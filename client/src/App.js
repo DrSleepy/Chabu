@@ -9,7 +9,7 @@ class App extends Component {
     return (
       <div className="App">
         <button className={css.App__btn}> Join room by ID </button>
-        <button className={css.App__btn2}> Create Questions Room </button>
+        <button className={[css.App__btn2, css.red].join(' ')}> Create Questions Room </button>
       </div>
     );
   }
