@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import logger from 'morgan';
 
-import config from './config';
+import * as config from './config';
 import routes from './routes/routes';
 import errors from './errors/errors';
 
@@ -23,6 +23,6 @@ routes(server);
 // Error handling
 errors(server);
 
-server.listen(config.port, () => {
-  console.log(`Server has started on port ${config.port}`);
+server.listen(config.PORT, () => {
+  console.log(`Server has started on port ${config.PORT}`);
 });

@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
-import config from './config';
+import * as config from './config';
 
 mongoose.Promise = global.Promise;
 
 mongoose
-  .connect(config.database.srv)
+  .connect(config.SRV)
   .then(result => {
-    console.log('Connected to MongoDB');
+    console.log('Connected to MongoDB', result);
   })
   .catch(err => {
     console.log('Error connecting to database', err);

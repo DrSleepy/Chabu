@@ -1,6 +1,2 @@
-export default {
-  port: 3111,
-  database: {
-    srv: ''
-  }
-};
+export const PORT = 3111;
+export const SRV = '';
