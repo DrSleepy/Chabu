@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import Button from 'antd/lib/button';
-import 'antd/dist/antd.css';
+
+import './styles/reset.less';
+import './styles/base.less';
+import css from './App.less';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <Button type="primary"> Bob </Button>
-        <p> Hi Bob </p>
+        <button className={css.App__btn}> Join room by ID </button>
+        <button className={css.App__btn2}> Create Questions Room </button>
       </div>
     );
   }
