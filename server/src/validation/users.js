@@ -1,30 +1,27 @@
 import Joi from 'joi';
 
-import email from './field-schemas/email';
-import username from './field-schemas/username';
-import password from './field-schemas/password';
+import * as fields from '../joi';
 
-export default {
-  addNewUser: (req, res, next) => {
-    // expected schema
-    const newUserSchema = Joi.object().keys({
-      email: email.required(),
-      password: password.required(),
-      username: username.required()
-    });
+export const createUser = (req, res, next) => {
+  // expected schema
+  const newUserSchema = Joi.object().keys({
+    email: fields.email.required(),
+    password: fields.password.required(),
+    username: fields.username.required()
+  });
 
-    const result = Joi.validate(req.body, newUserSchema);
-    result.error ? res.status(400).json(result.error) : next();
-    // Passing schema validation MUST return next() to continue to next middleware
-  },
-  updateUser: (req, res, next) => {
-    const updateUser = Joi.object().keys({
-      email,
-      password,
-      username
-    });
+  const result = Joi.validate(req.body, newUserSchema);
+  result.error ? res.status(400).json(result.error) : next();
+  // Passing schema validation MUST return next() to continue to next middleware
+};
 
-    const result = Joi.validate(req.body, updateUser);
-    result.error ? res.status(400).json(result.error) : next();
-  }
+export const updateUser = (req, res, next) => {
+  const updateUser = Joi.object().keys({
+    email: fields.email,
+    password: fields.password,
+    username: fields.username
+  });
+
+  const result = Joi.validate(req.body, updateUser);
+  result.error ? res.status(400).json(result.error) : next();
 };
