@@ -22,8 +22,7 @@ const UserSchema = new Schema({
   },
   showUsername: {
     type: Boolean,
-    default: false,
-    required: true
+    default: false
   },
   joinedRooms: [
     {

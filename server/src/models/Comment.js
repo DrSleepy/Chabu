@@ -4,8 +4,8 @@ const CommentSchema = new Schema({
   text: {
     type: String,
     required: true,
-    max: 20000,
-    min: 1
+    min: 1,
+    max: 20000
   },
   date: {
     type: Date,

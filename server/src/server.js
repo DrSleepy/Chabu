@@ -17,11 +17,6 @@ server.use(logger('dev'));
 server.use(bodyParser.json());
 server.use(cors());
 
-server.use((req, res, next) => {
-  console.log();
-  next();
-});
-
 // Routes
 routes(server);
 

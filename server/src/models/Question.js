@@ -4,14 +4,14 @@ const QuestionSchema = new Schema({
   title: {
     type: String,
     required: true,
-    max: 200,
-    min: 20
+    min: 20,
+    max: 200
   },
   text: {
     type: String,
     required: false,
-    max: 20000,
-    min: 50
+    min: 5,
+    max: 20000
   },
   date: {
     type: Date,

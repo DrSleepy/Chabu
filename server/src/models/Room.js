@@ -3,8 +3,7 @@ import { Schema, model, ObjectId } from 'mongoose';
 const RoomSchema = new Schema({
   id: {
     // automatically generated. How?
-    type: String,
-    required: true
+    type: String
   },
   title: {
     type: String,
