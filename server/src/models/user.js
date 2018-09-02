@@ -11,14 +11,14 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: true,
-    max: 30,
-    min: 8
+    min: 8,
+    max: 30
   },
   email: {
     type: String,
     required: false,
-    max: 50,
-    min: 4
+    min: 4,
+    max: 50
   },
   showUsername: {
     type: Boolean,

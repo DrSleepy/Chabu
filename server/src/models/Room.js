@@ -9,14 +9,14 @@ const RoomSchema = new Schema({
   title: {
     type: String,
     required: true,
-    max: 30,
-    min: 5
+    min: 5,
+    max: 100
   },
   creator: {
     type: String,
     required: false,
-    max: 20,
-    min: 5
+    min: 3,
+    max: 20
   },
   date: {
     type: Date,
