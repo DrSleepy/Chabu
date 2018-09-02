@@ -1,6 +1,8 @@
 import Joi from 'joi';
 
-export default Joi.string()
+const username = Joi.string()
   .alphanum()
   .min(5)
   .max(30);
+
+export default username;

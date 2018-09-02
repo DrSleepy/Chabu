@@ -1,20 +1,56 @@
-import mongoose from 'mongoose';
-
-// Look into how and were exactly to create Mongodb tables
-// the schema is only used to validate user objects against
-// schema before attempting to send object to database
-
-const Schema = mongoose.Schema;
+import { Schema, model, ObjectId } from 'mongoose';
 
 const UserSchema = new Schema({
-  firstName: String,
-  lastName: String,
-  email: {
+  username: {
     type: String,
     required: true,
-    unique: true
-  }
+    unique: true,
+    min: 4,
+    max: 20
+  },
+  password: {
+    type: String,
+    required: true,
+    max: 30,
+    min: 8
+  },
+  email: {
+    type: String,
+    required: false,
+    max: 50,
+    min: 4
+  },
+  showUsername: {
+    type: Boolean,
+    default: false,
+    required: true
+  },
+  joinedRooms: [
+    {
+      type: ObjectId,
+      ref: 'Room'
+    }
+  ],
+  createdRooms: [
+    {
+      type: ObjectId,
+      ref: 'Room'
+    }
+  ],
+  createdQuestions: [
+    {
+      type: ObjectId,
+      ref: 'Question'
+    }
+  ],
+  createdComments: [
+    {
+      type: ObjectId,
+      ref: 'Comment'
+    }
+  ]
 });
 
-const User = mongoose.model('User', UserSchema);
-export default User;
+const UserModel = model('User', UserSchema);
+
+export default UserModel;

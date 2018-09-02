@@ -4,11 +4,11 @@ import cors from 'cors';
 import logger from 'morgan';
 
 import * as config from './config';
-import routes from './routes/routes';
+import routes from './routers/routes';
 import errors from './errors/errors';
 
 // Connects to Mongodb
-import './connection';
+// import './connection';
 
 const server = express();
 
@@ -16,6 +16,11 @@ const server = express();
 server.use(logger('dev'));
 server.use(bodyParser.json());
 server.use(cors());
+
+server.use((req, res, next) => {
+  console.log();
+  next();
+});
 
 // Routes
 routes(server);
