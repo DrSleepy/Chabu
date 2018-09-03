@@ -2,7 +2,6 @@ import Joi from 'joi';
 
 export const config = {
   escapeHtml: true,
-  stripUnknown: true,
   abortEarly: false,
   language: {
     key: '{{label}} ',
@@ -12,20 +11,19 @@ export const config = {
   }
 };
 
-export const username = Joi.label('Username')
-  .string()
-  .alphanum()
+export const username = Joi.string()
   .min(4)
-  .max(20);
+  .max(20)
+  .alphanum()
+  .label('Username');
 
-export const password = Joi.label('Password')
-  .string()
+export const password = Joi.string()
   .alphanum()
   .min(8)
-  .max(30);
+  .max(30)
+  .label('Password');
 
-export const passwordConfirm = Joi.label('Password Confirmation')
-  .any()
+export const passwordConfirm = Joi.any()
   .valid(Joi.ref('password'))
   .options({
     language: {
@@ -33,47 +31,49 @@ export const passwordConfirm = Joi.label('Password Confirmation')
         allowOnly: 'does not match password'
       }
     }
-  });
+  })
+  .label('Password Confirmation');
 
-export const email = Joi.label('Email')
-  .email()
+export const email = Joi.string()
+  .email({ minDomainAtoms: 2 })
   .lowercase()
   .min(4)
-  .max(40);
+  .max(40)
+  .label('Email');
 
-export const creator = Joi.label('Creator')
-  .string()
+export const creator = Joi.string()
   .alphanum()
   .min(3)
-  .max(20);
+  .max(20)
+  .label('Creator');
 
-export const mongoId = Joi.label('MongoID')
-  .string()
+export const mongoId = Joi.string()
   .regex(/^[0-9a-fA-F]{24}/) // regex is mongo object ID format. Needs checking
   .min(24)
-  .max(24);
+  .max(24)
+  .label('MongoID');
 
-export const roomTitle = Joi.label('Room Title')
-  .string()
+export const roomTitle = Joi.string()
   .alphanum()
   .min(5)
-  .max(100);
+  .max(100)
+  .label('Room Title');
 
-export const questionTitle = Joi.label('Question Title')
-  .string()
+export const questionTitle = Joi.string()
   .min(20)
-  .max(200);
+  .max(200)
+  .label('Question Title');
 
-export const questionText = Joi.label('Question Text')
-  .string()
+export const questionText = Joi.string()
   .min(5)
-  .max(20000);
+  .max(20000)
+  .label('Question Text');
 
-export const commentText = Joi.label('Comment Text')
-  .string()
+export const commentText = Joi.string()
   .min(1)
-  .max(20000);
+  .max(20000)
+  .label('Comment Text');
 
-export const showUsername = Joi.label('Show Username').boolean();
+export const showUsername = Joi.boolean().label('Show Username');
 
-export const unlocked = Joi.label('Unlocked').boolean();
+export const unlocked = Joi.boolean().label('Unlocked');

@@ -1,8 +1,7 @@
 import express from 'express';
 
-import UsersController from '../controllers/users';
-import BodyValidation from '../validation/users';
-import RouteValidation from '../validation/routes';
+import * as bodyValidation from '../validation/accounts';
+import * as accountsController from '../controllers/accounts';
 
 const router = express.Router();
 
@@ -13,12 +12,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(RouteValidation.xxx, UsersController.getAllUsers)
-  .post(RouteValidation.xxx, BodyValidation.xxx, UsersController.addNewUser);
-
-router
-  .route('/:id')
-  .get(RouteValidation.xxx, UsersController.getAllUsers)
-  .post(RouteValidation.xxx, BodyValidation.xxx, UsersController.addNewUser);
+  .post(bodyValidation.createAccount, accountsController.createAccount)
+  .patch(bodyValidation.updateAccount, accountsController.updateAccount);
 
 export default router;
