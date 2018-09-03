@@ -1,6 +1,6 @@
 import { Schema, model, ObjectId } from 'mongoose';
 
-const UserSchema = new Schema({
+const AccountSchema = new Schema({
   username: {
     type: String,
     required: true,
@@ -50,6 +50,6 @@ const UserSchema = new Schema({
   ]
 });
 
-const UserModel = model('User', UserSchema);
+const AccountModel = model('Account', AccountSchema);
 
-export default UserModel;
+export default AccountModel;

@@ -21,9 +21,9 @@ const QuestionSchema = new Schema({
     type: Number,
     default: 0
   },
-  user: {
+  account: {
     type: ObjectId,
-    ref: 'User'
+    ref: 'Account'
   }
 });
 

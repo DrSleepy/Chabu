@@ -31,9 +31,9 @@ const RoomSchema = new Schema({
       ref: 'Question'
     }
   ],
-  user: {
+  account: {
     type: ObjectId,
-    ref: 'User'
+    ref: 'Account'
   }
 });
 

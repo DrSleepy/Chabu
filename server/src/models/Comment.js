@@ -17,9 +17,9 @@ const CommentSchema = new Schema({
       ref: 'Comment'
     }
   ],
-  user: {
+  account: {
     type: ObjectId,
-    ref: 'User'
+    ref: 'Account'
   }
 });
 
