@@ -13,7 +13,7 @@ const RoomSchema = new Schema({
   },
   creator: {
     type: String,
-    required: false,
+    default: null,
     min: 3,
     max: 20
   },

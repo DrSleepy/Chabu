@@ -16,7 +16,7 @@ const AccountSchema = new Schema({
   },
   email: {
     type: String,
-    required: false,
+    default: null,
     min: 4,
     max: 50
   },

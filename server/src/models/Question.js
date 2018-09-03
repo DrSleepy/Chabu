@@ -9,7 +9,7 @@ const QuestionSchema = new Schema({
   },
   text: {
     type: String,
-    required: false,
+    default: null,
     min: 5,
     max: 20000
   },
