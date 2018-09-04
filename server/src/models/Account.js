@@ -1,4 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
+import uniqueValidator from 'mongoose-unique-validator';
+import { genSaltSync, hashSync, compareSync } from 'bcrypt';
 
 const AccountSchema = new Schema({
   username: {
@@ -50,6 +52,20 @@ const AccountSchema = new Schema({
   ]
 });
 
-const AccountModel = mongoose.model('Account', AccountSchema);
+// plugins
+AccountSchema.plugin(uniqueValidator, { message: '{VALUE} already taken' });
 
+// hooks
+AccountSchema.pre('save', next => {
+  if (this.isModified('password')) {
+    this.password = this.encryptPassword(this.password);
+  }
+  next();
+});
+
+// methods
+AccountSchema.methods.encryptPassword = password => hashSync(password, genSaltSync(10));
+AccountSchema.methods.comparePassword = (plainPassword, hashedPassword) => compareSync(plainPassword, hashedPassword);
+
+const AccountModel = mongoose.model('Account', AccountSchema);
 export default AccountModel;

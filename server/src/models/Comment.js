@@ -1,6 +1,10 @@
 import mongoose, { Schema } from 'mongoose';
 
 const CommentSchema = new Schema({
+  showUsername: {
+    type: Boolean,
+    default: false
+  },
   text: {
     type: String,
     required: true,
@@ -30,5 +34,4 @@ const CommentSchema = new Schema({
 // before update, change 'edited' to true
 
 const CommentModel = mongoose.model('Comment', CommentSchema);
-
 export default CommentModel;

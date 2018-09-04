@@ -9,7 +9,7 @@ import errors from './errors/errors';
 import { verifyToken } from './jwt';
 
 // Connects to Mongodb
-// import './connection';
+import './connection';
 
 const server = express();
 

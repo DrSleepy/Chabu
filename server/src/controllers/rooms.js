@@ -1,48 +1,41 @@
-export const createRoom = (req, res, next) => {
+export const createRoom = (req, res) => {
   res.status(200).json({
     message: 'Validated and creating room..'
   });
-  next();
 };
 
-export const getRoom = (req, res, next) => {
+export const getRoom = (req, res) => {
   res.status(200).json({
     message: 'Validated and getting specific room..'
   });
-  next();
 };
 
-export const deleteRoom = (req, res, next) => {
+export const deleteRoom = (req, res) => {
   res.status(200).json({
     message: 'Validated and deleting specific room..'
   });
-  next();
 };
 
-export const updateRoom = (req, res, next) => {
+export const updateRoom = (req, res) => {
   res.status(200).json({
     message: 'Validated and updating specific room..'
   });
-  next();
 };
 
-export const filterRoom = (req, res, next) => {
+export const filterRoom = (req, res) => {
   res.status(200).json({
     message: 'Validated and filtering specific room..'
   });
-  next();
 };
 
-export const joinRoom = (req, res, next) => {
+export const joinRoom = (req, res) => {
   res.status(200).json({
     message: 'Validated and joining specific room..'
   });
-  next();
 };
 
-export const leaveRoom = (req, res, next) => {
+export const leaveRoom = (req, res) => {
   res.status(200).json({
     message: 'Validated and leaving specific room..'
   });
-  next();
 };
