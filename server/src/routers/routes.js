@@ -10,7 +10,7 @@ const routes = server => {
   // server.use('/rooms', rooms);
   // server.use('/questions', questions);
   // server.use('/comments', comments);
-  // server.use('/', 'to be discussed');
+  // server.use('/', 'to be discussed');+
 };
 
 export default routes;

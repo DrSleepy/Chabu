@@ -20,7 +20,7 @@ export const username = Joi.string()
 export const password = Joi.string()
   .alphanum()
   .min(8)
-  .max(30)
+  .max(100)
   .label('Password');
 
 export const passwordConfirm = Joi.any()

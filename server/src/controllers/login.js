@@ -24,6 +24,6 @@ export const login = async (req, res) => {
   const token = await signToken(account);
   res.cookie('token', token, { httpOnly: true, secure: SECURE_COOKIES });
 
-  const goodResponse = { ok: false, errors: [], account: null };
+  const goodResponse = { ok: true, errors: [], account: null };
   res.status(200).json(goodResponse);
 };

@@ -14,7 +14,7 @@ const AccountSchema = new Schema({
     type: String,
     required: true,
     min: 8,
-    max: 30
+    max: 100
   },
   email: {
     type: String,
@@ -52,13 +52,16 @@ const AccountSchema = new Schema({
   ]
 });
 
+const AccountModel = mongoose.model('Account', AccountSchema);
+
 // plugins
 AccountSchema.plugin(uniqueValidator, { message: '{VALUE} already taken' });
 
 // hooks
-AccountSchema.pre('save', next => {
+// eslint-disable-next-line
+AccountSchema.pre('save', function(next) {
   if (this.isModified('password')) {
-    this.password = this.encryptPassword(this.password);
+    this.password = AccountSchema.methods.encryptPassword(this.password);
   }
   next();
 });
@@ -67,5 +70,4 @@ AccountSchema.pre('save', next => {
 AccountSchema.methods.encryptPassword = password => hashSync(password, genSaltSync(10));
 AccountSchema.methods.comparePassword = (plainPassword, hashedPassword) => compareSync(plainPassword, hashedPassword);
 
-const AccountModel = mongoose.model('Account', AccountSchema);
 export default AccountModel;
