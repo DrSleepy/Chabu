@@ -52,8 +52,6 @@ const AccountSchema = new Schema({
   ]
 });
 
-const AccountModel = mongoose.model('Account', AccountSchema);
-
 // plugins
 AccountSchema.plugin(uniqueValidator, { message: '{VALUE} already taken' });
 
@@ -61,13 +59,14 @@ AccountSchema.plugin(uniqueValidator, { message: '{VALUE} already taken' });
 // eslint-disable-next-line
 AccountSchema.pre('save', function(next) {
   if (this.isModified('password')) {
-    this.password = AccountSchema.methods.encryptPassword(this.password);
+    this.password = this.encryptPassword(this.password);
   }
   next();
 });
 
 // methods
 AccountSchema.methods.encryptPassword = password => hashSync(password, genSaltSync(10));
-AccountSchema.methods.comparePassword = (plainPassword, hashedPassword) => compareSync(plainPassword, hashedPassword);
+AccountSchema.methods.isValidPassword = (plainPassword, hashedPassword) => compareSync(plainPassword, hashedPassword);
 
+const AccountModel = mongoose.model('Account', AccountSchema);
 export default AccountModel;

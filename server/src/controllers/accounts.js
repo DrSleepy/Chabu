@@ -3,15 +3,15 @@ import { signToken } from '../jwt';
 import { SECURE_COOKIES } from '../config';
 
 export const createAccount = async (req, res) => {
-  const badResponse = { ok: false, errors: [] };
+  const response = { ok: false, errors: [] };
 
   // check if username exists
   const bodyUsername = new RegExp(req.body.username, 'i');
   const account = await AccountModel.findOne({ username: bodyUsername }).select('username');
 
   if (account) {
-    badResponse.errors.push({ path: ['username'], message: 'Username is already registered' });
-    res.status(400).json(badResponse);
+    response.errors.push({ path: ['username'], message: 'Username is already registered' });
+    res.status(400).json(response);
     return;
   }
 
@@ -21,8 +21,8 @@ export const createAccount = async (req, res) => {
   const token = await signToken(newAccount);
   res.cookie('token', token, { httpOnly: true, secure: SECURE_COOKIES });
 
-  const goodResponse = { ok: true, errors: [] };
-  res.status(200).json(goodResponse);
+  response.ok = true;
+  res.status(200).json(response);
 };
 
 export const getAccount = (req, res) => {
