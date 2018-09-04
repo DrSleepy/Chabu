@@ -47,7 +47,7 @@ export const creator = Joi.string()
   .max(20)
   .label('Creator');
 
-export const mongoId = Joi.string()
+export const mongoID = Joi.string()
   .regex(/^[0-9a-fA-F]{24}/) // regex is mongo object ID format. Needs checking
   .min(24)
   .max(24)

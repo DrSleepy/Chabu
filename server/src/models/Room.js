@@ -1,4 +1,4 @@
-import { Schema, ObjectId, model } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const RoomSchema = new Schema({
   id: {
@@ -27,16 +27,16 @@ const RoomSchema = new Schema({
   },
   questions: [
     {
-      type: ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'Question'
     }
   ],
   account: {
-    type: ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Account'
   }
 });
 
-const RoomModel = model('Room', RoomSchema);
+const RoomModel = mongoose.model('Room', RoomSchema);
 
 export default RoomModel;

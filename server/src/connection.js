@@ -4,9 +4,12 @@ import * as config from './config';
 mongoose.Promise = global.Promise;
 
 mongoose
-  .connect(config.SRV)
-  .then(result => {
-    console.log('Connected to MongoDB', result);
+  .connect(
+    config.SRV,
+    { useNewUrlParser: true }
+  )
+  .then(() => {
+    console.log('Connected to MongoDB');
   })
   .catch(err => {
     console.log('Error connecting to database', err);

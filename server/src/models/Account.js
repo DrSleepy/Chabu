@@ -1,4 +1,4 @@
-import { Schema, ObjectId, model } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const AccountSchema = new Schema({
   username: {
@@ -26,30 +26,30 @@ const AccountSchema = new Schema({
   },
   joinedRooms: [
     {
-      type: ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'Room'
     }
   ],
   createdRooms: [
     {
-      type: ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'Room'
     }
   ],
   createdQuestions: [
     {
-      type: ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'Question'
     }
   ],
   createdComments: [
     {
-      type: ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'Comment'
     }
   ]
 });
 
-const AccountModel = model('Account', AccountSchema);
+const AccountModel = mongoose.model('Account', AccountSchema);
 
 export default AccountModel;

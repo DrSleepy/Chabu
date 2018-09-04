@@ -6,6 +6,7 @@ import logger from 'morgan';
 import * as config from './config';
 import routes from './routers/routes';
 import errors from './errors/errors';
+import { verifyToken } from './jwt';
 
 // Connects to Mongodb
 // import './connection';
@@ -16,6 +17,7 @@ const server = express();
 server.use(logger('dev'));
 server.use(bodyParser.json());
 server.use(cors());
+server.use(verifyToken);
 
 // Routes
 routes(server);

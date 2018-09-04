@@ -1,4 +1,4 @@
-import { Schema, ObjectId, model } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const CommentSchema = new Schema({
   text: {
@@ -7,22 +7,28 @@ const CommentSchema = new Schema({
     min: 1,
     max: 20000
   },
+  edited: {
+    type: Boolean,
+    default: false
+  },
   date: {
     type: Date,
     default: Date.now
   },
   children: [
     {
-      type: ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'Comment'
     }
   ],
   account: {
-    type: ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Account'
   }
 });
 
-const CommentModel = model('Comment', CommentSchema);
+// before update, change 'edited' to true
+
+const CommentModel = mongoose.model('Comment', CommentSchema);
 
 export default CommentModel;

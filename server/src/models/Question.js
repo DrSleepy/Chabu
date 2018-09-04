@@ -1,4 +1,4 @@
-import { Schema, ObjectId, model } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const QuestionSchema = new Schema({
   title: {
@@ -13,6 +13,10 @@ const QuestionSchema = new Schema({
     min: 5,
     max: 20000
   },
+  edited: {
+    type: Boolean,
+    default: false
+  },
   date: {
     type: Date,
     default: Date.now
@@ -22,11 +26,11 @@ const QuestionSchema = new Schema({
     default: 0
   },
   account: {
-    type: ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Account'
   }
 });
 
-const QuestionModel = model('Question', QuestionSchema);
+const QuestionModel = mongoose.model('Question', QuestionSchema);
 
 export default QuestionModel;
