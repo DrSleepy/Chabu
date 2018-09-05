@@ -3,7 +3,7 @@ import { SECURE_COOKIES } from '../config';
 import AccountModel from '../models/Account';
 
 export const login = async (req, res) => {
-  const response = { ok: false, errors: [] };
+  const response = { ok: false, errors: [], data: null };
 
   // check if account exists
   const bodyUsername = new RegExp(req.body.username, 'i');

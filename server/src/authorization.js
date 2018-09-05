@@ -1,5 +1,5 @@
 export const authorization = (id, model) => async (req, res, next) => {
-  // not logged in
+  // forbid - not logged in
   if (!req.accountID) {
     res.sendStatus(403);
     return;
@@ -12,13 +12,13 @@ export const authorization = (id, model) => async (req, res, next) => {
     return;
   }
 
-  // update account
+  // deal with own account
   if (req.accountID == result._id) {
     next();
     return;
   }
 
-  // update resource
+  // deal with own resources
   if (result.account && req.accountID == result.account._id) {
     next();
     return;

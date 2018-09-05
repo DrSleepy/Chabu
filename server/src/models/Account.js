@@ -12,6 +12,7 @@ const AccountSchema = new Schema({
   },
   password: {
     type: String,
+    select: false,
     required: true,
     min: 8,
     max: 100

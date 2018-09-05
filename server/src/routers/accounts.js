@@ -19,7 +19,7 @@ router.route('/').post(bodyValidation.createAccount, accountsController.createAc
 
 router
   .route('/:id')
-  .get(paramValidation('id', fields.mongoID), accountsController.getAccount) // complete
+  .get(paramValidation('id', fields.mongoID), authorization('id', AccountModel), accountsController.getAccount) // complete
   .patch(
     paramValidation('id', fields.mongoID), // complete
     authorization('id', AccountModel), // complete
