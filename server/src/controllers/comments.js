@@ -1,14 +1,11 @@
 import CommentModel from '../models/Comment';
+import AccountModel from '../models/Account';
 
 export const createComment = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
-  console.log('YASSSS');
-
-  // code here
-  const x = await new CommentModel({ account: req.accountID, ...req.body }).save();
-  const e = await CommentModel.findById(x._id).populate('account');
-  console.log(e);
+  const newComment = await new CommentModel({ account: req.accountID, ...req.body }).save();
+  await AccountModel.findByIdAndUpdate(req.accountID, { $push: { createdComments: newComment._id } });
 
   response.ok = true;
   res.status(200).json(response);

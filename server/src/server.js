@@ -5,8 +5,12 @@ import express from 'express';
 import logger from 'morgan';
 
 import * as config from './config';
-import routes from './routers/routes';
 import { verifyToken } from './jwt';
+import login from './routers/login';
+import accounts from './routers/accounts';
+// import rooms from './rooms';
+// import questions from './questions';
+import comments from './routers/comments';
 
 // connects to Mongodb
 import './connection';
@@ -21,7 +25,11 @@ server.use(cookieParser());
 server.use(verifyToken);
 
 // routes
-routes(server);
+server.use('/login', login);
+server.use('/accounts', accounts);
+// server.use('/rooms', rooms);
+// server.use('/questions', questions);
+server.use('/comments', comments);
 
 // error handling
 server.use((err, req, res, next) => res.status(err.status).json(err)); // eslint-disable-line

@@ -23,6 +23,6 @@ export const verifyToken = async (req, res, next) => {
     req.accountID = decoded.accountID;
     next();
   } catch (error) {
-    res.sendStatus(401);
+    next({ status: 401, message: 'Invalid token', error });
   }
 };

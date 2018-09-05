@@ -28,7 +28,7 @@ export const createAccount = async (req, res, next) => {
 export const getAccount = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const account = await AccountModel.findById(req.params.id);
+  const account = await AccountModel.findById(req.params.id).select('-password');
   if (!account) {
     response.errors.push({ path: ['account'], message: 'Account not found' }).select('-Password');
     next({ status: 404, ...response });
