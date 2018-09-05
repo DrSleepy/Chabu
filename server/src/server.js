@@ -1,11 +1,12 @@
-import express from 'express';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import express from 'express';
 import logger from 'morgan';
 
 import * as config from './config';
-import routes from './routers/routes';
 import errors from './errors/errors';
+import routes from './routers/routes';
 import { verifyToken } from './jwt';
 
 // Connects to Mongodb
@@ -15,8 +16,9 @@ const server = express();
 
 // Middleware
 server.use(logger('dev'));
-server.use(bodyParser.json());
 server.use(cors());
+server.use(bodyParser.json());
+server.use(cookieParser());
 server.use(verifyToken);
 
 // Routes

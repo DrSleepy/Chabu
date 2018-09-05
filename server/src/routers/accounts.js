@@ -15,16 +15,16 @@ const router = express.Router();
 // 3. validate body
 // 4. call controller after success
 
-router.route('/').post(bodyValidation.createAccount, accountsController.createAccount);
+router.route('/').post(bodyValidation.createAccount, accountsController.createAccount); // complete
 
 router
   .route('/:id')
-  .get(paramValidation('id', fields.mongoID), accountsController.getAccount)
+  .get(paramValidation('id', fields.mongoID), accountsController.getAccount) // complete
   .patch(
-    paramValidation('id', fields.mongoID),
-    authorization('id', AccountModel),
-    bodyValidation.updateAccount,
-    accountsController.updateAccount
+    paramValidation('id', fields.mongoID), // complete
+    authorization('id', AccountModel), // complete
+    bodyValidation.updateAccount, // complete
+    accountsController.updateAccount // complete
   );
 
 export default router;

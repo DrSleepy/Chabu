@@ -31,8 +31,11 @@ export const getAccount = (req, res) => {
   });
 };
 
-export const updateAccount = (req, res) => {
-  res.status(200).json({
-    message: 'Validated and updating specific account..'
-  });
+export const updateAccount = async (req, res) => {
+  const response = { ok: false, errors: [] };
+
+  await AccountModel.findByIdAndUpdate({ _id: req.params.id }, { $set: { ...req.body } });
+
+  response.ok = true;
+  res.status(200).json(response);
 };

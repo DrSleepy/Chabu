@@ -5,6 +5,6 @@ import * as bodyValidation from '../validation/login';
 
 const router = express.Router();
 
-router.route('/').post(bodyValidation.login, loginController.login);
+router.route('/').post(bodyValidation.login, loginController.login); // complete
 
 export default router;

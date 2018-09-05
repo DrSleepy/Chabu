@@ -3,6 +3,8 @@ import * as config from './config';
 
 mongoose.Promise = global.Promise;
 
+mongoose.set('useFindAndModify', false);
+
 mongoose
   .connect(
     config.SRV,
