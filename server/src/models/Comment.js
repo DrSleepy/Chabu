@@ -1,15 +1,15 @@
 import mongoose, { Schema } from 'mongoose';
 
 const CommentSchema = new Schema({
-  showUsername: {
-    type: Boolean,
-    default: false
-  },
   text: {
     type: String,
     required: true,
     min: 1,
     max: 20000
+  },
+  showUsername: {
+    type: Boolean,
+    default: false
   },
   edited: {
     type: Boolean,

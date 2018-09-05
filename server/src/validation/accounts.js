@@ -15,7 +15,7 @@ export const createAccount = (req, res, next) => {
   });
 
   const result = Joi.validate(req.body, newAccountSchema, fields.config);
-  result.error ? res.status(400).json(result.error) : next();
+  result.error ? next({ status: 400, ...result.error }) : next();
 };
 
 export const updateAccount = (req, res, next) => {
@@ -25,5 +25,5 @@ export const updateAccount = (req, res, next) => {
   });
 
   const result = Joi.validate(req.body, updateAccountSchema, fields.config);
-  result.error ? res.status(400).json(result.error) : next();
+  result.error ? next({ status: 400, ...result.error }) : next();
 };

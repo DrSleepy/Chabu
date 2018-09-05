@@ -2,7 +2,7 @@ import { signToken } from '../jwt';
 import { SECURE_COOKIES } from '../config';
 import AccountModel from '../models/Account';
 
-export const login = async (req, res) => {
+export const login = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
   // check if account exists
@@ -11,7 +11,7 @@ export const login = async (req, res) => {
 
   if (!account) {
     response.errors.push({ path: ['username'], message: 'Username is not registered' });
-    res.status(404).json(response);
+    next({ status: 404, ...response });
     return;
   }
 
@@ -19,7 +19,7 @@ export const login = async (req, res) => {
   const validPassword = account.isValidPassword(req.body.password, account.password);
   if (!validPassword) {
     response.errors.push({ path: ['password'], message: 'Incorrect password' });
-    res.status(401).json(response);
+    next({ status: 401, ...response });
     return;
   }
 

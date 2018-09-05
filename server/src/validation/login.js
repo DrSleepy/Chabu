@@ -9,5 +9,5 @@ export const login = (req, res, next) => {
   });
 
   const result = Joi.validate(req.body, authenticateSchema, fields.config);
-  result.error ? res.status(400).json(result.error) : next();
+  result.error ? next({ status: 400, ...result.error }) : next();
 };

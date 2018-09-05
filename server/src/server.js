@@ -5,28 +5,25 @@ import express from 'express';
 import logger from 'morgan';
 
 import * as config from './config';
-import errors from './errors/errors';
 import routes from './routers/routes';
 import { verifyToken } from './jwt';
 
-// Connects to Mongodb
+// connects to Mongodb
 import './connection';
 
 const server = express();
 
-// Middleware
+// middleware
 server.use(logger('dev'));
 server.use(cors());
 server.use(bodyParser.json());
 server.use(cookieParser());
 server.use(verifyToken);
 
-// Routes
+// routes
 routes(server);
 
-// Error handling
-errors(server);
+// error handling
+server.use((err, req, res, next) => res.status(err.status).json(err)); // eslint-disable-line
 
-server.listen(config.PORT, () => {
-  console.log(`Server has started on port ${config.PORT}`);
-});
+server.listen(config.PORT, () => console.log(`Server has started on port ${config.PORT}`));

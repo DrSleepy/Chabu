@@ -2,7 +2,7 @@ import AccountModel from '../models/Account';
 import { signToken } from '../jwt';
 import { SECURE_COOKIES } from '../config';
 
-export const createAccount = async (req, res) => {
+export const createAccount = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
   // check if username exists
@@ -10,8 +10,8 @@ export const createAccount = async (req, res) => {
   const account = await AccountModel.findOne({ username: bodyUsername }).select('username');
 
   if (account) {
-    response.errors.push({ path: ['username'], message: 'Username is already registered' });
-    res.status(400).json(response);
+    response.errors.push({ path: ['username'], message: 'Username is taken' });
+    next({ status: 400, ...response });
     return;
   }
 
@@ -25,13 +25,13 @@ export const createAccount = async (req, res) => {
   res.status(200).json(response);
 };
 
-export const getAccount = async (req, res) => {
+export const getAccount = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const account = await AccountModel.findById({ _id: req.params.id });
+  const account = await AccountModel.findById(req.params.id);
   if (!account) {
-    response.errors.push({ path: ['account'], message: 'No account found by that ID' }).select('-Password');
-    res.status(404).json(response);
+    response.errors.push({ path: ['account'], message: 'Account not found' }).select('-Password');
+    next({ status: 404, ...response });
     return;
   }
 
@@ -43,7 +43,7 @@ export const getAccount = async (req, res) => {
 export const updateAccount = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
-  await AccountModel.findByIdAndUpdate({ _id: req.params.id }, { $set: { ...req.body } });
+  await AccountModel.findByIdAndUpdate(req.params.id, { $set: { ...req.body } });
 
   response.ok = true;
   res.status(200).json(response);
