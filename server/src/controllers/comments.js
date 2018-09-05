@@ -4,8 +4,15 @@ import AccountModel from '../models/Account';
 export const createComment = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
-  const newComment = await new CommentModel({ account: req.accountID, ...req.body }).save();
-  await AccountModel.findByIdAndUpdate(req.accountID, { $push: { createdComments: newComment._id } });
+  const account = await AccountModel.findById(req.accountID);
+
+  const newComment = await new CommentModel({
+    account: req.accountID,
+    showUsername: account.showUsername,
+    ...req.body
+  }).save();
+
+  await account.update({ $push: { createdComments: newComment._id } });
 
   response.ok = true;
   res.status(200).json(response);
@@ -17,8 +24,11 @@ export const deleteComment = (req, res) => {
   });
 };
 
-export const updateComment = (req, res) => {
-  res.status(200).json({
-    message: 'Validated and updating specific account..'
-  });
+export const updateComment = async (req, res) => {
+  const response = { ok: false, errors: [], data: null };
+
+  await CommentModel.findByIdAndUpdate(req.params.id, { ...req.body });
+
+  response.ok = true;
+  res.status(200).json(response);
 };

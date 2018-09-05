@@ -2,9 +2,9 @@ import express from 'express';
 
 import AccountModel from '../models/Account';
 import { paramValidation } from '../validation/routes';
-import * as auth from '../auth';
 import * as bodyValidation from '../validation/accounts';
 import * as accountsController from '../controllers/accounts';
+import * as auth from '../auth';
 import * as fields from '../joi';
 
 const router = express.Router();
@@ -21,11 +21,11 @@ router.route('/').post(bodyValidation.createAccount, accountsController.createAc
 router
   .route('/:id')
   .get(
-    auth.isLoggedIn,
-    paramValidation('id', fields.mongoID),
-    auth.authorization('id', AccountModel),
-    accountsController.getAccount
-  ) // complete
+    auth.isLoggedIn, // complete
+    paramValidation('id', fields.mongoID), // complete
+    auth.authorization('id', AccountModel), // complete
+    accountsController.getAccount // complete
+  )
   .patch(
     auth.isLoggedIn,
     paramValidation('id', fields.mongoID), // complete

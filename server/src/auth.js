@@ -23,5 +23,5 @@ export const authorization = (id, model) => async (req, res, next) => {
     return;
   }
 
-  next({ status: 403, message: 'Forbidden from accessing this resource' });
+  next({ status: 403, message: 'Access forbidden' });
 };

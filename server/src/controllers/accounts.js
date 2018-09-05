@@ -43,7 +43,7 @@ export const getAccount = async (req, res, next) => {
 export const updateAccount = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
-  await AccountModel.findByIdAndUpdate(req.params.id, { $set: { ...req.body } });
+  await AccountModel.findByIdAndUpdate(req.params.id, { ...req.body });
 
   response.ok = true;
   res.status(200).json(response);
