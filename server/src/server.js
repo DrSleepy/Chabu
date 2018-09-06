@@ -12,7 +12,6 @@ import accounts from './routers/accounts';
 // import questions from './questions';
 import comments from './routers/comments';
 
-// connects to Mongodb
 import './connection';
 
 const server = express();

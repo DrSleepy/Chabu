@@ -11,6 +11,10 @@ const CommentSchema = new Schema({
     type: Boolean,
     default: false
   },
+  deleted: {
+    type: Boolean,
+    default: false
+  },
   edited: {
     type: Boolean,
     default: false
@@ -30,8 +34,6 @@ const CommentSchema = new Schema({
     ref: 'Account'
   }
 });
-
-// before update, change 'edited' to true
 
 const CommentModel = mongoose.model('Comment', CommentSchema);
 export default CommentModel;

@@ -18,16 +18,29 @@ export const createComment = async (req, res) => {
   res.status(200).json(response);
 };
 
-export const deleteComment = (req, res) => {
-  res.status(200).json({
-    message: 'Validated and deleting specific account..'
-  });
-};
-
-export const updateComment = async (req, res) => {
+export const deleteComment = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
-  await CommentModel.findByIdAndUpdate(req.params.id, { ...req.body });
+  // update instead of delete - need child comments
+  await CommentModel.findByIdAndUpdate(req.params.id, { text: null, deleted: true });
+  await AccountModel.findByIdAndUpdate(req.accountID, { $pull: { createdComments: req.params.id } });
+
+  response.ok = true;
+  res.status(200).json(response);
+};
+
+export const updateComment = async (req, res, next) => {
+  const response = { ok: false, errors: [], data: null };
+
+  const comment = await CommentModel.findById(req.params.id);
+
+  if (comment.deleted) {
+    response.errors.push({ path: ['deleted'], message: 'Comment has been deleted' });
+    next({ status: 404, ...response });
+    return;
+  }
+
+  await comment.update({ edited: true, ...req.body });
 
   response.ok = true;
   res.status(200).json(response);

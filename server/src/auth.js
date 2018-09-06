@@ -4,7 +4,7 @@ export const isLoggedIn = (req, res, next) => {
 };
 
 export const authorization = (id, model) => async (req, res, next) => {
-  const result = await model.findById({ _id: req.params[id] });
+  const result = await model.findById(req.params[id]);
 
   if (!result) {
     next({ status: 404, message: 'Resource not found' });

@@ -20,6 +20,11 @@ router
     bodyValidation.createOrUpdateComment, // complete
     commentsController.updateComment // complete
   )
-  .delete();
+  .delete(
+    auth.isLoggedIn, // complete
+    paramValidation('id', fields.mongoID), // complete
+    auth.authorization('id', CommentModel), // complete
+    commentsController.deleteComment // complete
+  );
 
 export default router;
