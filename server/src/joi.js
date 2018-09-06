@@ -54,7 +54,6 @@ export const mongoID = Joi.string()
   .label('MongoID');
 
 export const roomTitle = Joi.string()
-  .alphanum()
   .min(5)
   .max(100)
   .label('Room Title');

@@ -28,9 +28,9 @@ export const createAccount = async (req, res, next) => {
 export const getAccount = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const account = await AccountModel.findById(req.params.id).select('-password');
+  const account = await AccountModel.findById(req.params.accountID).select('-password');
   if (!account) {
-    response.errors.push({ path: ['account'], message: 'Account not found' }).select('-Password');
+    response.errors.push({ path: ['account'], message: 'Account not found' });
     next({ status: 404, ...response });
     return;
   }
@@ -43,7 +43,7 @@ export const getAccount = async (req, res, next) => {
 export const updateAccount = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
-  await AccountModel.findByIdAndUpdate(req.params.id, { ...req.body });
+  await AccountModel.findByIdAndUpdate(req.params.accountID, { ...req.body });
 
   response.ok = true;
   res.status(200).json(response);

@@ -18,7 +18,8 @@ export const createComment = async (req, res) => {
   const isReply = req.path.split('/').includes('reply');
 
   const model = isReply ? CommentModel : QuestionModel;
-  await model.findByIdAndUpdate(req.params.id, { $push: { comments: newComment._id } });
+  const modelID = req.params.commentID || req.params.questionID;
+  await model.findByIdAndUpdate(modelID, { $push: { comments: newComment._id } });
 
   response.ok = true;
   res.status(200).json(response);
@@ -28,10 +29,8 @@ export const deleteComment = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
   // update instead of delete - need child comments
-  const updateComment = CommentModel.findByIdAndUpdate(req.params.id, { text: null, deleted: true });
-  const removeComment = AccountModel.findByIdAndUpdate(req.accountID, { $pull: { createdComments: req.params.id } });
-
-  await Promise.all([updateComment, removeComment]);
+  await CommentModel.findByIdAndUpdate(req.params.commentID, { text: null, deleted: true });
+  await AccountModel.findByIdAndUpdate(req.accountID, { $pull: { createdComments: req.params.accountID } });
 
   response.ok = true;
   res.status(200).json(response);
@@ -40,7 +39,7 @@ export const deleteComment = async (req, res) => {
 export const updateComment = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const comment = await CommentModel.findById(req.params.id);
+  const comment = await CommentModel.findById(req.params.commentID);
 
   if (comment.deleted) {
     response.errors.push({ path: ['deleted'], message: 'Comment has been deleted' });

@@ -12,24 +12,24 @@ const router = express.Router();
 // router.route('/').post(auth.isLoggedIn, commentsValidation.createOrUpdateComment, commentsController.createComment); // REDO
 
 router
-  .route('/:id')
+  .route('/:commentID')
   .patch(
     auth.isLoggedIn, // complete
-    paramValidation('id', fields.mongoID), // complete
-    auth.authorization('id', CommentModel), // complete
+    paramValidation('commentID', fields.mongoID), // complete
+    auth.authorization('commentID', CommentModel), // complete
     commentsValidation.createOrUpdateComment, // complete
     commentsController.updateComment // complete
   )
   .delete(
     auth.isLoggedIn, // complete
-    paramValidation('id', fields.mongoID), // complete
-    auth.authorization('id', CommentModel), // complete
+    paramValidation('commentID', fields.mongoID), // complete
+    auth.authorization('commentID', CommentModel), // complete
     commentsController.deleteComment // complete
   );
 
-router.route('/:id/reply').post(
+router.route('/:commentID/reply').post(
   auth.isLoggedIn, // complete
-  paramValidation('id', fields.mongoID), // complete
+  paramValidation('commentID', fields.mongoID), // complete
   commentsValidation.createOrUpdateComment, // complete
   commentsController.createComment // complete
 );

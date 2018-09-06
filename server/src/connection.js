@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
+import bluebird from 'bluebird';
+
 import * as config from './config';
 
+// mongoose.Promise = bluebird;
 mongoose.Promise = global.Promise;
 
 mongoose.set('useFindAndModify', false);

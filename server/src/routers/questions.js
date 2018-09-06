@@ -14,22 +14,28 @@ const router = express.Router();
 router.route('/').post(auth.isLoggedIn, questionsValidation.createQuestion, questionsController.createQuestion); // completed
 
 router
-  .route('/:id')
+  .route('/:questionID')
   .get(
-    paramValidation('id', fields.mongoID), // complete
+    paramValidation('questionID', fields.mongoID), // complete
     questionsController.getQuestion
   )
   .patch(
     auth.isLoggedIn, // complete
-    paramValidation('id', fields.mongoID), // complete
-    auth.authorization('id', QuestionModel), // complete
+    paramValidation('questionID', fields.mongoID), // complete
+    auth.authorization('questionID', QuestionModel), // complete
     questionsValidation.updateQuestion, // complete
     questionsController.updateQuestion
+  )
+  .delete(
+    auth.isLoggedIn,
+    paramValidation('questionID', fields.mongoID),
+    auth.authorization('questionID', QuestionModel),
+    questionsController.deleteQuestion
   );
 
-router.route('/:id/comment').post(
+router.route('/:questionID/comment').post(
   auth.isLoggedIn, // complete
-  paramValidation('id', fields.mongoID), // complete
+  paramValidation('questionID', fields.mongoID), // complete
   commentsValidation.createOrUpdateComment, // complete
   commentsController.createComment // complete
 );

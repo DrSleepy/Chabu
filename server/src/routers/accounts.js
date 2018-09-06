@@ -19,17 +19,17 @@ const router = express.Router();
 router.route('/').post(accountsValidation.createAccount, accountsController.createAccount); // REDO
 
 router
-  .route('/:id')
+  .route('/:accountID')
   .get(
     auth.isLoggedIn, // complete
-    paramValidation('id', fields.mongoID), // complete
-    auth.authorization('id', AccountModel), // complete
+    paramValidation('accountID', fields.mongoID), // complete
+    auth.authorization('accountID', AccountModel), // complete
     accountsController.getAccount // complete
   )
   .patch(
     auth.isLoggedIn,
-    paramValidation('id', fields.mongoID), // complete
-    auth.authorization('id', AccountModel), // complete
+    paramValidation('accountID', fields.mongoID), // complete
+    auth.authorization('accountID', AccountModel), // complete
     accountsValidation.updateAccount, // complete
     accountsController.updateAccount // complete
   );
