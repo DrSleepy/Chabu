@@ -1,10 +1,10 @@
 import express from 'express';
 
+import * as loginValidation from '../validation/login';
 import * as loginController from '../controllers/login';
-import * as bodyValidation from '../validation/login';
 
 const router = express.Router();
 
-router.route('/').post(bodyValidation.login, loginController.login); // complete
+router.route('/').post(loginValidation.login, loginController.login); // complete
 
 export default router;

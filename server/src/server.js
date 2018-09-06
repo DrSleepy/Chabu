@@ -9,7 +9,7 @@ import { verifyToken } from './jwt';
 import login from './routers/login';
 import accounts from './routers/accounts';
 // import rooms from './rooms';
-// import questions from './questions';
+import questions from './routers/questions';
 import comments from './routers/comments';
 
 import './connection';
@@ -27,7 +27,7 @@ server.use(verifyToken);
 server.use('/login', login);
 server.use('/accounts', accounts);
 // server.use('/rooms', rooms);
-// server.use('/questions', questions);
+server.use('/questions', questions);
 server.use('/comments', comments);
 
 // error handling

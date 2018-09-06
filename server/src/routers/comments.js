@@ -2,14 +2,14 @@ import express from 'express';
 
 import CommentModel from '../models/Comment';
 import { paramValidation } from '../validation/routes';
-import * as bodyValidation from '../validation/comments';
+import * as commentsValidation from '../validation/comments';
 import * as commentsController from '../controllers/comments';
 import * as auth from '../auth';
 import * as fields from '../joi';
 
 const router = express.Router();
 
-router.route('/').post(auth.isLoggedIn, bodyValidation.createOrUpdateComment, commentsController.createComment); // complete
+// router.route('/').post(auth.isLoggedIn, commentsValidation.createOrUpdateComment, commentsController.createComment); // REDO
 
 router
   .route('/:id')
@@ -17,7 +17,7 @@ router
     auth.isLoggedIn, // complete
     paramValidation('id', fields.mongoID), // complete
     auth.authorization('id', CommentModel), // complete
-    bodyValidation.createOrUpdateComment, // complete
+    commentsValidation.createOrUpdateComment, // complete
     commentsController.updateComment // complete
   )
   .delete(
@@ -26,5 +26,12 @@ router
     auth.authorization('id', CommentModel), // complete
     commentsController.deleteComment // complete
   );
+
+router.route('/:id/reply').post(
+  auth.isLoggedIn, // complete
+  paramValidation('id', fields.mongoID), // complete
+  commentsValidation.createOrUpdateComment, // complete
+  commentsController.createComment // complete
+);
 
 export default router;

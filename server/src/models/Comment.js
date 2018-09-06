@@ -23,7 +23,7 @@ const CommentSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  children: [
+  comments: [
     {
       type: Schema.Types.ObjectId,
       ref: 'Comment'

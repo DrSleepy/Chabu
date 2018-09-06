@@ -1,4 +1,5 @@
 import CommentModel from '../models/Comment';
+import QuestionModel from '../models/Question';
 import AccountModel from '../models/Account';
 
 export const createComment = async (req, res) => {
@@ -13,6 +14,11 @@ export const createComment = async (req, res) => {
   }).save();
 
   await account.update({ $push: { createdComments: newComment._id } });
+
+  const isReply = req.path.split('/').includes('reply');
+
+  const model = isReply ? CommentModel : QuestionModel;
+  await model.findByIdAndUpdate(req.params.id, { $push: { comments: newComment._id } });
 
   response.ok = true;
   res.status(200).json(response);
