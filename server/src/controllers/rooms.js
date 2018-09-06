@@ -4,12 +4,10 @@ import RoomModel from '../models/Room';
 export const createRoom = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
-  const account = await AccountModel.findById(req.accountID);
+  const account = AccountModel.findById(req.accountID);
+  const newRoom = new RoomModel({ account: req.accountID, ...req.body }).save();
 
-  const newRoom = await new RoomModel({
-    account: req.accountID,
-    ...req.body
-  }).save();
+  await Promise.all([account, newRoom]);
 
   await account.update({ $push: { createdRooms: newRoom._id } });
 

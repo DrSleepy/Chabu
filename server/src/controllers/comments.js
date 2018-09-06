@@ -28,8 +28,10 @@ export const deleteComment = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
   // update instead of delete - need child comments
-  await CommentModel.findByIdAndUpdate(req.params.id, { text: null, deleted: true });
-  await AccountModel.findByIdAndUpdate(req.accountID, { $pull: { createdComments: req.params.id } });
+  const updateComment = CommentModel.findByIdAndUpdate(req.params.id, { text: null, deleted: true });
+  const removeComment = AccountModel.findByIdAndUpdate(req.accountID, { $pull: { createdComments: req.params.id } });
+
+  await Promise.all([updateComment, removeComment]);
 
   response.ok = true;
   res.status(200).json(response);

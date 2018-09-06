@@ -5,12 +5,10 @@ import RoomModel from '../models/Room';
 export const createQuestion = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
-  const account = await AccountModel.findById(req.accountID);
+  const account = AccountModel.findById(req.accountID);
+  const newQuestion = new QuestionModel({ account: req.accountID, ...req.body }).save();
 
-  const newQuestion = await new QuestionModel({
-    account: req.accountID,
-    ...req.body
-  }).save();
+  await Promise.all([account, newQuestion]);
 
   const updateAccount = account.update({ $push: { createdQuestions: newQuestion._id } });
   const updateRoom = RoomModel.findByIdAndUpdate(req.params.id, { $push: { questions: newQuestion._id } });
