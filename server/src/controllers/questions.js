@@ -1,5 +1,6 @@
-import QuestionModel from '../models/Question';
 import AccountModel from '../models/Account';
+import QuestionModel from '../models/Question';
+import RoomModel from '../models/Room';
 
 export const createQuestion = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
@@ -11,7 +12,10 @@ export const createQuestion = async (req, res) => {
     ...req.body
   }).save();
 
-  await account.update({ $push: { createdQuestions: newQuestion._id } });
+  const updateAccount = account.update({ $push: { createdQuestions: newQuestion._id } });
+  const updateRoom = RoomModel.findByIdAndUpdate(req.params.id, { $push: { questions: newQuestion._id } });
+
+  await Promise.all([updateAccount, updateRoom]);
 
   response.ok = true;
   res.status(200).json(response);

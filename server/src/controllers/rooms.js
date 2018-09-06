@@ -1,7 +1,20 @@
-export const createRoom = (req, res) => {
-  res.status(200).json({
-    message: 'Validated and creating room..'
-  });
+import AccountModel from '../models/Account';
+import RoomModel from '../models/Room';
+
+export const createRoom = async (req, res) => {
+  const response = { ok: false, errors: [], data: null };
+
+  const account = await AccountModel.findById(req.accountID);
+
+  const newRoom = await new RoomModel({
+    account: req.accountID,
+    ...req.body
+  }).save();
+
+  await account.update({ $push: { createdRooms: newRoom._id } });
+
+  response.ok = true;
+  res.status(200).json(response);
 };
 
 export const getRoom = (req, res) => {

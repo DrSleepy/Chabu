@@ -8,7 +8,7 @@ import * as config from './config';
 import { verifyToken } from './jwt';
 import login from './routers/login';
 import accounts from './routers/accounts';
-// import rooms from './rooms';
+import rooms from './routers/rooms';
 import questions from './routers/questions';
 import comments from './routers/comments';
 
@@ -26,7 +26,7 @@ server.use(verifyToken);
 // routes
 server.use('/login', login);
 server.use('/accounts', accounts);
-// server.use('/rooms', rooms);
+server.use('/rooms', rooms);
 server.use('/questions', questions);
 server.use('/comments', comments);
 
