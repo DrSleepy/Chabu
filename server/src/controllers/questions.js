@@ -2,14 +2,22 @@ import AccountModel from '../models/Account';
 import QuestionModel from '../models/Question';
 import RoomModel from '../models/Room';
 
-export const createQuestion = async (req, res) => {
+export const createQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
   const account = await AccountModel.findById(req.accountID);
   const newQuestion = await new QuestionModel({ account: req.accountID, ...req.body }).save();
 
   await account.update({ $push: { createdQuestions: newQuestion._id } });
-  await RoomModel.findByIdAndUpdate(req.params.roomID, { $push: { questions: newQuestion._id } });
+
+  const room = await RoomModel.findById(req.params.roomID);
+  if (!room) {
+    response.errors.push({ path: ['room'], message: 'Room not found' });
+    next({ status: 404, ...response });
+    return;
+  }
+
+  await room.update({ $push: { questions: newQuestion._id } });
 
   response.ok = true;
   res.status(200).json(response);
@@ -50,11 +58,12 @@ export const deleteQuestion = async (req, res) => {
   res.status(200).json(response);
 };
 
-export const likeQuestion = async (req, res) => {
+export const likeQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
   const account = await AccountModel.findById(req.accountID);
   const liked = account.likedQuestions.find(objectID => objectID._id == req.params.questionID);
+  const question = await QuestionModel.findById(req.params.questionID);
 
   let action = '$push';
   let vote = 1;
@@ -64,8 +73,14 @@ export const likeQuestion = async (req, res) => {
     vote = -1;
   }
 
-  await account.update({ [action]: { likedQuestions: req.params.questionID } }).exec();
-  await QuestionModel.findByIdAndUpdate(req.params.questionID, { $inc: { likes: vote } });
+  if (!question) {
+    response.errors.push({ path: ['question'], message: 'Question not found' });
+    next({ status: 404, ...response });
+    return;
+  }
+
+  await question.update({ $inc: { likes: vote } });
+  await account.update({ [action]: { likedQuestions: req.params.questionID } });
 
   response.ok = true;
   res.status(200).json(response);
