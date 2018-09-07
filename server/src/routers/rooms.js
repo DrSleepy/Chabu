@@ -16,18 +16,20 @@ router.route('/').post(auth.isLoggedIn, roomsValidation.createRoom, roomsControl
 router
   .route('/:roomID')
   .post(
-    auth.isLoggedIn /* done */,
-    paramValidation('roomID', fields.mongoID) /* done */,
-    questionsValidation.createQuestion /* done */,
+    auth.isLoggedIn,
+    paramValidation('roomID', fields.mongoID),
+    questionsValidation.createQuestion,
     questionsController.createQuestion
   );
 
-router.route('/:roomID/:questionID').delete(
-  auth.isLoggedIn /* done */,
-  paramValidation('roomID', fields.mongoID) /* done */,
-  paramValidation('questionID', fields.mongoID),
-  auth.authorization('questionID', QuestionModel), // complete
-  questionsController.deleteQuestion
-);
+router
+  .route('/:roomID/:questionID')
+  .delete(
+    auth.isLoggedIn,
+    paramValidation('roomID', fields.mongoID),
+    paramValidation('questionID', fields.mongoID),
+    auth.authorization('questionID', QuestionModel),
+    questionsController.deleteQuestion
+  );
 
 export default router;

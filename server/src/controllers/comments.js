@@ -15,7 +15,7 @@ export const createComment = async (req, res) => {
 
   await account.update({ $push: { createdComments: newComment._id } });
 
-  const isReply = req.path.split('/').includes('reply');
+  const isReply = req.baseUrl === '/comments';
 
   const model = isReply ? CommentModel : QuestionModel;
   const modelID = req.params.commentID || req.params.questionID;
@@ -30,7 +30,7 @@ export const deleteComment = async (req, res) => {
 
   // update instead of delete - need child comments
   await CommentModel.findByIdAndUpdate(req.params.commentID, { text: null, deleted: true });
-  await AccountModel.findByIdAndUpdate(req.accountID, { $pull: { createdComments: req.params.accountID } });
+  await AccountModel.findByIdAndUpdate(req.accountID, { $pull: { createdComments: req.params.commentID } });
 
   response.ok = true;
   res.status(200).json(response);

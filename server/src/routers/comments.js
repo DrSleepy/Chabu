@@ -9,29 +9,26 @@ import * as fields from '../joi';
 
 const router = express.Router();
 
-// router.route('/').post(auth.isLoggedIn, commentsValidation.createOrUpdateComment, commentsController.createComment); // REDO
-
 router
   .route('/:commentID')
+  .post(
+    auth.isLoggedIn,
+    paramValidation('commentID', fields.mongoID),
+    commentsValidation.createOrUpdateComment,
+    commentsController.createComment
+  )
   .patch(
-    auth.isLoggedIn, // complete
-    paramValidation('commentID', fields.mongoID), // complete
-    auth.authorization('commentID', CommentModel), // complete
-    commentsValidation.createOrUpdateComment, // complete
-    commentsController.updateComment // complete
+    auth.isLoggedIn,
+    paramValidation('commentID', fields.mongoID),
+    auth.authorization('commentID', CommentModel),
+    commentsValidation.createOrUpdateComment,
+    commentsController.updateComment
   )
   .delete(
-    auth.isLoggedIn, // complete
-    paramValidation('commentID', fields.mongoID), // complete
-    auth.authorization('commentID', CommentModel), // complete
-    commentsController.deleteComment // complete
+    auth.isLoggedIn,
+    paramValidation('commentID', fields.mongoID),
+    auth.authorization('commentID', CommentModel),
+    commentsController.deleteComment
   );
-
-router.route('/:commentID/reply').post(
-  auth.isLoggedIn, // complete
-  paramValidation('commentID', fields.mongoID), // complete
-  commentsValidation.createOrUpdateComment, // complete
-  commentsController.createComment // complete
-);
 
 export default router;

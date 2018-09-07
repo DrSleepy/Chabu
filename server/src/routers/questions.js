@@ -11,33 +11,21 @@ import * as fields from '../joi';
 
 const router = express.Router();
 
-router.route('/').post(auth.isLoggedIn, questionsValidation.createQuestion, questionsController.createQuestion); // completed
-
 router
   .route('/:questionID')
-  .get(
-    paramValidation('questionID', fields.mongoID), // complete
-    questionsController.getQuestion
+  .get(paramValidation('questionID', fields.mongoID), questionsController.getQuestion)
+  .post(
+    auth.isLoggedIn,
+    paramValidation('questionID', fields.mongoID),
+    commentsValidation.createOrUpdateComment,
+    commentsController.createComment
   )
   .patch(
-    auth.isLoggedIn, // complete
-    paramValidation('questionID', fields.mongoID), // complete
-    auth.authorization('questionID', QuestionModel), // complete
-    questionsValidation.updateQuestion, // complete
-    questionsController.updateQuestion
-  )
-  .delete(
     auth.isLoggedIn,
     paramValidation('questionID', fields.mongoID),
     auth.authorization('questionID', QuestionModel),
-    questionsController.deleteQuestion
+    questionsValidation.updateQuestion,
+    questionsController.updateQuestion
   );
-
-router.route('/:questionID/comment').post(
-  auth.isLoggedIn, // complete
-  paramValidation('questionID', fields.mongoID), // complete
-  commentsValidation.createOrUpdateComment, // complete
-  commentsController.createComment // complete
-);
 
 export default router;
