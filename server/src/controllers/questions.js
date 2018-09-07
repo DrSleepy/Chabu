@@ -47,12 +47,26 @@ export const updateQuestion = async (req, res) => {
   res.status(200).json(response);
 };
 
-export const deleteQuestion = async (req, res) => {
+export const deleteQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  await AccountModel.findByIdAndUpdate(req.accountID, { $pull: { createdQuestions: req.params.questionID } });
+  const room = await RoomModel.findById(req.params.roomID);
+  if (!room) {
+    response.errors.push({ path: ['room'], message: 'Room not found' });
+    next({ status: 404, ...response });
+    return;
+  }
+
+  const question = await QuestionModel.findById(req.params.questionID);
+  if (!question) {
+    response.errors.push({ path: ['question'], message: 'Question not found' });
+    next({ status: 404, ...response });
+    return;
+  }
+
+  await question.remove();
   await RoomModel.findByIdAndUpdate(req.params.roomID, { $pull: { questions: req.params.questionID } });
-  await QuestionModel.findByIdAndRemove(req.params.questionID);
+  await AccountModel.findByIdAndUpdate(req.accountID, { $pull: { createdQuestions: req.params.questionID } });
 
   response.ok = true;
   res.status(200).json(response);

@@ -6,8 +6,8 @@ export const createAccount = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
   // check if username exists
-  const bodyUsername = new RegExp(req.body.username, 'i');
-  const account = await AccountModel.findOne({ username: bodyUsername }).select('username');
+  const username = new RegExp(req.body.username, 'i');
+  const account = await AccountModel.findOne({ username }).select('username');
 
   if (account) {
     response.errors.push({ path: ['username'], message: 'Username is taken' });
@@ -25,15 +25,10 @@ export const createAccount = async (req, res, next) => {
   res.status(200).json(response);
 };
 
-export const getAccount = async (req, res, next) => {
+export const getAccount = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
   const account = await AccountModel.findById(req.params.accountID).select('-password');
-  if (!account) {
-    response.errors.push({ path: ['account'], message: 'Account not found' });
-    next({ status: 404, ...response });
-    return;
-  }
 
   response.ok = true;
   response.data = account;
@@ -43,7 +38,7 @@ export const getAccount = async (req, res, next) => {
 export const updateAccount = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
-  await AccountModel.findByIdAndUpdate(req.params.accountID, { ...req.body });
+  await AccountModel.findByIdAndUpdate(req.params.accountID, req.body);
 
   response.ok = true;
   res.status(200).json(response);
