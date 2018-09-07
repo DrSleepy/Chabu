@@ -28,4 +28,8 @@ router
     questionsController.updateQuestion
   );
 
+router
+  .route('/:questionID/like')
+  .post(auth.isLoggedIn, paramValidation('questionID', fields.mongoID), questionsController.likeQuestion);
+
 export default router;

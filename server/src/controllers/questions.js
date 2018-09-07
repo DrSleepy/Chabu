@@ -50,8 +50,23 @@ export const deleteQuestion = async (req, res) => {
   res.status(200).json(response);
 };
 
-export const likeQuestion = (req, res) => {
-  res.status(200).json({
-    message: 'Validated and liking specific question..'
-  });
+export const likeQuestion = async (req, res) => {
+  const response = { ok: false, errors: [], data: null };
+
+  const account = await AccountModel.findById(req.accountID);
+  const liked = account.likedQuestions.find(objectID => objectID._id == req.params.questionID);
+
+  let action = '$push';
+  let vote = 1;
+
+  if (liked) {
+    action = '$pull';
+    vote = -1;
+  }
+
+  await account.update({ [action]: { likedQuestions: req.params.questionID } }).exec();
+  await QuestionModel.findByIdAndUpdate(req.params.questionID, { $inc: { likes: vote } });
+
+  response.ok = true;
+  res.status(200).json(response);
 };

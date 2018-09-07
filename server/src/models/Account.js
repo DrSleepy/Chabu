@@ -26,6 +26,12 @@ const AccountSchema = new Schema({
     type: Boolean,
     default: false
   },
+  likedQuestions: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Question'
+    }
+  ],
   joinedRooms: [
     {
       type: Schema.Types.ObjectId,
