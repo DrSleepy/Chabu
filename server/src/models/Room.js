@@ -31,6 +31,12 @@ const RoomSchema = new Schema({
       ref: 'Question'
     }
   ],
+  members: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Account'
+    }
+  ],
   account: {
     type: Schema.Types.ObjectId,
     ref: 'Account'

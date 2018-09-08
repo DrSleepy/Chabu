@@ -1,6 +1,6 @@
 import CommentModel from '../models/Comment';
-import AccountModel from '../models/Account';
 import QuestionModel from '../models/Question';
+import AccountModel from '../models/Account';
 
 export const createComment = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
@@ -40,17 +40,6 @@ export const deleteComment = async (req, res, next) => {
 
   response.ok = true;
   res.status(200).json(response);
-};
-
-export const deleteAllComments = async commentID => {
-  const mainComment = await CommentModel.findById(commentID);
-
-  if (mainComment && mainComment.comments.length) {
-    mainComment.comments.forEach(subComment => deleteAllComments(subComment));
-  }
-
-  await AccountModel.findByIdAndUpdate(mainComment.account, { $pull: { createdComments: mainComment._id } });
-  await mainComment.remove();
 };
 
 export const updateComment = async (req, res, next) => {

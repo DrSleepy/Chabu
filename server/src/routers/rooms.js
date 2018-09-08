@@ -1,5 +1,6 @@
 import express from 'express';
 
+import RoomModel from '../models/Room';
 import QuestionModel from '../models/Question';
 import { paramValidation } from '../validation/routes';
 import * as roomsValidation from '../validation/rooms';
@@ -11,7 +12,7 @@ import * as fields from '../joi';
 
 const router = express.Router();
 
-router.route('/').post(auth.isLoggedIn, roomsValidation.createRoom, roomsController.createRoom, roomsController.joinRoom);
+router.route('/').post(auth.isLoggedIn, roomsValidation.createRoom, roomsController.createRoom);
 
 router
   .route('/:roomID')
@@ -20,6 +21,12 @@ router
     paramValidation('roomID', fields.mongoID),
     questionsValidation.createQuestion,
     questionsController.createQuestion
+  )
+  .delete(
+    auth.isLoggedIn,
+    paramValidation('roomID', fields.mongoID),
+    auth.authorization('roomID', RoomModel),
+    roomsController.deleteRoom
   );
 
 router

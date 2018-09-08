@@ -1,7 +1,6 @@
 import AccountModel from '../models/Account';
-import RoomModel from '../models/Room';
 import QuestionModel from '../models/Question';
-import { deleteAllComments } from './comments';
+import RoomModel from '../models/Room';
 
 export const createQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
@@ -9,6 +8,8 @@ export const createQuestion = async (req, res, next) => {
   const account = await AccountModel.findById(req.accountID);
   const newQuestion = await new QuestionModel({ account: req.accountID, ...req.body }).save();
   const room = await RoomModel.findById(req.params.roomID);
+
+  await account.update({ $push: { createdQuestions: newQuestion._id } });
 
   if (!room) {
     response.errors.push({ path: ['room'], message: 'Room not found' });
@@ -23,7 +24,6 @@ export const createQuestion = async (req, res, next) => {
   }
 
   await room.update({ $push: { questions: newQuestion._id } });
-  await account.update({ $push: { createdQuestions: newQuestion._id } });
 
   response.ok = true;
   res.status(200).json(response);
@@ -53,22 +53,26 @@ export const updateQuestion = async (req, res) => {
   res.status(200).json(response);
 };
 
-export const deleteQuestionLogic = async question => {
-  if (question.comments.length) {
-    question.comments.forEach(comment => deleteAllComments(comment._id));
-  }
-
-  await AccountModel.findByIdAndUpdate(question.account, { $pull: { createdQuestions: question._id } });
-  await question.remove();
-};
-
-export const deleteQuestion = async (req, res) => {
+export const deleteQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const question = await QuestionModel.findById(req.params.questionID);
-  deleteQuestionLogic(question);
+  const room = await RoomModel.findById(req.params.roomID);
+  if (!room) {
+    response.errors.push({ path: ['room'], message: 'Room not found' });
+    next({ status: 404, ...response });
+    return;
+  }
 
+  const question = await QuestionModel.findById(req.params.questionID);
+  if (!question) {
+    response.errors.push({ path: ['question'], message: 'Question not found' });
+    next({ status: 404, ...response });
+    return;
+  }
+
+  await question.remove();
   await RoomModel.findByIdAndUpdate(req.params.roomID, { $pull: { questions: req.params.questionID } });
+  await AccountModel.findByIdAndUpdate(req.accountID, { $pull: { createdQuestions: req.params.questionID } });
 
   response.ok = true;
   res.status(200).json(response);
