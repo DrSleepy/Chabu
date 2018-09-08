@@ -79,18 +79,18 @@ export const likeQuestion = async (req, res, next) => {
   const liked = account.likedQuestions.find(objectID => objectID._id == req.params.questionID);
   const question = await QuestionModel.findById(req.params.questionID);
 
+  if (!question) {
+    response.errors.push({ path: ['question'], message: 'Question not found' });
+    next({ status: 404, ...response });
+    return;
+  }
+
   let action = '$push';
   let vote = 1;
 
   if (liked) {
     action = '$pull';
     vote = -1;
-  }
-
-  if (!question) {
-    response.errors.push({ path: ['question'], message: 'Question not found' });
-    next({ status: 404, ...response });
-    return;
   }
 
   await question.update({ $inc: { likes: vote } });

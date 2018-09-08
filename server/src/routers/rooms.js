@@ -11,7 +11,7 @@ import * as fields from '../joi';
 
 const router = express.Router();
 
-router.route('/').post(auth.isLoggedIn, roomsValidation.createRoom, roomsController.createRoom);
+router.route('/').post(auth.isLoggedIn, roomsValidation.createRoom, roomsController.createRoom, roomsController.joinRoom);
 
 router
   .route('/:roomID')
@@ -31,5 +31,7 @@ router
     auth.authorization('questionID', QuestionModel),
     questionsController.deleteQuestion
   );
+
+router.route('/:roomID/join').patch(auth.isLoggedIn, paramValidation('roomID', fields.mongoID), roomsController.joinRoom);
 
 export default router;

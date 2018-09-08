@@ -29,7 +29,7 @@ export const deleteComment = async (req, res, next) => {
 
   const comment = await CommentModel.findById(req.params.commentID);
   if (comment.deleted) {
-    response.errors.push({ path: ['deleted'], message: 'Comment has been deleted' });
+    response.errors.push({ path: ['comment'], message: 'Comment has been deleted' });
     next({ status: 404, ...response });
     return;
   }
