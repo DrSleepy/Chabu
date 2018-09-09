@@ -1,6 +1,7 @@
 import AccountModel from '../models/Account';
 import RoomModel from '../models/Room';
 import appendRelativeTime from '../helpers/relativeTime';
+import filterQuestionsByKeywords from './questions';
 import * as questionsController from './questions';
 
 const joinRoomLogic = async (accountID, roomID) => {
@@ -50,59 +51,57 @@ export const createRoom = async (req, res, next) => {
   res.status(200).json(response);
 };
 
-// const filterQuestions = query => {
-//   console.log('INSIDE QUERY');
+const filterQuestions = (query, questions) => {
+  let filteredQuestions = questions;
 
-//   if (req.query.keywords) {
-//     const filteredQuestions = filterQuestionsByKeywords(room.questions, req.query.keywords);
-//     room.questions = filteredQuestions;
-//   }
+  if (query.keywords) {
+    filteredQuestions = filterQuestionsByKeywords(filteredQuestions, query.keywords);
+  }
 
-//   if (req.query.startDate) {
-//     const filteredQuestions = room.questions.filter(question => question.date.toISOString() < req.query.startDate);
-//     room.questions = filteredQuestions;
-//   }
+  if (query.startDate) {
+    filteredQuestions = filteredQuestions.filter(question => question.date.toISOString() < query.startDate);
+  }
 
-//   if (req.query.endDate) {
-//     const filteredQuestions = room.questions.filter(question => question.date.toISOString() > req.query.startDate);
-//     room.questions = filteredQuestions;
-//   }
+  if (query.endDate) {
+    filteredQuestions = filteredQuestions.filter(question => question.date.toISOString() > query.startDate);
+  }
 
-// if (req.query.view) {
-//   switch (req.query.view) {
-//     case 'today':
-//       {
-//         const filteredQuestions = room.questions.filter(question => {
-//           const date = new Date();
-//           return question.date.getDate() === date.getDate();
-//         });
-//         room.questions = filteredQuestions;
-//       }
-//       break;
+  return filteredQuestions;
 
-//     case 'week':
-//       {
-//         const filteredQuestions = room.questions.filter(question => {
-//           const date = new Date();
-//           return question.date.getWeek() === date.getWeek();
-//         });
-//         room.questions = filteredQuestions;
-//       }
-//       break;
+  // if (query.view) {
+  //   switch (query.view) {
+  //     case 'today':
+  //       {
+  //         const filteredQuestions = questions.filter(question => {
+  //           const date = new Date();
+  //           return question.date.getDate() === date.getDate();
+  //         });
+  //         questions = filteredQuestions;
+  //       }
+  //       break;
 
-//     case 'month':
-//       break;
+  //     case 'week':
+  //       {
+  //         const filteredQuestions = questions.filter(question => {
+  //           const date = new Date();
+  //           return question.date.getWeek() === date.getWeek();
+  //         });
+  //         questions = filteredQuestions;
+  //       }
+  //       break;
 
-//     case 'year':
-//       break;
+  //     case 'month':
+  //       break;
 
-//     default:
-//       break;
-//   }
-//   const filteredQuestions = room.questions.filter(question => question.date.toISOString() > req.query.startDate);
-//   room.questions = filteredQuestions;
-// }
-// };
+  //     case 'year':
+  //       break;
+
+  //     default:
+  //       break;
+  //   }
+  //   return questions.filter(question => question.date.toISOString() > query.startDate);
+  // }
+};
 
 export const getRoom = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
@@ -119,7 +118,7 @@ export const getRoom = async (req, res, next) => {
   }
 
   if (Object.keys(req.query).length) {
-    // room.questions = filterQuestions(req.query);
+    room.questions = filterQuestions(req.query);
   }
 
   room.questions = appendRelativeTime(room.questions);

@@ -1,6 +1,7 @@
 import AccountModel from '../models/Account';
 import RoomModel from '../models/Room';
 import QuestionModel from '../models/Question';
+import appendRelativeTime from '../helpers/relativeTime';
 import * as commentsController from './comments';
 
 export const filterQuestionsByKeywords = (questions, keywords) => {
@@ -50,12 +51,14 @@ export const createQuestion = async (req, res, next) => {
 export const getQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const question = await QuestionModel.findById(req.params.questionID);
+  const question = await QuestionModel.findById(req.params.questionID).populate('comments');
   if (!question) {
     response.errors.push({ path: ['question'], message: 'Question not found' });
     next({ status: 404, ...response });
     return;
   }
+
+  question.comments = appendRelativeTime(question.comments);
 
   response.ok = true;
   response.data = question;

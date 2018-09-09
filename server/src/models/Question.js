@@ -37,10 +37,5 @@ const QuestionSchema = new Schema({
   }
 });
 
-// virtuals
-QuestionSchema.virtual('timeAgo').get(function() {
-  return 'STEVE';
-});
-
 const QuestionModel = mongoose.model('Question', QuestionSchema);
 export default QuestionModel;
