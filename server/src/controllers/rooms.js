@@ -49,10 +49,18 @@ export const createRoom = async (req, res, next) => {
   res.status(200).json(response);
 };
 
-export const getRoom = (req, res) => {
+export const getRoom = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
+  const room = await RoomModel.findById(req.params.roomID);
+  if (!room) {
+    response.errors.push({ path: ['room'], message: 'Room not found' });
+    next({ status: 404, ...response });
+    return;
+  }
+
   response.ok = true;
+  response.data = room;
   res.status(200).json(response);
 };
 
@@ -75,20 +83,17 @@ export const deleteRoom = async (req, res) => {
   res.status(200).json(response);
 };
 
-export const updateRoom = (req, res) => {
-  res.status(200).json({
-    message: 'Validated and updating specific room..'
-  });
+export const updateRoom = async (req, res) => {
+  const response = { ok: false, errors: [], data: null };
+
+  await RoomModel.findByIdAndUpdate(req.params.roomID, req.body);
+
+  response.ok = true;
+  res.status(200).json(response);
 };
 
 export const filterRoom = (req, res) => {
   res.status(200).json({
     message: 'Validated and filtering specific room..'
-  });
-};
-
-export const leaveRoom = (req, res) => {
-  res.status(200).json({
-    message: 'Validated and leaving specific room..'
   });
 };

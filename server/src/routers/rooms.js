@@ -16,11 +16,19 @@ router.route('/').post(auth.isLoggedIn, roomsValidation.createRoom, roomsControl
 
 router
   .route('/:roomID')
+  .get(paramValidation('roomID', fields.mongoID), roomsController.getRoom)
   .post(
     auth.isLoggedIn,
     paramValidation('roomID', fields.mongoID),
     questionsValidation.createQuestion,
     questionsController.createQuestion
+  )
+  .patch(
+    auth.isLoggedIn,
+    paramValidation('roomID', fields.mongoID),
+    auth.authorization('roomID', RoomModel),
+    roomsValidation.updateRoom,
+    roomsController.updateRoom
   )
   .delete(
     auth.isLoggedIn,

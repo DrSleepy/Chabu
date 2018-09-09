@@ -11,3 +11,14 @@ export const createRoom = (req, res, next) => {
   const result = Joi.validate(req.body, newRoomSchema, fields.config);
   result.error ? next({ status: 400, ...result.error }) : next();
 };
+
+export const updateRoom = (req, res, next) => {
+  const updateRoomSchema = Joi.object().keys({
+    title: fields.roomTitle,
+    creator: fields.creator,
+    unlocked: fields.unlocked
+  });
+
+  const result = Joi.validate(req.body, updateRoomSchema, fields.config);
+  result.error ? next({ status: 400, ...result.error }) : next();
+};
