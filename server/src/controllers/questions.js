@@ -1,7 +1,7 @@
 import AccountModel from '../models/Account';
 import RoomModel from '../models/Room';
 import QuestionModel from '../models/Question';
-import { deleteAllComments } from './comments';
+import * as commentsController from './comments';
 
 export const createQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
@@ -55,7 +55,7 @@ export const updateQuestion = async (req, res) => {
 
 export const deleteQuestionLogic = async question => {
   if (question.comments.length) {
-    question.comments.forEach(comment => deleteAllComments(comment._id));
+    question.comments.forEach(comment => commentsController.deleteAllComments(comment._id));
   }
 
   await AccountModel.findByIdAndUpdate(question.account, { $pull: { createdQuestions: question._id } });

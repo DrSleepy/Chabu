@@ -1,6 +1,6 @@
 import AccountModel from '../models/Account';
 import RoomModel from '../models/Room';
-import { deleteQuestionLogic } from './questions';
+import * as questionsController from './questions';
 
 const joinRoomLogic = async (accountID, roomID) => {
   const account = await AccountModel.findById(accountID);
@@ -11,6 +11,7 @@ const joinRoomLogic = async (accountID, roomID) => {
 
   const action = joined ? '$pull' : '$push';
   await account.update({ [action]: { joinedRooms: roomID } });
+  await room.update({ [action]: { members: accountID } });
 
   return true;
 };
@@ -49,9 +50,10 @@ export const createRoom = async (req, res, next) => {
 };
 
 export const getRoom = (req, res) => {
-  res.status(200).json({
-    message: 'Validated and getting specific room..'
-  });
+  const response = { ok: false, errors: [], data: null };
+
+  response.ok = true;
+  res.status(200).json(response);
 };
 
 export const deleteRoom = async (req, res) => {
@@ -59,10 +61,12 @@ export const deleteRoom = async (req, res) => {
 
   const room = await RoomModel.findById(req.params.roomID).populate('questions');
   if (room && room.questions.length) {
-    room.questions.forEach(question => deleteQuestionLogic(question));
+    room.questions.forEach(question => questionsController.deleteQuestionLogic(question));
   }
 
-  // ACCESS room.members, LOOP THROUGH IT AND PULL roomID FROM ALL MEMBERS IN ARRAY
+  room.members.forEach(async memberID => {
+    await AccountModel.findByIdAndUpdate(memberID, { $pull: { joinedRooms: req.params.roomID } });
+  });
 
   await AccountModel.findByIdAndUpdate(req.accountID, { $pull: { createdRooms: req.params.roomID } });
   await room.remove();
