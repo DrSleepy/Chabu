@@ -9,6 +9,8 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'no-underscore-dangle': 0,
     'max-len': 0,
+    'no-plusplus': 0,
+    'no-param-reassign': ['error', { props: false }],
     'no-unused-expressions': ['error', { allowTernary: true }],
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }]
   }

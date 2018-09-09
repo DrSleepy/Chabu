@@ -3,6 +3,24 @@ import RoomModel from '../models/Room';
 import QuestionModel from '../models/Question';
 import * as commentsController from './comments';
 
+export const filterQuestionsByKeywords = (questions, keywords) => {
+  const keywordsSet = new Set([...keywords.split(' ')]);
+
+  return questions.filter(question => {
+    let relevanceLevel = 0;
+
+    keywordsSet.forEach(word => {
+      if (question.title.toLowerCase().includes(word.toLowerCase())) {
+        relevanceLevel++;
+      }
+    });
+
+    question.relevanceLevel = relevanceLevel;
+
+    return relevanceLevel > 0;
+  });
+};
+
 export const createQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 

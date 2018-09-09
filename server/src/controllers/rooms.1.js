@@ -1,6 +1,5 @@
 import AccountModel from '../models/Account';
 import RoomModel from '../models/Room';
-import appendRelativeTime from '../helpers/relativeTime';
 import * as questionsController from './questions';
 
 const joinRoomLogic = async (accountID, roomID) => {
@@ -50,59 +49,23 @@ export const createRoom = async (req, res, next) => {
   res.status(200).json(response);
 };
 
-// const filterQuestions = query => {
-//   console.log('INSIDE QUERY');
+export const filterQuestionsByKeywords = (questions, keywords) => {
+  const keywordsSet = new Set([...keywords.split(' ')]);
 
-//   if (req.query.keywords) {
-//     const filteredQuestions = filterQuestionsByKeywords(room.questions, req.query.keywords);
-//     room.questions = filteredQuestions;
-//   }
+  return questions.filter(question => {
+    let relevanceLevel = 0;
 
-//   if (req.query.startDate) {
-//     const filteredQuestions = room.questions.filter(question => question.date.toISOString() < req.query.startDate);
-//     room.questions = filteredQuestions;
-//   }
+    keywordsSet.forEach(word => {
+      if (question.title.toLowerCase().includes(word.toLowerCase())) {
+        relevanceLevel++;
+      }
+    });
 
-//   if (req.query.endDate) {
-//     const filteredQuestions = room.questions.filter(question => question.date.toISOString() > req.query.startDate);
-//     room.questions = filteredQuestions;
-//   }
+    question.relevanceLevel = relevanceLevel;
 
-// if (req.query.view) {
-//   switch (req.query.view) {
-//     case 'today':
-//       {
-//         const filteredQuestions = room.questions.filter(question => {
-//           const date = new Date();
-//           return question.date.getDate() === date.getDate();
-//         });
-//         room.questions = filteredQuestions;
-//       }
-//       break;
-
-//     case 'week':
-//       {
-//         const filteredQuestions = room.questions.filter(question => {
-//           const date = new Date();
-//           return question.date.getWeek() === date.getWeek();
-//         });
-//         room.questions = filteredQuestions;
-//       }
-//       break;
-
-//     case 'month':
-//       break;
-
-//     case 'year':
-//       break;
-
-//     default:
-//       break;
-//   }
-//   const filteredQuestions = room.questions.filter(question => question.date.toISOString() > req.query.startDate);
-//   room.questions = filteredQuestions;
-// }
-// };
+    return relevanceLevel > 0;
+  });
+};
 
 export const getRoom = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
@@ -118,11 +81,56 @@ export const getRoom = async (req, res, next) => {
     return;
   }
 
-  if (Object.keys(req.query).length) {
-    // room.questions = filterQuestions(req.query);
+  if (req.query.keywords) {
+    const filteredQuestions = filterQuestionsByKeywords(room.questions, req.query.keywords);
+    room.questions = filteredQuestions;
   }
 
-  room.questions = appendRelativeTime(room.questions);
+  if (req.query.startDate) {
+    const filteredQuestions = room.questions.filter(question => question.date.toISOString() < req.query.startDate);
+    room.questions = filteredQuestions;
+  }
+
+  if (req.query.endDate) {
+    const filteredQuestions = room.questions.filter(question => question.date.toISOString() > req.query.startDate);
+    room.questions = filteredQuestions;
+  }
+
+  // AppendRelativeTime - momentJS
+  if (req.query.view) {
+    switch (req.query.view) {
+      case 'today':
+        {
+          const filteredQuestions = room.questions.filter(question => {
+            const date = new Date();
+            return question.date.getDate() === date.getDate();
+          });
+          room.questions = filteredQuestions;
+        }
+        break;
+
+      case 'week':
+        {
+          const filteredQuestions = room.questions.filter(question => {
+            const date = new Date();
+            return question.date.getWeek() === date.getWeek();
+          });
+          room.questions = filteredQuestions;
+        }
+        break;
+
+      case 'month':
+        break;
+
+      case 'year':
+        break;
+
+      default:
+        break;
+    }
+    const filteredQuestions = room.questions.filter(question => question.date.toISOString() > req.query.startDate);
+    room.questions = filteredQuestions;
+  }
 
   response.ok = true;
   response.data = room;
@@ -155,4 +163,10 @@ export const updateRoom = async (req, res) => {
 
   response.ok = true;
   res.status(200).json(response);
+};
+
+export const filterRoom = (req, res) => {
+  res.status(200).json({
+    message: 'Validated and filtering specific room..'
+  });
 };
