@@ -5,6 +5,7 @@ import * as config from './config';
 mongoose.Promise = global.Promise;
 
 mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 mongoose
   .connect(

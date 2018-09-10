@@ -3,6 +3,7 @@ import RoomModel from '../models/Room';
 import appendRelativeTime from '../helpers/relativeTime';
 import filterQuestionsByKeywords from './questions';
 import * as questionsController from './questions';
+import QuestionModel from '../models/Question';
 
 const joinRoomLogic = async (accountID, roomID) => {
   const account = await AccountModel.findById(accountID);
@@ -51,74 +52,85 @@ export const createRoom = async (req, res, next) => {
   res.status(200).json(response);
 };
 
-const filterQuestions = (query, questions) => {
-  let filteredQuestions = questions;
+const filterQuestions = (query, questions) => {};
 
-  if (query.keywords) {
-    filteredQuestions = filterQuestionsByKeywords(filteredQuestions, query.keywords);
+const buildQuery = criteria => {
+  const query = {};
+
+  if (criteria.keywords) {
+    query.$text = { $search: criteria.keywords };
+    // query.score = { $meta: 'textScore' };
   }
 
-  if (query.startDate) {
-    filteredQuestions = filteredQuestions.filter(question => question.date.toISOString() < query.startDate);
-  }
-
-  if (query.endDate) {
-    filteredQuestions = filteredQuestions.filter(question => question.date.toISOString() > query.startDate);
-  }
-
-  return filteredQuestions;
-
-  // if (query.view) {
-  //   switch (query.view) {
-  //     case 'today':
-  //       {
-  //         const filteredQuestions = questions.filter(question => {
-  //           const date = new Date();
-  //           return question.date.getDate() === date.getDate();
-  //         });
-  //         questions = filteredQuestions;
-  //       }
-  //       break;
-
-  //     case 'week':
-  //       {
-  //         const filteredQuestions = questions.filter(question => {
-  //           const date = new Date();
-  //           return question.date.getWeek() === date.getWeek();
-  //         });
-  //         questions = filteredQuestions;
-  //       }
-  //       break;
-
-  //     case 'month':
-  //       break;
-
-  //     case 'year':
-  //       break;
-
-  //     default:
-  //       break;
-  //   }
-  //   return questions.filter(question => question.date.toISOString() > query.startDate);
-  // }
+  return query;
 };
 
 export const getRoom = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const room = await RoomModel.findById(req.params.roomID)
-    .populate('questions')
-    .lean()
-    .exec();
+  // if (Object.keys(req.query).length) {
+  // room.questions = filterQuestions(req.query);
+  // buildQuery(req.query);
+  // }
+
+  // const query = buildQuery(req.query);
+  // console.log(query);
+
+  // console.log(req.query.keywords);
+
+  // const room = await RoomModel.findById(req.params.roomID)
+  //   .populate({ path: 'questions', match: query })
+  //   .lean()
+  //   .exec();
+
+  // const query = buildQuery(req.query);
+
+  // const room = await RoomModel.findById(req.params.roomID).populate({
+  //   path: 'questions',
+  //   match: {
+  //     $text: { $search: 'jack water' }
+  //     // score: { $meta: 'textScore' }
+  //   },
+  //   score: { $meta: 'textScore' },
+  //   options: { sort: { score: { $meta: 'textScore' } } }
+  // });
+
+  // const room = await RoomModel.findById(req.params.roomID).populate({
+  //   path: 'questions',
+  //   match: {
+  //     $text: { $search: 'jack water' }
+  //   },
+  //   score: { $meta: 'textScore' },
+  //   options: { sort: { score: 1 } }
+  // });
+  const room = await RoomModel.findById(req.params.roomID).populate({
+    path: 'questions',
+    match: {
+      $text: { $search: 'jack water' }
+    },
+    score: { $meta: 'textScore' },
+    options: { sort: { score: 1 } }
+  });
+
+  // const room = await QuestionModel.find(
+  //   {
+  //     $text: { $search: 'jack water' }
+  //   },
+  //   {
+  //     score: { $meta: 'textScore' }
+  //   }
+  // ).sort({
+  //   score: { $meta: 'textScore' }
+  // });
+
+  // const questions = await QuestionModel.find({ $text: { $search: 'water' } });
+
+  console.log(room);
 
   if (!room) {
     response.errors.push({ path: ['room'], message: 'Room not found' });
     next({ status: 404, ...response });
     return;
-  }
-
-  if (Object.keys(req.query).length) {
-    room.questions = filterQuestions(req.query);
   }
 
   room.questions = appendRelativeTime(room.questions);

@@ -37,5 +37,9 @@ const QuestionSchema = new Schema({
   }
 });
 
+// Do not delete: mongoose index doesnt work. index must be created on mongodb manually
+QuestionSchema.index({ title: 'text' });
+
 const QuestionModel = mongoose.model('Question', QuestionSchema);
+
 export default QuestionModel;
