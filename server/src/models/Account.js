@@ -1,8 +1,13 @@
 import mongoose, { Schema } from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
+import shortid from 'shortid';
 import { genSaltSync, hashSync, compareSync } from 'bcrypt';
 
 const AccountSchema = new Schema({
+  _id: {
+    type: String,
+    default: shortid.generate
+  },
   username: {
     type: String,
     required: true,
@@ -28,37 +33,35 @@ const AccountSchema = new Schema({
   },
   likedQuestions: [
     {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: 'Question'
     }
   ],
   joinedRooms: [
     {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: 'Room'
     }
   ],
   createdRooms: [
     {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: 'Room'
     }
   ],
   createdQuestions: [
     {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: 'Question'
     }
   ],
   createdComments: [
     {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: 'Comment'
     }
   ]
 });
-
-const AccountModel = mongoose.model('Account', AccountSchema);
 
 AccountSchema.plugin(uniqueValidator, { message: '{VALUE} already taken' });
 
@@ -72,4 +75,5 @@ AccountSchema.pre('save', function(next) {
   next();
 });
 
+const AccountModel = mongoose.model('Account', AccountSchema);
 export default AccountModel;

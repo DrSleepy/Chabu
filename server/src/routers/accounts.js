@@ -22,13 +22,13 @@ router
   .route('/:accountID')
   .get(
     auth.isLoggedIn,
-    paramValidation('accountID', fields.mongoID),
+    paramValidation('accountID', fields.uuid),
     auth.authorization('accountID', AccountModel),
     accountsController.getAccount
   )
   .patch(
     auth.isLoggedIn,
-    paramValidation('accountID', fields.mongoID),
+    paramValidation('accountID', fields.uuid),
     auth.authorization('accountID', AccountModel),
     accountsValidation.updateAccount,
     accountsController.updateAccount

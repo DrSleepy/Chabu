@@ -1,10 +1,15 @@
 import mongoose, { Schema } from 'mongoose';
+import shortid from 'shortid';
 import moment from 'moment';
 
 import AccountModel from './Account';
 import { deleteComments } from './Comment';
 
 const QuestionSchema = new Schema({
+  _id: {
+    type: String,
+    default: shortid.generate
+  },
   title: {
     type: String,
     required: true,
@@ -31,22 +36,20 @@ const QuestionSchema = new Schema({
   },
   comments: [
     {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: 'Comment'
     }
   ],
   account: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'Account'
   }
 });
 
-const QuestionModel = mongoose.model('Question', QuestionSchema);
-
-QuestionSchema.set('toObject', { getters: true });
-
 // DO NOT DELETE: mongoose index doesnt work. index must be created on mongodb manually
 QuestionSchema.index({ title: 'text' });
+
+QuestionSchema.set('toObject', { getters: true });
 
 QuestionSchema.virtual('timeAgo').get(function() {
   return moment(this.date).from(new Date());
@@ -54,7 +57,7 @@ QuestionSchema.virtual('timeAgo').get(function() {
 
 export function deleteQuestions() {
   this.questions.forEach(async questionID => {
-    const question = await QuestionModel.findById(questionID);
+    const question = await QuestionModel.findById(questionID); //eslint-disable-line
     await AccountModel.findByIdAndUpdate(question.account, { $pull: { createdQuestions: question._id } });
     await question.remove();
   });
@@ -66,4 +69,5 @@ QuestionSchema.pre('remove', async function(next) {
   next();
 });
 
+const QuestionModel = mongoose.model('Question', QuestionSchema);
 export default QuestionModel;

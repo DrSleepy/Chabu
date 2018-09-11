@@ -16,23 +16,23 @@ router.route('/').post(auth.isLoggedIn, roomsValidation.createRoom, roomsControl
 
 router
   .route('/:roomID')
-  .get(paramValidation('roomID', fields.mongoID), roomsController.getRoom)
+  .get(paramValidation('roomID', fields.uuid), roomsController.getRoom)
   .post(
     auth.isLoggedIn,
-    paramValidation('roomID', fields.mongoID),
+    paramValidation('roomID', fields.uuid),
     questionsValidation.createQuestion,
     questionsController.createQuestion
   )
   .patch(
     auth.isLoggedIn,
-    paramValidation('roomID', fields.mongoID),
+    paramValidation('roomID', fields.uuid),
     auth.authorization('roomID', RoomModel),
     roomsValidation.updateRoom,
     roomsController.updateRoom
   )
   .delete(
     auth.isLoggedIn,
-    paramValidation('roomID', fields.mongoID),
+    paramValidation('roomID', fields.uuid),
     auth.authorization('roomID', RoomModel),
     roomsController.deleteRoom
   );
@@ -41,12 +41,12 @@ router
   .route('/:roomID/:questionID')
   .delete(
     auth.isLoggedIn,
-    paramValidation('roomID', fields.mongoID),
-    paramValidation('questionID', fields.mongoID),
+    paramValidation('roomID', fields.uuid),
+    paramValidation('questionID', fields.uuid),
     auth.authorization('questionID', QuestionModel),
     questionsController.deleteQuestion
   );
 
-router.route('/:roomID/join').patch(auth.isLoggedIn, paramValidation('roomID', fields.mongoID), roomsController.joinRoom);
+router.route('/:roomID/join').patch(auth.isLoggedIn, paramValidation('roomID', fields.uuid), roomsController.joinRoom);
 
 export default router;

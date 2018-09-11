@@ -1,9 +1,14 @@
 import mongoose, { Schema } from 'mongoose';
+import shortid from 'shortid';
 import moment from 'moment';
 
 import AccountModel from './Account';
 
 const CommentSchema = new Schema({
+  _id: {
+    type: String,
+    default: shortid.generate
+  },
   text: {
     type: String,
     required: true,
@@ -28,17 +33,15 @@ const CommentSchema = new Schema({
   },
   comments: [
     {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: 'Comment'
     }
   ],
   account: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'Account'
   }
 });
-
-const CommentModel = mongoose.model('Comment', CommentSchema);
 
 CommentSchema.set('toObject', { getters: true });
 
@@ -48,7 +51,7 @@ CommentSchema.virtual('timeAgo').get(function() {
 
 export function deleteComments() {
   this.comments.forEach(async commentID => {
-    const comment = await CommentModel.findById(commentID);
+    const comment = await CommentModel.findById(commentID); //eslint-disable-line
     await AccountModel.findByIdAndUpdate(comment.account, { $pull: { createdComments: comment._id } });
     await comment.remove();
   });
@@ -59,4 +62,5 @@ CommentSchema.pre('remove', function(next) {
   next();
 });
 
+const CommentModel = mongoose.model('Comment', CommentSchema);
 export default CommentModel;

@@ -5,7 +5,7 @@ import buildQuery from '../helpers/buildQuery';
 
 const joinRoomLogic = async (accountID, roomID) => {
   const account = await AccountModel.findById(accountID);
-  const joined = account.joinedRooms.find(objectID => objectID._id == roomID);
+  const joined = account.joinedRooms.find(ID => ID === roomID);
   const room = await RoomModel.findById(roomID);
 
   if (!room) return false;
@@ -20,7 +20,7 @@ const joinRoomLogic = async (accountID, roomID) => {
 export const joinRoom = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const joinedRoom = joinRoomLogic(req.accountID, req.params.roomID);
+  const joinedRoom = await joinRoomLogic(req.accountID, req.params.roomID);
   if (!joinedRoom) {
     response.errors.push({ path: ['room'], message: 'Room not found' });
     next({ status: 404, ...response });

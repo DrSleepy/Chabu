@@ -13,20 +13,20 @@ router
   .route('/:commentID')
   .post(
     auth.isLoggedIn,
-    paramValidation('commentID', fields.mongoID),
+    paramValidation('commentID', fields.uuid),
     commentsValidation.createOrUpdateComment,
     commentsController.createComment
   )
   .patch(
     auth.isLoggedIn,
-    paramValidation('commentID', fields.mongoID),
+    paramValidation('commentID', fields.uuid),
     auth.authorization('commentID', CommentModel),
     commentsValidation.createOrUpdateComment,
     commentsController.updateComment
   )
   .delete(
     auth.isLoggedIn,
-    paramValidation('commentID', fields.mongoID),
+    paramValidation('commentID', fields.uuid),
     auth.authorization('commentID', CommentModel),
     commentsController.deleteComment
   );

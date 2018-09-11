@@ -13,16 +13,16 @@ const router = express.Router();
 
 router
   .route('/:questionID')
-  .get(paramValidation('questionID', fields.mongoID), questionsController.getQuestion)
+  .get(paramValidation('questionID', fields.uuid), questionsController.getQuestion)
   .post(
     auth.isLoggedIn,
-    paramValidation('questionID', fields.mongoID),
+    paramValidation('questionID', fields.uuid),
     commentsValidation.createOrUpdateComment,
     commentsController.createComment
   )
   .patch(
     auth.isLoggedIn,
-    paramValidation('questionID', fields.mongoID),
+    paramValidation('questionID', fields.uuid),
     auth.authorization('questionID', QuestionModel),
     questionsValidation.updateQuestion,
     questionsController.updateQuestion
@@ -30,6 +30,6 @@ router
 
 router
   .route('/:questionID/like')
-  .post(auth.isLoggedIn, paramValidation('questionID', fields.mongoID), questionsController.likeQuestion);
+  .post(auth.isLoggedIn, paramValidation('questionID', fields.uuid), questionsController.likeQuestion);
 
 export default router;

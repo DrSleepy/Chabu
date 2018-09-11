@@ -6,7 +6,7 @@ import AccountModel from './Account';
 import { deleteQuestions } from './Question';
 
 const RoomSchema = new Schema({
-  id: {
+  _id: {
     type: String,
     default: shortid.generate
   },
@@ -32,23 +32,21 @@ const RoomSchema = new Schema({
   },
   questions: [
     {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: 'Question'
     }
   ],
   members: [
     {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: 'Account'
     }
   ],
   account: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'Account'
   }
 });
-
-const RoomModel = mongoose.model('Room', RoomSchema);
 
 RoomSchema.set('toObject', { getters: true });
 
@@ -69,4 +67,5 @@ RoomSchema.pre('remove', async function(next) {
   next();
 });
 
+const RoomModel = mongoose.model('Room', RoomSchema);
 export default RoomModel;
