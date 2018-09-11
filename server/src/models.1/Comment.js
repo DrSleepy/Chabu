@@ -1,8 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import moment from 'moment';
 
-import AccountModel from './Account';
-
 const CommentSchema = new Schema({
   text: {
     type: String,
@@ -38,25 +36,12 @@ const CommentSchema = new Schema({
   }
 });
 
-const CommentModel = mongoose.model('Comment', CommentSchema);
-
-CommentSchema.set('toObject', { getters: true });
-
-CommentSchema.virtual('timeAgo').get(function() {
+// eslint-disable-next-line
+CommentSchema.virtual('dateAgo').get(function() {
   return moment(this.date).from(new Date());
 });
 
-export function deleteComments() {
-  this.comments.forEach(async commentID => {
-    const comment = await CommentModel.findById(commentID);
-    await AccountModel.findByIdAndUpdate(comment.account, { $pull: { createdComments: comment._id } });
-    await comment.remove();
-  });
-}
+CommentSchema.set('toObject', { getters: true });
 
-CommentSchema.pre('remove', function(next) {
-  deleteComments.call(this);
-  next();
-});
-
+const CommentModel = mongoose.model('Comment', CommentSchema);
 export default CommentModel;

@@ -1,9 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import moment from 'moment';
 
-import AccountModel from './Account';
-import { deleteQuestions } from './Question';
-
 const RoomSchema = new Schema({
   id: {
     // automatically generated. How?
@@ -47,25 +44,12 @@ const RoomSchema = new Schema({
   }
 });
 
-const RoomModel = mongoose.model('Room', RoomSchema);
-
-RoomSchema.set('toObject', { getters: true });
-
-RoomSchema.virtual('timeAgo').get(function() {
+// eslint-disable-next-line
+RoomSchema.virtual('dateAgo').get(function() {
   return moment(this.date).from(new Date());
 });
 
-function pullRoomFromMembers() {
-  this.members.forEach(async memberID => {
-    await AccountModel.findByIdAndUpdate(memberID, { $pull: { joinedRooms: this._id } });
-  });
-}
+RoomSchema.set('toObject', { getters: true });
 
-RoomSchema.pre('remove', async function(next) {
-  deleteQuestions.call(this);
-  pullRoomFromMembers.call(this);
-  await AccountModel.findByIdAndUpdate(this.account, { $pull: { createdRooms: this._id } });
-  next();
-});
-
+const RoomModel = mongoose.model('Room', RoomSchema);
 export default RoomModel;

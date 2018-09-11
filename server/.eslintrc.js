@@ -10,6 +10,8 @@ module.exports = {
     'no-underscore-dangle': 0,
     'max-len': 0,
     'no-plusplus': 0,
+    'func-names': 0,
+    'space-before-function-paren': 0,
     'no-param-reassign': ['error', { props: false }],
     'no-unused-expressions': ['error', { allowTernary: true }],
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }]

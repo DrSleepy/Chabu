@@ -42,6 +42,17 @@ export const deleteComment = async (req, res, next) => {
   res.status(200).json(response);
 };
 
+export const deleteAllComments = async commentID => {
+  const mainComment = await CommentModel.findById(commentID);
+
+  if (mainComment && mainComment.comments.length) {
+    mainComment.comments.forEach(subComment => deleteAllComments(subComment));
+  }
+
+  await AccountModel.findByIdAndUpdate(mainComment.account, { $pull: { createdComments: mainComment._id } });
+  await mainComment.remove();
+};
+
 export const updateComment = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 

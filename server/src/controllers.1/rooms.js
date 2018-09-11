@@ -2,6 +2,7 @@ import AccountModel from '../models/Account';
 import RoomModel from '../models/Room';
 import QuestionModel from '../models/Question';
 import buildQuery from '../helpers/buildQuery';
+import * as questionsController from './questions';
 
 const joinRoomLogic = async (accountID, roomID) => {
   const account = await AccountModel.findById(accountID);
@@ -83,6 +84,15 @@ export const deleteRoom = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
   const room = await RoomModel.findById(req.params.roomID).populate('questions');
+  if (room && room.questions.length) {
+    room.questions.forEach(question => questionsController.deleteQuestionLogic(question));
+  }
+
+  room.members.forEach(async memberID => {
+    await AccountModel.findByIdAndUpdate(memberID, { $pull: { joinedRooms: req.params.roomID } });
+  });
+
+  await AccountModel.findByIdAndUpdate(req.accountID, { $pull: { createdRooms: req.params.roomID } });
   await room.remove();
 
   response.ok = true;

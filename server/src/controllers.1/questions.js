@@ -1,6 +1,7 @@
 import AccountModel from '../models/Account';
 import RoomModel from '../models/Room';
 import QuestionModel from '../models/Question';
+import * as commentsController from './comments';
 
 export const createQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
@@ -72,13 +73,22 @@ export const updateQuestion = async (req, res) => {
   res.status(200).json(response);
 };
 
+export const deleteQuestionLogic = async question => {
+  if (question.comments.length) {
+    question.comments.forEach(comment => commentsController.deleteAllComments(comment._id));
+  }
+
+  await AccountModel.findByIdAndUpdate(question.account, { $pull: { createdQuestions: question._id } });
+  await question.remove();
+};
+
 export const deleteQuestion = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
-  await RoomModel.findByIdAndUpdate(req.params.roomID, { $pull: { questions: req.params.questionID } });
-
   const question = await QuestionModel.findById(req.params.questionID);
-  await question.remove();
+  deleteQuestionLogic(question);
+
+  await RoomModel.findByIdAndUpdate(req.params.roomID, { $pull: { questions: req.params.questionID } });
 
   response.ok = true;
   res.status(200).json(response);
