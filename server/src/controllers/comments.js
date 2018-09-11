@@ -57,19 +57,3 @@ export const updateComment = async (req, res, next) => {
   response.ok = true;
   res.status(200).json(response);
 };
-
-// export const getMoreComments = async (req, res, next) => {
-//   const response = { ok: false, errors: [], data: null };
-
-//   const comment = await CommentModel.findById(req.params.commentID);
-//   if (comment.deleted) {
-//     response.errors.push({ path: ['deleted'], message: 'Comment has been deleted' });
-//     next({ status: 404, ...response });
-//     return;
-//   }
-
-//   await comment.update({ edited: true, ...req.body });
-
-//   response.ok = true;
-//   res.status(200).json(response);
-// };

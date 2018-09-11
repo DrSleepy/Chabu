@@ -47,6 +47,7 @@ export const createRoom = async (req, res, next) => {
   }
 
   response.ok = true;
+  response.data = newRoom;
   res.status(200).json(response);
 };
 
@@ -82,7 +83,7 @@ export const getRoom = async (req, res, next) => {
 export const deleteRoom = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
-  const room = await RoomModel.findById(req.params.roomID).populate('questions');
+  const room = await RoomModel.findById(req.params.roomID);
   await room.remove();
 
   response.ok = true;

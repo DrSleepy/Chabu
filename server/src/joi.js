@@ -48,9 +48,8 @@ export const creator = Joi.string()
   .label('Creator');
 
 export const mongoID = Joi.string()
+  .length(24)
   .regex(/^[0-9a-fA-F]{24}/) // regex is mongo object ID format. Needs checking
-  .min(24)
-  .max(24)
   .label('MongoID');
 
 export const roomTitle = Joi.string()

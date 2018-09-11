@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
+import shortid from 'shortid';
 import moment from 'moment';
 
 import AccountModel from './Account';
@@ -6,8 +7,8 @@ import { deleteQuestions } from './Question';
 
 const RoomSchema = new Schema({
   id: {
-    // automatically generated. How?
-    type: String
+    type: String,
+    default: shortid.generate
   },
   title: {
     type: String,
