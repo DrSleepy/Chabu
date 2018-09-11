@@ -30,6 +30,6 @@ router
 
 router
   .route('/:questionID/like')
-  .post(auth.isLoggedIn, paramValidation('questionID', fields.uuid), questionsController.likeQuestion);
+  .patch(auth.isLoggedIn, paramValidation('questionID', fields.uuid), questionsController.likeQuestion);
 
 export default router;

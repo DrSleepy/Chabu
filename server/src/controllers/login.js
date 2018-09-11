@@ -1,6 +1,6 @@
+import AccountModel from '../models/Account';
 import { signToken } from '../jwt';
 import { SECURE_COOKIES } from '../config';
-import AccountModel from '../models/Account';
 
 export const login = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };

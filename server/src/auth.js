@@ -12,13 +12,13 @@ export const authorization = (id, model) => async (req, res, next) => {
   }
 
   // deal with own account
-  if (req.accountID == result._id) {
+  if (req.accountID === result._id) {
     next();
     return;
   }
 
   // deal with own resources
-  if (result.account && req.accountID == result.account._id) {
+  if (result.account && req.accountID === result.account) {
     next();
     return;
   }

@@ -2,23 +2,31 @@ import CommentModel from '../models/Comment';
 import AccountModel from '../models/Account';
 import QuestionModel from '../models/Question';
 
-export const createComment = async (req, res) => {
+export const createComment = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
   const account = await AccountModel.findById(req.accountID);
+
   const newComment = await new CommentModel({
     account: req.accountID,
     showUsername: account.showUsername,
     ...req.body
   }).save();
 
-  await account.update({ $push: { createdComments: newComment._id } });
-
   const isReply = req.baseUrl === '/comments';
 
   const model = isReply ? CommentModel : QuestionModel;
   const modelID = req.params.commentID || req.params.questionID;
-  await model.findByIdAndUpdate(modelID, { $push: { comments: newComment._id } });
+  const resource = await model.findById(modelID);
+
+  if (!resource) {
+    response.errors.push({ path: ['resource'], message: 'Resource not found' });
+    next({ status: 404, ...response });
+    return;
+  }
+
+  await resource.update({ $push: { comments: newComment._id } });
+  await account.update({ $push: { createdComments: newComment._id } });
 
   response.ok = true;
   res.status(200).json(response);

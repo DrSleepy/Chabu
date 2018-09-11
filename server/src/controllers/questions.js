@@ -88,7 +88,7 @@ export const likeQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
   const account = await AccountModel.findById(req.accountID);
-  const liked = account.likedQuestions.find(objectID => objectID._id == req.params.questionID);
+  const liked = account.likedQuestions.find(ID => ID === req.params.questionID);
   const question = await QuestionModel.findById(req.params.questionID);
 
   if (!question) {
