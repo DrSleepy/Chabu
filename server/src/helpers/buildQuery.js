@@ -15,17 +15,17 @@ const buildQuery = criteria => {
   }
 
   if (criteria.view) {
-    let dateAgo;
+    let timeAgo;
 
     if (criteria.view === 'day') {
-      dateAgo = moment().subtract(1, 'day');
+      timeAgo = moment().subtract(1, 'day');
     }
 
     if (criteria.view === 'week' || criteria.view === 'month') {
-      dateAgo = moment().subtract(1, [criteria.view]);
+      timeAgo = moment().subtract(1, [criteria.view]);
     }
 
-    query.find = { date: { $gte: dateAgo } };
+    query.find = { date: { $gte: timeAgo } };
   }
 
   if (criteria.sort) {
