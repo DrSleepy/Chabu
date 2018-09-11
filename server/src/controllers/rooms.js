@@ -1,9 +1,9 @@
 import AccountModel from '../models/Account';
 import RoomModel from '../models/Room';
-import appendRelativeTime from '../helpers/relativeTime';
-import filterQuestionsByKeywords from './questions';
-import * as questionsController from './questions';
 import QuestionModel from '../models/Question';
+import buildQuery from '../helpers/buildQuery';
+import appendRelativeTime from '../helpers/relativeTime';
+import * as questionsController from './questions';
 
 const joinRoomLogic = async (accountID, roomID) => {
   const account = await AccountModel.findById(accountID);
@@ -52,88 +52,33 @@ export const createRoom = async (req, res, next) => {
   res.status(200).json(response);
 };
 
-const filterQuestions = (query, questions) => {};
-
-const buildQuery = criteria => {
-  const query = {};
-
-  if (criteria.keywords) {
-    query.$text = { $search: criteria.keywords };
-    // query.score = { $meta: 'textScore' };
-  }
-
-  return query;
-};
-
 export const getRoom = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  // if (Object.keys(req.query).length) {
-  // room.questions = filterQuestions(req.query);
-  // buildQuery(req.query);
-  // }
-
-  // const query = buildQuery(req.query);
-  // console.log(query);
-
-  // console.log(req.query.keywords);
-
-  // const room = await RoomModel.findById(req.params.roomID)
-  //   .populate({ path: 'questions', match: query })
-  //   .lean()
-  //   .exec();
-
-  // const query = buildQuery(req.query);
-
-  // const room = await RoomModel.findById(req.params.roomID).populate({
-  //   path: 'questions',
-  //   match: {
-  //     $text: { $search: 'jack water' }
-  //     // score: { $meta: 'textScore' }
-  //   },
-  //   score: { $meta: 'textScore' },
-  //   options: { sort: { score: { $meta: 'textScore' } } }
-  // });
-
-  // const room = await RoomModel.findById(req.params.roomID).populate({
-  //   path: 'questions',
-  //   match: {
-  //     $text: { $search: 'jack water' }
-  //   },
-  //   score: { $meta: 'textScore' },
-  //   options: { sort: { score: 1 } }
-  // });
-  const room = await RoomModel.findById(req.params.roomID).populate({
-    path: 'questions',
-    match: {
-      $text: { $search: 'jack water' }
-    },
-    score: { $meta: 'textScore' },
-    options: { sort: { score: 1 } }
-  });
-
-  // const room = await QuestionModel.find(
-  //   {
-  //     $text: { $search: 'jack water' }
-  //   },
-  //   {
-  //     score: { $meta: 'textScore' }
-  //   }
-  // ).sort({
-  //   score: { $meta: 'textScore' }
-  // });
-
-  // const questions = await QuestionModel.find({ $text: { $search: 'water' } });
-
-  console.log(room);
-
+  const room = await RoomModel.findById(req.params.roomID).lean();
   if (!room) {
     response.errors.push({ path: ['room'], message: 'Room not found' });
     next({ status: 404, ...response });
     return;
   }
 
-  room.questions = appendRelativeTime(room.questions);
+  let query = {};
+
+  if (Object.keys(req.query).length) {
+    query = buildQuery(req.query);
+  }
+
+  const questions = await QuestionModel.find(
+    {
+      _id: { $in: room.questions },
+      ...query.find
+    },
+    query.options
+  )
+    .sort(query.sort)
+    .lean();
+
+  room.questions = appendRelativeTime(questions);
 
   response.ok = true;
   response.data = room;
