@@ -1,26 +1,7 @@
 import AccountModel from '../models/Account';
 import RoomModel from '../models/Room';
 import QuestionModel from '../models/Question';
-import appendRelativeTime from '../helpers/relativeTime';
 import * as commentsController from './comments';
-
-export const filterQuestionsByKeywords = (questions, keywords) => {
-  const keywordsSet = new Set([...keywords.split(' ')]);
-
-  return questions.filter(question => {
-    let relevanceLevel = 0;
-
-    keywordsSet.forEach(word => {
-      if (question.title.toLowerCase().includes(word.toLowerCase())) {
-        relevanceLevel++;
-      }
-    });
-
-    question.relevanceLevel = relevanceLevel;
-
-    return relevanceLevel > 0;
-  });
-};
 
 export const createQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
@@ -52,13 +33,31 @@ export const getQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
   const question = await QuestionModel.findById(req.params.questionID).populate('comments');
+
+  // const question = await QuestionModel.findById(req.params.questionID)
+  //   .populate({
+  //     path: 'comments',
+  //     populate: {
+  //       path: 'comments',
+  //       populate: {
+  //         path: 'comments',
+  //         populate: {
+  //           path: 'comments',
+  //           populate: {
+  //             path: 'comments'
+  //           }
+  //         }
+  //       }
+  //     }
+  //   })
+  //   .lean()
+  //   .exec();
+
   if (!question) {
     response.errors.push({ path: ['question'], message: 'Question not found' });
     next({ status: 404, ...response });
     return;
   }
-
-  question.comments = appendRelativeTime(question.comments);
 
   response.ok = true;
   response.data = question;

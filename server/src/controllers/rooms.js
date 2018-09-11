@@ -2,7 +2,6 @@ import AccountModel from '../models/Account';
 import RoomModel from '../models/Room';
 import QuestionModel from '../models/Question';
 import buildQuery from '../helpers/buildQuery';
-import appendRelativeTime from '../helpers/relativeTime';
 import * as questionsController from './questions';
 
 const joinRoomLogic = async (accountID, roomID) => {
@@ -55,7 +54,7 @@ export const createRoom = async (req, res, next) => {
 export const getRoom = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const room = await RoomModel.findById(req.params.roomID).lean();
+  const room = await RoomModel.findById(req.params.roomID);
   if (!room) {
     response.errors.push({ path: ['room'], message: 'Room not found' });
     next({ status: 404, ...response });
@@ -68,17 +67,13 @@ export const getRoom = async (req, res, next) => {
     query = buildQuery(req.query);
   }
 
-  const questions = await QuestionModel.find(
+  room.questions = await QuestionModel.find(
     {
       _id: { $in: room.questions },
       ...query.find
     },
     query.options
-  )
-    .sort(query.sort)
-    .lean();
-
-  room.questions = appendRelativeTime(questions);
+  ).sort(query.sort);
 
   response.ok = true;
   response.data = room;

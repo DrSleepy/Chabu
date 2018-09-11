@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
+import moment from 'moment';
 
 const RoomSchema = new Schema({
   id: {
@@ -42,6 +43,13 @@ const RoomSchema = new Schema({
     ref: 'Account'
   }
 });
+
+// eslint-disable-next-line
+RoomSchema.virtual('dateAgo').get(function() {
+  return moment(this.date).from(new Date());
+});
+
+RoomSchema.set('toObject', { getters: true });
 
 const RoomModel = mongoose.model('Room', RoomSchema);
 export default RoomModel;

@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
+import moment from 'moment';
 
 const CommentSchema = new Schema({
   text: {
@@ -34,6 +35,13 @@ const CommentSchema = new Schema({
     ref: 'Account'
   }
 });
+
+// eslint-disable-next-line
+CommentSchema.virtual('dateAgo').get(function() {
+  return moment(this.date).from(new Date());
+});
+
+CommentSchema.set('toObject', { getters: true });
 
 const CommentModel = mongoose.model('Comment', CommentSchema);
 export default CommentModel;
