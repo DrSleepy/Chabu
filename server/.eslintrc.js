@@ -11,6 +11,7 @@ module.exports = {
     'max-len': 0,
     'no-plusplus': 0,
     'func-names': 0,
+    'object-curly-newline': 0,
     'space-before-function-paren': 0,
     'no-param-reassign': ['error', { props: false }],
     'no-unused-expressions': ['error', { allowTernary: true }],

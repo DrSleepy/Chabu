@@ -20,10 +20,18 @@ export const createAccount = (req, res, next) => {
 
 export const updateAccount = (req, res, next) => {
   const updateAccountSchema = Joi.object().keys({
-    email: fields.email,
     showUsername: fields.showUsername
   });
 
   const result = Joi.validate(req.body, updateAccountSchema, fields.config);
+  result.error ? next({ status: 400, ...result.error }) : next();
+};
+
+export const verifyEmail = (req, res, next) => {
+  const verifyEmailSchema = Joi.object().keys({
+    email: fields.email.required()
+  });
+
+  const result = Joi.validate(req.body, verifyEmailSchema, fields.config);
   result.error ? next({ status: 400, ...result.error }) : next();
 };

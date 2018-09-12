@@ -16,10 +16,8 @@ export const verifyToken = async (req, res, next) => {
     return;
   }
 
-  const { token } = req.cookies;
-
   try {
-    const decoded = await JWT.verify(token, JWT_SECRET);
+    const decoded = await JWT.verify(req.cookies.token, JWT_SECRET);
     req.accountID = decoded.accountID;
     next();
   } catch (error) {

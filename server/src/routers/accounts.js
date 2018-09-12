@@ -18,6 +18,10 @@ const router = express.Router();
 
 router.route('/').post(accountsValidation.createAccount, accountsController.createAccount);
 
+router.route('/verify').post(auth.isLoggedIn, accountsValidation.verifyEmail, accountsController.sendEmailVerification);
+
+router.route('/verify/:token').get(accountsController.verifyEmail);
+
 router
   .route('/:accountID')
   .get(

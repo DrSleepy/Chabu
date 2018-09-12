@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { forbiddenUsernames } from './helpers/forbiddenUsernames';
 
 export const config = {
   escapeHtml: true,
@@ -15,6 +16,8 @@ export const username = Joi.string()
   .min(4)
   .max(20)
   .alphanum()
+  .insensitive()
+  .invalid(forbiddenUsernames)
   .label('Username');
 
 export const password = Joi.string()
