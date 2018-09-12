@@ -1,15 +1,12 @@
 import CommentModel from '../models/Comment';
-import AccountModel from '../models/Account';
 import QuestionModel from '../models/Question';
 
 export const createComment = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const account = await AccountModel.findById(req.accountID);
-
   const newComment = await new CommentModel({
-    account: req.accountID,
-    showUsername: account.showUsername,
+    account: req.account._id,
+    showUsername: req.account.showUsername,
     ...req.body
   }).save();
 
@@ -26,7 +23,7 @@ export const createComment = async (req, res, next) => {
   }
 
   await resource.update({ $push: { comments: newComment._id } });
-  await account.update({ $push: { createdComments: newComment._id } });
+  await req.account.update({ $push: { createdComments: newComment._id } });
 
   response.ok = true;
   res.status(200).json(response);
@@ -44,7 +41,7 @@ export const deleteComment = async (req, res, next) => {
 
   // update instead of delete - need child comments
   await comment.update({ text: null, deleted: true });
-  await AccountModel.findByIdAndUpdate(req.accountID, { $pull: { createdComments: req.params.commentID } });
+  await req.account.update({ $pull: { createdComments: req.params.commentID } });
 
   response.ok = true;
   res.status(200).json(response);

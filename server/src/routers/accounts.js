@@ -1,11 +1,8 @@
 import express from 'express';
 
-import AccountModel from '../models/Account';
-import { paramValidation } from '../validation/routes';
 import * as accountsValidation from '../validation/accounts';
 import * as accountsController from '../controllers/accounts';
 import * as auth from '../auth';
-import * as fields from '../joi';
 
 const router = express.Router();
 
@@ -16,26 +13,14 @@ const router = express.Router();
 // 4. validate body
 // 5. call controller after success
 
-router.route('/').post(accountsValidation.createAccount, accountsController.createAccount);
+router
+  .route('/')
+  .get(auth.isLoggedIn, accountsController.getAccount)
+  .post(accountsValidation.createAccount, accountsController.createAccount)
+  .patch(auth.isLoggedIn, accountsValidation.updateAccount, accountsController.updateAccount);
 
 router.route('/verify').post(auth.isLoggedIn, accountsValidation.verifyEmail, accountsController.sendEmailVerification);
 
 router.route('/verify/:token').get(accountsController.verifyEmail);
-
-router
-  .route('/:accountID')
-  .get(
-    auth.isLoggedIn,
-    paramValidation('accountID', fields.uuid),
-    auth.authorization('accountID', AccountModel),
-    accountsController.getAccount
-  )
-  .patch(
-    auth.isLoggedIn,
-    paramValidation('accountID', fields.uuid),
-    auth.authorization('accountID', AccountModel),
-    accountsValidation.updateAccount,
-    accountsController.updateAccount
-  );
 
 export default router;

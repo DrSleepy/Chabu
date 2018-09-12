@@ -1,12 +1,10 @@
-import AccountModel from '../models/Account';
 import RoomModel from '../models/Room';
 import QuestionModel from '../models/Question';
 
 export const createQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const account = await AccountModel.findById(req.accountID);
-  const newQuestion = await new QuestionModel({ account: req.accountID, ...req.body }).save();
+  const newQuestion = await new QuestionModel({ account: req.account._id, ...req.body }).save();
   const room = await RoomModel.findById(req.params.roomID);
 
   if (!room) {
@@ -22,7 +20,7 @@ export const createQuestion = async (req, res, next) => {
   }
 
   await room.update({ $push: { questions: newQuestion._id } });
-  await account.update({ $push: { createdQuestions: newQuestion._id } });
+  await req.account.update({ $push: { createdQuestions: newQuestion._id } });
 
   response.ok = true;
   res.status(200).json(response);
@@ -87,8 +85,7 @@ export const deleteQuestion = async (req, res) => {
 export const likeQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const account = await AccountModel.findById(req.accountID);
-  const liked = account.likedQuestions.find(ID => ID === req.params.questionID);
+  const liked = req.account.likedQuestions.find(ID => ID === req.params.questionID);
   const question = await QuestionModel.findById(req.params.questionID);
 
   if (!question) {
@@ -106,7 +103,7 @@ export const likeQuestion = async (req, res, next) => {
   }
 
   await question.update({ $inc: { likes: vote } });
-  await account.update({ [action]: { likedQuestions: req.params.questionID } });
+  await req.account.update({ [action]: { likedQuestions: req.params.questionID } });
 
   response.ok = true;
   res.status(200).json(response);

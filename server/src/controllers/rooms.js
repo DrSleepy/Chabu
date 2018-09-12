@@ -1,10 +1,8 @@
-import AccountModel from '../models/Account';
 import RoomModel from '../models/Room';
 import QuestionModel from '../models/Question';
 import buildQuery from '../helpers/buildQuery';
 
-const joinRoomLogic = async (accountID, roomID) => {
-  const account = await AccountModel.findById(accountID);
+const joinRoomLogic = async (account, roomID) => {
   const joined = account.joinedRooms.find(ID => ID === roomID);
   const room = await RoomModel.findById(roomID);
 
@@ -12,7 +10,7 @@ const joinRoomLogic = async (accountID, roomID) => {
 
   const action = joined ? '$pull' : '$push';
   await account.update({ [action]: { joinedRooms: roomID } });
-  await room.update({ [action]: { members: accountID } });
+  await room.update({ [action]: { members: account._id } });
 
   return true;
 };
@@ -20,7 +18,7 @@ const joinRoomLogic = async (accountID, roomID) => {
 export const joinRoom = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const joinedRoom = await joinRoomLogic(req.accountID, req.params.roomID);
+  const joinedRoom = await joinRoomLogic(req.account, req.params.roomID);
   if (!joinedRoom) {
     response.errors.push({ path: ['room'], message: 'Room not found' });
     next({ status: 404, ...response });
@@ -34,12 +32,11 @@ export const joinRoom = async (req, res, next) => {
 export const createRoom = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const account = await AccountModel.findById(req.accountID);
-  const newRoom = await new RoomModel({ account: req.accountID, ...req.body }).save();
+  const newRoom = await new RoomModel({ account: req.account._id, ...req.body }).save();
 
-  await account.update({ $push: { createdRooms: newRoom._id } });
+  await req.account.update({ $push: { createdRooms: newRoom._id } });
 
-  const joinedRoom = joinRoomLogic(req.accountID, newRoom._id);
+  const joinedRoom = joinRoomLogic(req.account, newRoom._id);
   if (!joinedRoom) {
     response.errors.push({ path: ['room'], message: 'Room not found' });
     next({ status: 404, ...response });
@@ -61,19 +58,9 @@ export const getRoom = async (req, res, next) => {
     return;
   }
 
-  let query = {};
+  const query = Object.keys(req.query).length ? buildQuery(req.query) : {};
 
-  if (Object.keys(req.query).length) {
-    query = buildQuery(req.query);
-  }
-
-  room.questions = await QuestionModel.find(
-    {
-      _id: { $in: room.questions },
-      ...query.find
-    },
-    query.options
-  ).sort(query.sort);
+  room.questions = await QuestionModel.find({ _id: { $in: room.questions }, ...query.find }, query.options).sort(query.sort);
 
   response.ok = true;
   response.data = room;
