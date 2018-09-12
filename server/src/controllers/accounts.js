@@ -46,7 +46,7 @@ export const sendEmailVerification = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
   if (req.account.email) {
-    response.errors.push({ path: ['email'], message: 'Account already linked to an email' });
+    response.errors.push({ path: ['email'], message: 'Account is already linked to an email' });
     next({ status: 400, ...response });
     return;
   }
@@ -96,6 +96,12 @@ export const verifyEmail = async (req, res, next) => {
   if (!account) {
     response.errors.push({ path: ['account'], message: 'Account not found' });
     next({ status: 404, ...response });
+    return;
+  }
+
+  if (account.email) {
+    response.errors.push({ path: ['email'], message: 'Account already linked to an email' });
+    next({ status: 409, ...response });
     return;
   }
 

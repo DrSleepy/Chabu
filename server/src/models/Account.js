@@ -63,6 +63,9 @@ const AccountSchema = new Schema({
   ]
 });
 
+// DO NOT DELETE: mongoose index doesnt work. index must be created on mongodb manually
+AccountSchema.index([{ email: 1 }, { username: 1 }]);
+
 AccountSchema.plugin(uniqueValidator, { message: '{VALUE} already taken' });
 
 AccountSchema.methods.encryptPassword = password => hashSync(password, genSaltSync(10));
