@@ -73,13 +73,28 @@ export const updateQuestion = async (req, res) => {
   res.status(200).json(response);
 };
 
-export const deleteQuestion = async (req, res) => {
+export const deleteQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  await RoomModel.findByIdAndUpdate(req.params.roomID, { $pull: { questions: req.params.questionID } });
+  const room = await RoomModel.findById(req.params.roomID);
+  if (!room) {
+    response.errors.push({ path: ['room'], message: 'Room not found' });
+    next({ status: 404, ...response });
+    return;
+  }
+
+  if (!room.questions.includes(req.params.questionID)) {
+    response.errors.push({ path: ['question'], message: 'Question not found in room' });
+    next({ status: 404, ...response });
+    return;
+  }
+
+  const updateRoom = room.update({ $pull: { questions: req.params.questionID } });
+  const question = QuestionModel.findById(req.params.questionID);
+
+  await Promise.all([updateRoom, question]);
 
   // remove() used to fire RoomSchema 'remove' hook
-  const question = await QuestionModel.findById(req.params.questionID);
   await question.remove();
 
   response.ok = true;

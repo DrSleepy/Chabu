@@ -54,16 +54,20 @@ RoomSchema.virtual('timeAgo').get(function() {
   return moment(this.date).from(new Date());
 });
 
-function pullRoomFromMembers() {
-  this.members.forEach(async memberID => {
-    await AccountModel.findByIdAndUpdate(memberID, { $pull: { joinedRooms: this._id } });
-  });
-}
-
 RoomSchema.pre('remove', async function(next) {
   deleteQuestions.call(this);
-  pullRoomFromMembers.call(this);
-  await AccountModel.findByIdAndUpdate(this.account, { $pull: { createdRooms: this._id } });
+
+  const pullRoomFromMembers = AccountModel.updateMany(
+    { _id: { $in: this.members } },
+    { $pull: { joinedRooms: this._id } }
+  ).exec();
+
+  const pullRoomFromCreatedRooms = AccountModel.findByIdAndUpdate(this.account, {
+    $pull: { createdRooms: this._id }
+  }).exec();
+
+  await Promise.all([pullRoomFromMembers, pullRoomFromCreatedRooms]);
+
   next();
 });
 
