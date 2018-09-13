@@ -26,7 +26,7 @@ API Endpoints v1
 | PATCH  	| rooms/:roomID                                                	| update specific room                                                                                         	|
 | GET    	| rooms/:roomID                                                	| get specific room                                                                                            	|
 | POST   	| rooms/:roomID                                                	| create new question in a room                                                                                	|
-| GET    	| rooms/:roomID?keywords=computer+science&view=month&sort=date 	| filter and sort questions within room by keywords in title, view by week or month, sort results by any field 	|
+| GET    	| rooms/:roomID?keywords=computer+science&view=month&sort=likes:1 	| filter and sort questions within room by keywords in title, view by week or month, sort results by any field 	|
 | PATCH  	| rooms/:roomID/join                                           	| join or leave a room                                                                                         	|
 | DELETE 	| rooms/:roomID/:questionID                                    	| delete specific question from a room                                                                         	|
 |        	|                                                              	|                                                                                                              	|
