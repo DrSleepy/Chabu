@@ -9,8 +9,10 @@ const joinRoomLogic = async (account, roomID) => {
   if (!room) return false;
 
   const action = joined ? '$pull' : '$push';
-  await account.update({ [action]: { joinedRooms: roomID } });
-  await room.update({ [action]: { members: account._id } });
+  const updateAccount = account.update({ [action]: { joinedRooms: roomID } });
+  const updateRoom = room.update({ [action]: { members: account._id } });
+
+  await Promise.all([updateAccount, updateRoom]);
 
   return true;
 };
@@ -29,19 +31,15 @@ export const joinRoom = async (req, res, next) => {
   res.status(200).json(response);
 };
 
-export const createRoom = async (req, res, next) => {
+export const createRoom = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
   const newRoom = await new RoomModel({ account: req.account._id, ...req.body }).save();
 
-  await req.account.update({ $push: { createdRooms: newRoom._id } });
+  const updateAccount = req.account.update({ $push: { createdRooms: newRoom._id } });
+  const joinRoomResult = joinRoomLogic(req.account, newRoom._id);
 
-  const joinedRoom = joinRoomLogic(req.account, newRoom._id);
-  if (!joinedRoom) {
-    response.errors.push({ path: ['room'], message: 'Room not found' });
-    next({ status: 404, ...response });
-    return;
-  }
+  await Promise.all([updateAccount, joinRoomResult]);
 
   response.ok = true;
   response.data = newRoom;
@@ -70,6 +68,7 @@ export const getRoom = async (req, res, next) => {
 export const deleteRoom = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
+  // remove() used to fire RoomSchema 'remove' hook
   const room = await RoomModel.findById(req.params.roomID);
   await room.remove();
 

@@ -4,7 +4,6 @@ import QuestionModel from '../models/Question';
 export const createQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const newQuestion = await new QuestionModel({ account: req.account._id, ...req.body }).save();
   const room = await RoomModel.findById(req.params.roomID);
 
   if (!room) {
@@ -19,8 +18,12 @@ export const createQuestion = async (req, res, next) => {
     return;
   }
 
-  await room.update({ $push: { questions: newQuestion._id } });
-  await req.account.update({ $push: { createdQuestions: newQuestion._id } });
+  const newQuestion = await new QuestionModel({ account: req.account._id, ...req.body }).save();
+
+  const updateRoom = room.update({ $push: { questions: newQuestion._id } });
+  const updateAccount = req.account.update({ $push: { createdQuestions: newQuestion._id } });
+
+  await Promise.all([updateRoom, updateAccount]);
 
   response.ok = true;
   res.status(200).json(response);
@@ -75,6 +78,7 @@ export const deleteQuestion = async (req, res) => {
 
   await RoomModel.findByIdAndUpdate(req.params.roomID, { $pull: { questions: req.params.questionID } });
 
+  // remove() used to fire RoomSchema 'remove' hook
   const question = await QuestionModel.findById(req.params.questionID);
   await question.remove();
 
@@ -102,8 +106,10 @@ export const likeQuestion = async (req, res, next) => {
     vote = -1;
   }
 
-  await question.update({ $inc: { likes: vote } });
-  await req.account.update({ [action]: { likedQuestions: req.params.questionID } });
+  const updateQuestionResult = question.update({ $inc: { likes: vote } });
+  const updateAccount = req.account.update({ [action]: { likedQuestions: req.params.questionID } });
+
+  await Promise.all([updateQuestionResult, updateAccount]);
 
   response.ok = true;
   res.status(200).json(response);

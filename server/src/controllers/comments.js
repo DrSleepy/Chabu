@@ -4,12 +4,6 @@ import QuestionModel from '../models/Question';
 export const createComment = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const newComment = await new CommentModel({
-    account: req.account._id,
-    showUsername: req.account.showUsername,
-    ...req.body
-  }).save();
-
   const isReply = req.baseUrl === '/comments';
 
   const model = isReply ? CommentModel : QuestionModel;
@@ -22,8 +16,16 @@ export const createComment = async (req, res, next) => {
     return;
   }
 
-  await resource.update({ $push: { comments: newComment._id } });
-  await req.account.update({ $push: { createdComments: newComment._id } });
+  const newComment = await new CommentModel({
+    account: req.account._id,
+    showUsername: req.account.showUsername,
+    ...req.body
+  }).save();
+
+  const updateResource = resource.update({ $push: { comments: newComment._id } });
+  const updateAccount = req.account.update({ $push: { createdComments: newComment._id } });
+
+  await Promise.all([updateResource, updateAccount]);
 
   response.ok = true;
   res.status(200).json(response);
@@ -40,8 +42,10 @@ export const deleteComment = async (req, res, next) => {
   }
 
   // update instead of delete - need child comments
-  await comment.update({ text: null, deleted: true });
-  await req.account.update({ $pull: { createdComments: req.params.commentID } });
+  const updateComment = comment.update({ text: null, deleted: true });
+  const updateAccount = req.account.update({ $pull: { createdComments: req.params.commentID } });
+
+  await Promise.all([updateComment, updateAccount]);
 
   response.ok = true;
   res.status(200).json(response);
