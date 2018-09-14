@@ -32,7 +32,7 @@ API Endpoints v1
 | PATCH  | rooms/:roomID/join                                              | join or leave a room                                                                                         |
 | DELETE | rooms/:roomID/:questionID                                       | delete specific question from a room                                                                         |
 |        |                                                                 |                                                                                                              |
-| GET    | questions/:questiondID                                          | get specific question                                                                                        |
+| GET    | questions/:questionID                                           | get specific question                                                                                        |
 | PATCH  | questions/:questionID                                           | update specific question                                                                                     |
 | POST   | questions/:questionID                                           | create new comment on question                                                                               |
 | PATCH  | questions/:questionID/like                                      | like or unlike a question                                                                                    |
