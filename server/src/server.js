@@ -3,6 +3,8 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import logger from 'morgan';
+import helmet from 'helmet';
+import compression from 'compression';
 
 import * as config from './config';
 import { verifyToken } from './jwt';
@@ -17,6 +19,8 @@ import './connection';
 const server = express();
 
 // middleware
+server.use(helmet());
+server.use(compression());
 server.use(logger('dev'));
 server.use(cors());
 server.use(bodyParser.json());
