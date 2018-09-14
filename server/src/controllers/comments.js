@@ -22,8 +22,8 @@ export const createComment = async (req, res, next) => {
     ...req.body
   }).save();
 
-  const updateResource = resource.update({ $push: { comments: newComment._id } });
-  const updateAccount = req.account.update({ $push: { createdComments: newComment._id } });
+  const updateResource = resource.update({ $push: { comments: newComment._id } }).exec();
+  const updateAccount = req.account.update({ $push: { createdComments: newComment._id } }).exec();
 
   await Promise.all([updateResource, updateAccount]);
 
@@ -42,8 +42,8 @@ export const deleteComment = async (req, res, next) => {
   }
 
   // update instead of delete - need child comments
-  const updateComment = comment.update({ text: null, deleted: true });
-  const updateAccount = req.account.update({ $pull: { createdComments: req.params.commentID } });
+  const updateComment = comment.update({ text: null, deleted: true }).exec();
+  const updateAccount = req.account.update({ $pull: { createdComments: req.params.commentID } }).exec();
 
   await Promise.all([updateComment, updateAccount]);
 

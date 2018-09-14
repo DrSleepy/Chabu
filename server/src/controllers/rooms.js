@@ -9,8 +9,8 @@ const joinRoomLogic = async (account, roomID) => {
   if (!room) return false;
 
   const action = joined ? '$pull' : '$push';
-  const updateAccount = account.update({ [action]: { joinedRooms: roomID } });
-  const updateRoom = room.update({ [action]: { members: account._id } });
+  const updateAccount = account.update({ [action]: { joinedRooms: roomID } }).exec();
+  const updateRoom = room.update({ [action]: { members: account._id } }).exec();
 
   await Promise.all([updateAccount, updateRoom]);
 
@@ -36,7 +36,7 @@ export const createRoom = async (req, res) => {
 
   const newRoom = await new RoomModel({ account: req.account._id, ...req.body }).save();
 
-  const updateAccount = req.account.update({ $push: { createdRooms: newRoom._id } });
+  const updateAccount = req.account.update({ $push: { createdRooms: newRoom._id } }).exec();
   const joinRoomResult = joinRoomLogic(req.account, newRoom._id);
 
   await Promise.all([updateAccount, joinRoomResult]);

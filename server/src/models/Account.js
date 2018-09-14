@@ -31,6 +31,10 @@ const AccountSchema = new Schema({
     type: Boolean,
     default: false
   },
+  resetToken: {
+    type: String,
+    default: null
+  },
   likedQuestions: [
     {
       type: String,

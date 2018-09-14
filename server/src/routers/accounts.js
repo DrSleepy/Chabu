@@ -23,4 +23,8 @@ router.route('/verify').post(auth.isLoggedIn, accountsValidation.verifyEmail, ac
 
 router.route('/verify/:token').get(accountsController.verifyEmail);
 
+router.route('/reset').post(accountsValidation.resetPassword, accountsController.resetPassword);
+
+router.route('/reset/:token').post(accountsValidation.resetPasswordVerify, accountsController.resetPasswordVerify);
+
 export default router;

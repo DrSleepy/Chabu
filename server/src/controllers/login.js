@@ -23,7 +23,12 @@ export const login = async (req, res, next) => {
     return;
   }
 
-  const token = await signToken(account);
+  // successful login should nullify resetToken if user previously clicked 'forgot password'
+  if (account.resetToken) {
+    await account.update({ resetToken: null });
+  }
+
+  const token = signToken(account);
   res.cookie('token', token, { httpOnly: true, secure: SECURE_COOKIES });
 
   response.ok = true;
