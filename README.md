@@ -11,7 +11,7 @@ Start on front end with reactjs
 
 API Endpoints v1
 
-| Method | Endpoint                                                        | Description                                                                                                  |
+| Method | Endpointt                                                        | Description                                                                                                  |
 | ------ | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | POST   | login/                                                          | authenticate account                                                                                         |
 |        |                                                                 |                                                                                                              |
