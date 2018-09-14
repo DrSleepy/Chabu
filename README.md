@@ -6,7 +6,7 @@ Backend NodeJs REST API server is complete. Handles authentication, authroizatio
 fulltext searching, security and effeciently uses Promise.all.  
 
 Next step: 
-Handle refreshing json web tokens.
+Start on front end with reactjs
 
 
 API Endpoints v1
