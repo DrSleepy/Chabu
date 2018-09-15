@@ -1,8 +1,8 @@
 @import (reference) '../../styles/index.less';
 
 .head {
-  .pad-2--5;
-  .col-gap-2;
+  padding: @size-3;
+  grid-column-gap: @size-2;
   display: grid;
   grid-template-columns: max-content max-content 1fr;
   align-items: center;
@@ -33,9 +33,12 @@
   font-family: 'roboto-medium';
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  border-bottom: solid 1px rgba(238, 238, 238, 50%);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
 
   &__item {
-    .pad-2--5;
+    .pad-tb-4;
+    .pad-lr-2--5;
     display: grid;
     justify-content: center;
   }

@@ -1,0 +1,51 @@
+@import (reference) '../../styles/index.less';
+
+.question {
+  padding: @size-3;
+  grid-column-gap: @size-2--5;
+  background-color: rgba(251, 252, 254, 70%);
+  border-bottom: solid 1px rgba(238, 238, 238, 50%);
+  display: grid;
+  grid-template-columns: max-content max-content 1fr max-content;
+  grid-template-areas:
+    'title    title   title arrow'
+    'unlocked creator code  arrow';
+
+  &__title {
+    .milli;
+    grid-area: title;
+    color: @primary-color;
+    font-family: 'roboto-medium';
+  }
+
+  &__unlocked {
+    grid-area: unlocked;
+
+    &:before {
+      .micro;
+      content: '\f00c';
+      font-family: FontAwesome;
+      color: @green-color;
+    }
+  }
+
+  &__creator {
+    grid-area: creator;
+    font-family: 'roboto-medium';
+  }
+
+  &__code {
+    color: #6889b9;
+  }
+
+  &__arrow {
+    grid-area: arrow;
+    align-self: center;
+
+    &:before {
+      content: '\f0da';
+      font-family: FontAwesome;
+      color: #6888b99f;
+    }
+  }
+}

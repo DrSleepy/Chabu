@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import Home from './views/Home/Home';
 
-// import css from './App.less';
 import './styles/reset.less';
 import './styles/base.less';
 
