@@ -1,0 +1,17 @@
+@import (reference) '../../styles/index.less';
+
+.head {
+  &__join {
+    .btn__primary;
+  }
+
+  &__create {
+    .btn__default;
+  }
+
+  &__settings:before {
+    content: '\f013';
+    font-family: FontAwesome;
+    color: @primary-color;
+  }
+}
