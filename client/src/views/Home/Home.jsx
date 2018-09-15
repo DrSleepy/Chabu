@@ -10,9 +10,9 @@ const Home = props => (
     </div>
     <nav>
       <ul className={css.navigation}>
-        <li> Joined Rooms </li>
-        <li> My Questions Rooms </li>
-        <li> Created Rooms </li>
+        <li className={css.navigation__item}> Joined Rooms </li>
+        <li className={css.navigation__item}> My Questions </li>
+        <li className={css.navigation__item}> Created Rooms </li>
       </ul>
     </nav>
   </header>

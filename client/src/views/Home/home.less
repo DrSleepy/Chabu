@@ -1,6 +1,12 @@
 @import (reference) '../../styles/index.less';
 
 .head {
+  .pad-2--5;
+  .col-gap-2;
+  display: grid;
+  grid-template-columns: max-content max-content 1fr;
+  align-items: center;
+
   &__join {
     .btn__primary;
   }
@@ -9,9 +15,28 @@
     .btn__default;
   }
 
-  &__settings:before {
-    content: '\f013';
-    font-family: FontAwesome;
-    color: @primary-color;
+  &__settings {
+    justify-self: end;
+    margin-top: 3px;
+
+    &:before {
+      content: '\f013';
+      font-family: FontAwesome;
+      font-size: 23px;
+      color: @primary-color;
+    }
+  }
+}
+
+.navigation {
+  color: @primary-color;
+  font-family: 'roboto-medium';
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  &__item {
+    .pad-2--5;
+    display: grid;
+    justify-content: center;
   }
 }
