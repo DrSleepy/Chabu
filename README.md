@@ -2,12 +2,11 @@
 
 The main purpose of this project is to learn Reactjs (MERN stack) by creating a forum like application.
 
-Current progress:
-Backend NodeJs REST API server is complete. Handles authentication, authroization, validation, errors, email verification,
+Back end - Progress: Complete.
+Back end NodeJs REST API server is complete. Handles authentication, authroization, validation, errors, email verification,
 fulltext searching, security and effeciently uses Promise.all.
 
-Next step:
-Start on front end with reactjs
+Front end - Progress: Completed Room and Questions list view.
 
 API Endpoints v1
 

@@ -62,7 +62,7 @@ export const roomTitle = Joi.string()
 
 export const questionTitle = Joi.string()
   .min(20)
-  .max(200)
+  .max(100)
   .label('Question Title');
 
 export const questionText = Joi.string()

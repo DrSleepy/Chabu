@@ -14,7 +14,7 @@ const QuestionSchema = new Schema({
     type: String,
     required: true,
     min: 20,
-    max: 200
+    max: 100
   },
   text: {
     type: String,
