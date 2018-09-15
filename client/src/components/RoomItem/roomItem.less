@@ -3,7 +3,7 @@
 .room {
   padding: @size-3;
   grid-column-gap: @size-2--5;
-  background-color: rgba(251, 252, 254, 70%);
+  background-color: rgba(200, 230, 255, 0.068);
   border-bottom: solid 1px rgba(238, 238, 238, 50%);
   display: grid;
   grid-template-columns: max-content max-content 1fr max-content;
@@ -23,9 +23,11 @@
 
     &:before {
       .micro;
-      content: '\f00c';
-      font-family: FontAwesome;
+      content: '\e5ca';
+      font-family: 'Material Icons';
       color: @green-color;
+      -webkit-text-stroke-width: 1.5px;
+      -webkit-text-stroke-color: @green-color;
     }
   }
 
@@ -44,9 +46,9 @@
     align-self: center;
 
     &:before {
-      content: '\f0da';
-      font-family: FontAwesome;
-      color: #6888b99f;
+      content: '\e315';
+      font-family: 'Material Icons';
+      color: rgba(104, 136, 185, 0.624);
     }
   }
 }

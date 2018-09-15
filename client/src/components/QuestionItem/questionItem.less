@@ -1,0 +1,78 @@
+@import (reference) '../../styles/index.less';
+
+.question {
+  padding: @size-3;
+  background-color: rgba(251, 252, 254, 70%);
+  border-bottom: solid 1px rgba(238, 238, 238, 50%);
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(4, max-content) 1fr max-content max-content;
+  grid-template-areas:
+    'thumb title title    title title  title'
+    'thumb likes comments time  delete bin';
+
+  &__thumb {
+    .pad-lr-2;
+    .tera;
+    margin-right: @size-3;
+    color: @primary-color;
+    grid-area: thumb;
+    color: transparent;
+    -webkit-text-stroke-width: 1.5px;
+    -webkit-text-stroke-color: @primary-color;
+
+    &:before {
+      content: '\e8dc';
+      font-family: 'Material Icons';
+    }
+  }
+
+  &__title {
+    .milli;
+    grid-area: title;
+    color: @light-black-text-color;
+    font-family: 'roboto-medium';
+  }
+
+  &__likes,
+  &__comments,
+  &__time,
+  &__delete {
+    .micro;
+    margin-right: @size-3;
+    color: #6889b9;
+  }
+
+  &__likes {
+    grid-area: likes;
+  }
+
+  &__comments {
+    grid-area: comments;
+  }
+
+  &__time {
+    grid-area: time;
+    color: #6889b9;
+  }
+
+  &__delete {
+    grid-area: delete;
+    color: @danger-color;
+    border: none;
+    background: none;
+    font-family: 'roboto-medium';
+    justify-self: end;
+    margin-right: 0;
+  }
+
+  &__bin {
+    grid-area: bin;
+
+    &:after {
+      content: '\e872';
+      font-family: 'Material Icons';
+      color: @faded-icon-color;
+    }
+  }
+}
