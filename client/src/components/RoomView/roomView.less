@@ -2,7 +2,7 @@
 
 .room {
   display: grid;
-  padding: @size-3;
+  padding: @size-4;
   grid-column-gap: @size-4;
   grid-template-columns: max-content 1fr max-content;
   grid-template-areas:
@@ -10,7 +10,6 @@
     'back  roomInfo  settings';
 
   &__back {
-    .zetta;
     grid-area: back;
 
     &:before {

@@ -1,8 +1,5 @@
 import React, { Fragment } from 'react';
 
-import RoomItem from '../RoomItem/RoomItem';
-import RoomView from '../RoomView/RoomView';
-import QuestionItem from '../QuestionItem/QuestionItem';
 import css from './homeView.less';
 
 const Home = props => (
@@ -19,9 +16,6 @@ const Home = props => (
         <li className={css['navigation__item']}> Created Rooms </li>
       </ul>
     </nav>
-    <QuestionItem />
-    <RoomItem />
-    <RoomView />
   </Fragment>
 );
 

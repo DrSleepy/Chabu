@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 
 import RoomInfo from '../RoomInfo/RoomInfo';
+import QuestionItem from '../QuestionItem/QuestionItem';
 import css from './roomView.less';
 
 const RoomView = props => (
@@ -27,7 +28,11 @@ const RoomView = props => (
         </button>
       </div>
     </header>
-    <main />
+    <main>
+      <QuestionItem />
+      <QuestionItem />
+      <QuestionItem />
+    </main>
   </Fragment>
 );
 
