@@ -1,0 +1,40 @@
+@import (reference) '../../styles/index.less';
+
+.room-info {
+  grid-column-gap: @size-2--5;
+  display: grid;
+  grid-template-columns: max-content max-content max-content;
+  grid-template-areas:
+    'title    title   title'
+    'unlocked creator code';
+
+  &__title {
+    .milli;
+    grid-area: title;
+    color: @primary-color;
+    font-family: 'roboto-medium';
+  }
+
+  &__unlocked {
+    grid-area: unlocked;
+
+    &:before {
+      .micro;
+      content: '\e5ca';
+      font-family: 'Material Icons';
+      color: @green-color;
+      -webkit-text-stroke-width: 1.5px;
+      -webkit-text-stroke-color: @green-color;
+    }
+  }
+
+  &__creator {
+    grid-area: creator;
+    color: @black-text-color;
+    font-family: 'roboto-medium';
+  }
+
+  &__code {
+    color: #6889b9;
+  }
+}

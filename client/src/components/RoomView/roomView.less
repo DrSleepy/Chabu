@@ -1,0 +1,47 @@
+@import (reference) '../../styles/index.less';
+
+.room-view {
+  display: grid;
+  padding: @size-3;
+  grid-column-gap: @size-4;
+  grid-template-columns: max-content 1fr max-content;
+  grid-template-areas:
+    'back  roomInfo  leave'
+    'back  roomInfo  settings';
+
+  &__back {
+    .zetta;
+    grid-area: back;
+    color: #212326;
+
+    &:before {
+      content: '\e314';
+      font-family: 'Material Icons';
+    }
+  }
+
+  &__room-info {
+    grid-area: roomInfo;
+  }
+
+  &__leave {
+    .giga;
+    grid-area: leave;
+    color: @danger-color;
+
+    &:before {
+      content: '\e879';
+      font-family: 'Material Icons';
+    }
+  }
+
+  &__settings {
+    .giga;
+    grid-area: settings;
+    margin-top: 5px;
+
+    &:before {
+      .settings-icon-before;
+    }
+  }
+}

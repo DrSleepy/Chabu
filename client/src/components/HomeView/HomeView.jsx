@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react';
 
-import Room from '../../components/Room/Room';
-import css from './home.less';
+import RoomItem from '../RoomItem/RoomItem';
+import RoomView from '../RoomView/RoomView';
+import css from './homeView.less';
 
 const Home = props => (
   <Fragment>
@@ -19,9 +20,8 @@ const Home = props => (
         </ul>
       </nav>
     </header>
-    <Room status="closed" />
-    <Room status="open" />
-    <Room status="closed" />
+    <RoomItem />
+    <RoomView />
   </Fragment>
 );
 
