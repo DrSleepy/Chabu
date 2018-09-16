@@ -1,0 +1,67 @@
+@import (reference) '../../styles/index.less';
+
+.comment {
+  padding: @size-3;
+  background-color: #abcdff0a;
+  border-top: solid 1px #a1c0e231;
+  border-bottom: solid 1px #a1c0e231;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: max-content 1fr max-content;
+  grid-column-gap: @size-2--5;
+  margin-bottom: @size-1--5;
+  align-items: center;
+
+  &__username {
+    color: @primary-color;
+    font-family: 'roboto-medium';
+  }
+
+  &__time {
+    color: @gray-text-color;
+  }
+
+  &__arrow:before {
+    content: '\e316';
+    font-family: 'Material Icons';
+    color: @black-text-color;
+    .giga;
+  }
+}
+
+.text {
+  color: @light-black-text-color;
+  margin-bottom: @size-2;
+}
+
+.footer {
+  display: grid;
+  grid-template-columns: max-content 1fr max-content;
+  grid-column-gap: @size-6;
+
+  & * {
+    padding: 0;
+    font-family: 'roboto-medium';
+  }
+
+  &__reply {
+    color: rgba(255, 193, 68, 0.747);
+
+    &:after {
+      content: '\e15e';
+      font-family: 'Material Icons';
+      color: @faded-icon-color;
+    }
+  }
+
+  &__edit {
+    justify-self: end;
+    color: @primary-color;
+  }
+
+  &__delete {
+    color: @danger-color;
+  }
+}
