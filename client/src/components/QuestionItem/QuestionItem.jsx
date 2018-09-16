@@ -11,8 +11,7 @@ const QuestionItem = props => (
     <p className={css.question__likes}> 1 likes </p>
     <p className={css.question__comments}> 3 comments </p>
     <p className={css.question__time}> 4 hours ago </p>
-    <button className={css.question__delete}> Delete </button>
-    <i className={css.question__bin} />
+    <i className={css.question__delete} />
   </div>
 );
 

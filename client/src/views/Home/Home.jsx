@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 
-import RoomItem from '../../components/RoomItem/RoomItem';
-import QuestionItem from '../../components/QuestionItem/QuestionItem';
+import Room from '../../components/Room/Room';
 import css from './home.less';
 
 const Home = props => (
@@ -20,10 +19,9 @@ const Home = props => (
         </ul>
       </nav>
     </header>
-    <RoomItem />
-    <RoomItem />
-    <QuestionItem />
-    <QuestionItem />
+    <Room status="closed" />
+    <Room status="open" />
+    <Room status="closed" />
   </Fragment>
 );
 
