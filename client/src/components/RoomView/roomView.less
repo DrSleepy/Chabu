@@ -1,6 +1,6 @@
 @import (reference) '../../styles/index.less';
 
-.room-view {
+.room {
   display: grid;
   padding: @size-3;
   grid-column-gap: @size-4;
@@ -40,6 +40,42 @@
 
     &:before {
       .settings-icon-before;
+    }
+  }
+}
+
+.actions {
+  .bottom-box-shadow-with-border;
+  display: grid;
+  padding: 0 @size-3 @size-4 @size-3;
+  grid-template-columns: 1fr repeat(3, max-content);
+
+  &__submit {
+    .btn__default;
+    width: max-content;
+  }
+
+  &__item {
+    color: @black-text-color;
+    font-family: 'roboto-medium';
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+
+    &--search:after {
+      .faded-icons;
+      content: '\e8b6';
+      -webkit-text-stroke-width: 1px;
+      -webkit-text-stroke-color: @faded-icon-color;
+    }
+    &--view:after {
+      .faded-icons;
+      content: '\e417';
+    }
+
+    &--sort:after {
+      .faded-icons;
+      content: '\e164';
     }
   }
 }
