@@ -28,7 +28,6 @@
 
 .navigation {
   .bottom-box-shadow-with-border;
-  color: @primary-color;
   font-family: 'roboto-medium';
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -37,6 +36,17 @@
     .pad-tb-4;
     .pad-lr-2--5;
     display: grid;
+    color: @primary-color;
     justify-content: center;
+    transition: 200ms;
+    border-bottom: solid 2px transparent;
+
+    &:hover {
+      border-bottom: solid 2px @primary-color;
+    }
   }
+}
+
+.active {
+  border-bottom: solid 2px @primary-color;
 }

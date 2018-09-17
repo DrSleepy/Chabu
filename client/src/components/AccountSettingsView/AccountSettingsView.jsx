@@ -10,7 +10,7 @@ const AccountSettingsView = props => (
 
     <SettingsSection
       heading="Secure your account"
-      text="Secure your account by linking your email. This allows you to recover your account if you ever forget your email."
+      text="Secure your account by linking your email. This allows you to recover your account if you ever forget   your email."
     >
       <input className={css.input} type="email" placeholder="Email" />
     </SettingsSection>
