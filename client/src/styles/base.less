@@ -10,6 +10,11 @@
   src: url('../fonts/ROBOTO-MEDIUM.TTF') format('truetype');
 }
 
+#root {
+  height: 100%;
+  background-color: orange;
+}
+
 body {
   .milli;
   font-family: 'roboto-regular';
@@ -18,4 +23,8 @@ body {
 button {
   background: none;
   border: 0;
+}
+
+::placeholder {
+  color: @gray-text-color;
 }

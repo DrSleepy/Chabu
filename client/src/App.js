@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import QuestionView from './components/QuestionView/QuestionView';
+import RoomSettingsView from './components/RoomSettingsView/RoomSettingsView';
 
 import './styles/reset.less';
 import './styles/base.less';
@@ -8,8 +8,8 @@ import './styles/base.less';
 class App extends Component {
   render() {
     return (
-      <div>
-        <QuestionView />
+      <div style={{ height: '100%' }}>
+        <RoomSettingsView />
       </div>
     );
   }

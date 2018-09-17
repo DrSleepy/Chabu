@@ -11,64 +11,64 @@
   grid-template-areas:
     'thumb  title  title     title  title'
     'thumb  likes  comments  time   delete';
+}
 
-  &__thumb {
-    .pad-lr-2;
-    .tera;
-    color: @primary-color;
-    grid-area: thumb;
-    color: transparent;
-    -webkit-text-stroke-width: 1.5px;
-    -webkit-text-stroke-color: @primary-color;
+.thumb {
+  .pad-lr-2;
+  .tera;
+  color: @primary-color;
+  grid-area: thumb;
+  color: transparent;
+  -webkit-text-stroke-width: 1.5px;
+  -webkit-text-stroke-color: @primary-color;
 
-    &:before {
-      content: '\e8dc';
-      font-family: 'Material Icons';
-    }
+  &:before {
+    content: '\e8dc';
+    font-family: 'Material Icons';
+  }
+}
+
+.title {
+  .milli;
+  grid-area: title;
+  color: @light-black-text-color;
+  font-family: 'roboto-medium';
+}
+
+.likes,
+.comments,
+.time,
+.delete {
+  .micro;
+  color: #6889b9;
+}
+
+.likes {
+  grid-area: likes;
+}
+
+.comments {
+  grid-area: comments;
+}
+
+.time {
+  grid-area: time;
+  color: #6889b9;
+}
+
+.delete {
+  grid-area: delete;
+  justify-self: end;
+  color: rgba(240, 44, 175, 0.3);
+  transition: 150ms;
+
+  &:hover {
+    color: rgba(240, 44, 103, 0.63);
   }
 
-  &__title {
-    .milli;
-    grid-area: title;
-    color: @light-black-text-color;
-    font-family: 'roboto-medium';
-  }
-
-  &__likes,
-  &__comments,
-  &__time,
-  &__delete {
-    .micro;
-    color: #6889b9;
-  }
-
-  &__likes {
-    grid-area: likes;
-  }
-
-  &__comments {
-    grid-area: comments;
-  }
-
-  &__time {
-    grid-area: time;
-    color: #6889b9;
-  }
-
-  &__delete {
-    grid-area: delete;
-    justify-self: end;
-    color: rgba(240, 44, 175, 0.3);
-    transition: 150ms;
-
-    &:hover {
-      color: rgba(240, 44, 103, 0.63);
-    }
-
-    &:after {
-      content: '\e872';
-      font-family: 'Material Icons';
-      font-size: 16px;
-    }
+  &:after {
+    content: '\e872';
+    font-family: 'Material Icons';
+    font-size: 16px;
   }
 }

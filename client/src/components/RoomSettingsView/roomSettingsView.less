@@ -1,0 +1,77 @@
+@import (reference) '../../styles/index.less';
+
+.settings {
+  height: 100%;
+  display: grid;
+  grid-template-rows: repeat(3, max-content) 1fr;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  align-items: center;
+  padding: @size-2 @size-4;
+  background-color: @faded-white-color;
+  border-bottom: solid 1px @faded-border-color;
+
+  &__back:before {
+    .back-icon-before;
+  }
+
+  &__title {
+    .giga;
+    color: @primary-color;
+    font-family: 'roboto-medium';
+  }
+}
+
+.section {
+  padding: @size-4;
+
+  &__subheading {
+    .kilo;
+    color: @primary-color;
+    font-family: 'roboto-medium';
+  }
+
+  &__text {
+    color: @light-black-text-color;
+    margin-bottom: 15px;
+  }
+
+  &__input {
+    .input__default;
+    margin-bottom: 10px;
+  }
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: solid 1px @light-border-color;
+  border-radius: 3px;
+
+  &__button {
+    .pad-tb-3;
+    .pad-lr-5;
+
+    &--selected {
+      color: white;
+      background-color: @primary-color;
+      border-radius: 3px;
+    }
+  }
+}
+
+.footer {
+  display: grid;
+
+  &__update {
+    .btn__default;
+    .pad-tb-3;
+    .pad-lr-10;
+    justify-self: center;
+    align-self: end;
+    margin-bottom: @size-10;
+  }
+}

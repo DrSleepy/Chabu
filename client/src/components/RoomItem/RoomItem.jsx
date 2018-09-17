@@ -4,9 +4,9 @@ import RoomInfo from '../RoomInfo/RoomInfo';
 import css from './roomItem.less';
 
 const RoomItem = props => (
-  <div className={css['room']}>
+  <div className={css.room}>
     <RoomInfo />
-    <i className={css['room__arrow']} />
+    <i className={css.arrow} />
   </div>
 );
 

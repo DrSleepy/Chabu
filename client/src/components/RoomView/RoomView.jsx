@@ -7,16 +7,16 @@ import css from './roomView.less';
 const RoomView = props => (
   <Fragment>
     <header>
-      <div className={css['room']}>
-        <i className={css['room__back']} />
+      <div className={css.room}>
+        <i className={css.room__back} />
         <div className={css['room__room-info']}>
           <RoomInfo />
         </div>
-        <i className={css['room__leave']} />
-        <i className={css['room__settings']} />
+        <i className={css.room__leave} />
+        <i className={css.room__settings} />
       </div>
-      <div className={css['actions']}>
-        <button className={css['actions__submit']}> Create Question </button>
+      <div className={css.actions}>
+        <button className={css.actions__submit}> Create Question </button>
         <button>
           <span className={[css['actions__item'], css['actions__item--search']].join(' ')}> Search </span>
         </button>
