@@ -1,0 +1,20 @@
+@import (reference) '../../styles/index.less';
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  align-items: center;
+  padding: @size-2 @size-4;
+  background-color: @faded-white-color;
+  border-bottom: solid 1px @faded-border-color;
+}
+
+.back:before {
+  .back-icon-before;
+}
+
+.title {
+  .giga;
+  color: @primary-color;
+  font-family: 'roboto-medium';
+}

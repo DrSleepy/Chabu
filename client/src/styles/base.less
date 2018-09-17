@@ -25,6 +25,15 @@ button {
   border: 0;
 }
 
-::placeholder {
+::-webkit-input-placeholder {
+  color: @gray-text-color;
+}
+::-moz-placeholder {
+  color: @gray-text-color;
+}
+:-ms-input-placeholder {
+  color: @gray-text-color;
+}
+:-moz-placeholder {
   color: @gray-text-color;
 }
