@@ -1,8 +1,12 @@
 @import (reference) '../../styles/index.less';
 
+.head {
+  .bottom-box-shadow-with-border;
+}
+
 .room {
-  display: grid;
   padding: @size-4;
+  display: grid;
   grid-column-gap: @size-4;
   grid-template-columns: max-content 1fr max-content;
   grid-template-areas:
@@ -29,6 +33,7 @@
     &:before {
       content: '\e879';
       font-family: 'Material Icons';
+      transform: rotate(0.03deg);
     }
   }
 
@@ -45,8 +50,8 @@
 
 .actions {
   .bottom-box-shadow-with-border;
+  padding: @size-4;
   display: grid;
-  padding: 0 @size-3 @size-4 @size-3;
   grid-template-columns: 1fr repeat(3, max-content);
 
   &__submit {
@@ -75,6 +80,54 @@
     &--sort:after {
       .faded-icons;
       content: '\e164';
+    }
+  }
+}
+
+.filters {
+  background-color: @faded-white-color;
+
+  &__search {
+    padding: @size-4;
+    display: grid;
+    grid-template-columns: 1fr max-content;
+
+    &--input {
+      .input__default;
+      border-radius: 3px 0 0 3px;
+    }
+
+    &--icon {
+      .pad-lr-5;
+      display: grid;
+      align-items: center;
+      border-radius: 0 3px 3px 0;
+      transition: 150ms;
+      background-color: @light-border-color;
+      color: @light-black-text-color;
+
+      &:before {
+        content: '\e8b6';
+        font-family: 'Material Icons';
+        transform: rotate(0.03deg);
+      }
+    }
+
+    &--input:not(:placeholder-shown) ~ &--icon {
+      color: #fff;
+      background-color: @primary-color;
+    }
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-items: center;
+    font-family: 'roboto-medium';
+    color: @black-text-color;
+
+    &__item {
+      padding: @size-4;
     }
   }
 }

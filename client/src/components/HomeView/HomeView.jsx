@@ -1,4 +1,5 @@
 import React, { Fragment, Component } from 'react';
+import { Link } from 'react-router-dom';
 
 import RoomItem from '../RoomItem/RoomItem';
 import QuestionItem from '../QuestionItem/QuestionItem';
@@ -19,7 +20,7 @@ class HomeView extends Component {
         <div className={css.head}>
           <button className={css.head__join}> Join room </button>
           <button className={css.head__create}> Create room </button>
-          <i className={css.head__settings}> </i>
+          <Link to="/settings" className={css.head__settings} />
         </div>
         <nav>
           <ul className={css.navigation}>

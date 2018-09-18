@@ -1,13 +1,17 @@
+// transform: rotate(0.03deg) is used otherwise icons appear pixilated
+
 .faded-icons {
   font-family: 'Material Icons';
   color: @faded-icon-color;
   margin-left: 5px;
+  transform: rotate(0.03deg);
 }
 
 .settings-icon-before {
   content: '\e8b8';
   font-family: 'Material Icons';
   color: transparent;
+  transform: rotate(0.03deg);
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: @primary-color;
 }
@@ -17,6 +21,7 @@
   content: '\e314';
   font-family: 'Material Icons';
   color: @black-text-color;
+  transform: rotate(0.03deg);
 }
 
 .thumb-icon-before {
@@ -24,6 +29,7 @@
   content: '\e8dc';
   font-family: 'Material Icons';
   color: transparent;
+  transform: rotate(0.03deg);
   -webkit-text-stroke-width: 1.5px;
   -webkit-text-stroke-color: @primary-color;
 }
