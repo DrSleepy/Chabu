@@ -1,13 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import RoomInfo from '../RoomInfo/RoomInfo';
 import css from './roomItem.less';
 
 const RoomItem = props => (
-  <div className={css.room}>
+  <Link className={css.room} to="/r/r">
     <RoomInfo />
     <i className={css.arrow} />
-  </div>
+  </Link>
 );
 
 export default RoomItem;

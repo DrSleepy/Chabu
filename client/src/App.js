@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import HomeView from './components/HomeView/HomeView';
 import RoomView from './components/RoomView/RoomView';
@@ -14,10 +14,9 @@ class App extends Component {
       <BrowserRouter>
         <div style={{ height: '100%' }}>
           <Switch>
-            <Route exact path="/" component={HomeView} />
             <Route exact path="/r/:roomID" component={RoomView} />
             <Route exact path="/q/:questionID" component={QuestionView} />
-            <Redirect to="/" />
+            <Route path="/" component={HomeView} />
           </Switch>
         </div>
       </BrowserRouter>

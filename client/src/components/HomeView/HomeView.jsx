@@ -9,7 +9,7 @@ class HomeView extends Component {
     component: <RoomItem />
   };
 
-  switchComponent = component => {
+  changeComponentHandler = component => {
     this.setState({ component });
   };
 
@@ -23,18 +23,17 @@ class HomeView extends Component {
         </div>
         <nav>
           <ul className={css.navigation}>
-            <li className={css.navigation__item} onClick={() => this.switchComponent(<RoomItem />)}>
+            <li className={css.navigation__item} onClick={() => this.changeComponentHandler(<RoomItem />)}>
               Joined Rooms
             </li>
-            <li className={css.navigation__item} onClick={() => this.switchComponent(<QuestionItem />)}>
+            <li className={css.navigation__item} onClick={() => this.changeComponentHandler(<QuestionItem />)}>
               My Questions
             </li>
-            <li className={css.navigation__item} onClick={() => this.switchComponent(<RoomItem />)}>
+            <li className={css.navigation__item} onClick={() => this.changeComponentHandler(<RoomItem />)}>
               Created Rooms
             </li>
           </ul>
         </nav>
-
         {this.state.component}
       </Fragment>
     );

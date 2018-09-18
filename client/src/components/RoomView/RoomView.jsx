@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 
 import RoomInfo from '../RoomInfo/RoomInfo';
 import QuestionItem from '../QuestionItem/QuestionItem';
@@ -8,7 +9,7 @@ const RoomView = props => (
   <Fragment>
     <header>
       <div className={css.room}>
-        <i className={css.room__back} />
+        <Link to="/" className={css.room__back} />
         <div className={css['room__room-info']}>
           <RoomInfo />
         </div>
