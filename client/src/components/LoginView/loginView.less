@@ -1,8 +1,10 @@
 @import (reference) '../../styles/index.less';
 
 .form {
-  display: grid;
   padding: @size-4;
+  height: 100%;
+  display: grid;
+  grid-template-rows: repeat(4, max-content) 1fr;
 }
 
 .company {
@@ -18,9 +20,11 @@
 }
 
 .submit {
+  justify-self: center;
+  align-self: end;
   .btn__default;
   .pad-tb-2--5;
   .pad-lr-10;
   .kilo;
-  justify-self: center;
+  margin-bottom: @size-10;
 }

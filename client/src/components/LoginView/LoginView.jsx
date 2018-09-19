@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import server from '../../axios';
-import { appendErrorsHandler } from '../../helpers/errorHandlers';
+import appendErrorsHandler from '../../helpers/appendErrorsHandler';
 import InputWithError from '../InputWithError/InputWithError';
 import css from './loginView.less';
 
 class LoginView extends Component {
   state = {
     formData: {
-      username: '',
-      password: ''
+      username: 'bobby',
+      password: '12345678'
     },
     formErrors: {
       username: [],
@@ -39,12 +40,18 @@ class LoginView extends Component {
       const errors = response.details || response.errors;
       const formErrors = appendErrorsHandler(errors, this.state.formErrors);
       this.setState({ formErrors });
+      return;
     }
+
+    // handle store changes
+    this.props.setAccountID(response.data.data.accountID);
+
+    this.props.history.push('/');
   };
 
   render() {
     return (
-      <form className={css.form}>
+      <form className={css.form} onSubmit={event => this.formHandler(event)}>
         <h1 className={css.company}> Chabu </h1>
         <h2 className={css.title}> Login </h2>
         <InputWithError
@@ -59,7 +66,7 @@ class LoginView extends Component {
           onChange={event => this.bindToState(event, 'password')}
           errorMessage={this.state.formErrors.password[0]}
         />
-        <button className={css.submit} onClick={event => this.formHandler(event)} type="submit">
+        <button className={css.submit} type="submit">
           Login
         </button>
       </form>
@@ -67,4 +74,15 @@ class LoginView extends Component {
   }
 }
 
-export default LoginView;
+const mapDispatchToProps = dispatch => {
+  return {
+    setAccountID: accountID => {
+      dispatch({ type: 'SET_ACCOUNT', accountID });
+    }
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(LoginView);
