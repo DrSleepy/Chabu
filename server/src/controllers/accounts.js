@@ -43,6 +43,16 @@ export const updateAccount = async (req, res) => {
   res.status(200).json(response);
 };
 
+export const getList = (model, list) => async (req, res) => {
+  const response = { ok: false, errors: [], data: null };
+
+  const result = await model.find({ _id: { $in: req.account[list] } });
+
+  response.ok = true;
+  response.data = result;
+  res.status(200).json(response);
+};
+
 export const sendEmailVerification = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 

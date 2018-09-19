@@ -7,7 +7,7 @@ export const login = async (req, res, next) => {
 
   // check if account exists
   const bodyUsername = new RegExp(`^${req.body.username}$`, 'i');
-  const account = await AccountModel.findOne({ username: bodyUsername });
+  const account = await AccountModel.findOne({ username: bodyUsername }).select('+password');
 
   if (!account) {
     response.errors.push({ path: ['username'], message: 'Username is not registered' });
@@ -32,5 +32,6 @@ export const login = async (req, res, next) => {
   res.cookie('token', token, { httpOnly: false, secure: SECURE_COOKIES });
 
   response.ok = true;
+  response.data = { accountID: account._id };
   res.status(200).json(response);
 };

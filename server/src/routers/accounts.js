@@ -1,5 +1,7 @@
 import express from 'express';
 
+import RoomModel from '../models/Room';
+import QuestionModel from '../models/Question';
 import * as accountsValidation from '../validation/accounts';
 import * as accountsController from '../controllers/accounts';
 import * as auth from '../auth';
@@ -18,6 +20,12 @@ router
   .get(auth.isLoggedIn, accountsController.getAccount)
   .post(accountsValidation.createAccount, accountsController.createAccount)
   .patch(auth.isLoggedIn, accountsValidation.updateAccount, accountsController.updateAccount);
+
+router.route('/joined-rooms').get(auth.isLoggedIn, accountsController.getList(RoomModel, 'joinedRooms'));
+
+router.route('/created-questions').get(auth.isLoggedIn, accountsController.getList(QuestionModel, 'createdQuestions'));
+
+router.route('/created-rooms').get(auth.isLoggedIn, accountsController.getList(RoomModel, 'createdRooms'));
 
 router.route('/verify').post(auth.isLoggedIn, accountsValidation.verifyEmail, accountsController.sendEmailVerification);
 
