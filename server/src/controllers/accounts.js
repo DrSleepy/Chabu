@@ -117,7 +117,7 @@ export const resetPassword = async (req, res, next) => {
 
   const resetToken = shortid.generate();
 
-  const email = new RegExp(req.body.email, 'i');
+  const email = new RegExp(`^${req.body.email}$`, 'i');
   const account = await AccountModel.findOne({ email });
 
   if (!account) {

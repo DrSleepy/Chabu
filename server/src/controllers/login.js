@@ -6,7 +6,7 @@ export const login = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
   // check if account exists
-  const bodyUsername = new RegExp(req.body.username, 'i');
+  const bodyUsername = new RegExp(`^${req.body.username}$`, 'i');
   const account = await AccountModel.findOne({ username: bodyUsername });
 
   if (!account) {
