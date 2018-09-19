@@ -4,15 +4,41 @@ import { Link } from 'react-router-dom';
 import RoomItem from '../RoomItem/RoomItem';
 import QuestionItem from '../QuestionItem/QuestionItem';
 import css from './homeView.less';
+import server from '../../axios';
 
 class HomeView extends Component {
   state = {
     component: <RoomItem />
   };
 
-  changeComponentHandler = component => {
-    this.setState({ component });
-  };
+  componentWillMount() {
+    server
+      .get('accounts')
+      .then(x => {
+        console.log('ooo', x);
+      })
+      .catch(error => {
+        console.log(error.response);
+      });
+
+    // server
+    //   .post('login', {
+    //     username: 'bobby',
+    //     password: 'abc123456'
+    //   })
+    //   .then(x => {
+    //     console.log('yay', x);
+    //   })
+    //   .catch(error => {
+    //     console.log(error.response.data);
+    //   });
+
+    // fetch('http://localhost:3333/accounts/', { method: 'GET', credentials: 'include' }) // or 'PUT'
+    //   .then(res => res.json())
+    //   .then(x => {
+    //     console.log('eeee', x);
+    //   });
+  }
 
   render() {
     return (
@@ -24,13 +50,13 @@ class HomeView extends Component {
         </div>
         <nav>
           <ul className={css.navigation}>
-            <li className={css.navigation__item} onClick={() => this.changeComponentHandler(<RoomItem />)}>
+            <li className={css.navigation__item} onClick={() => this.setState({ component: <RoomItem /> })}>
               Joined Rooms
             </li>
-            <li className={css.navigation__item} onClick={() => this.changeComponentHandler(<QuestionItem />)}>
+            <li className={css.navigation__item} onClick={() => this.setState({ component: <QuestionItem /> })}>
               My Questions
             </li>
-            <li className={css.navigation__item} onClick={() => this.changeComponentHandler(<RoomItem />)}>
+            <li className={css.navigation__item} onClick={() => this.setState({ component: <RoomItem /> })}>
               Created Rooms
             </li>
           </ul>
