@@ -4,10 +4,10 @@ import css from './roomInfo.less';
 
 const RoomInfo = props => (
   <div className={css.room}>
-    <h2 className={css.title}> Computer Science - Pipelines</h2>
+    <h2 className={css.title}> {props.title} </h2>
     <i className={css.unlocked} />
-    <p className={css.creator}> Dr Pushpa King </p>
-    <p className={css.code}> Exd3D4F</p>
+    <p className={css.creator}> {props.creator} </p>
+    <p className={css.id}> {props.id} </p>
   </div>
 );
 

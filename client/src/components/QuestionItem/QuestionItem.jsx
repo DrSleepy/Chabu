@@ -21,11 +21,11 @@ class QuestionItem extends Component {
       <div className={css.question}>
         <i className={[css.thumb, cssIsLiked].join(' ')} onClick={this.likeHandler} />
         <h2 className={css.title}>
-          <Link to="/q/q">What exactly are pipelines in the context of Computer Science?</Link>
+          <Link to="/q/q"> {this.props.title} </Link>
         </h2>
         <p className={css.likes}> {this.state.likes} likes </p>
         <p className={css.comments}> 3 comments </p>
-        <p className={css.time}> 4 hours ago </p>
+        <p className={css.time}> {this.props.timeAgo} </p>
         <i className={css.delete} />
       </div>
     );

@@ -6,7 +6,7 @@ import css from './roomItem.less';
 
 const RoomItem = props => (
   <Link className={css.room} to="/r/r">
-    <RoomInfo />
+    <RoomInfo {...props} />
     <i className={css.arrow} />
   </Link>
 );

@@ -8,37 +8,28 @@ import server from '../../axios';
 
 class HomeView extends Component {
   state = {
-    component: <RoomItem />
+    list: null
   };
 
   componentWillMount() {
-    server
-      .get('accounts')
-      .then(x => {
-        console.log('ooo', x);
-      })
-      .catch(error => {
-        console.log(error.response);
-      });
-
-    // server
-    //   .post('login', {
-    //     username: 'bobby',
-    //     password: 'abc123456'
-    //   })
-    //   .then(x => {
-    //     console.log('yay', x);
-    //   })
-    //   .catch(error => {
-    //     console.log(error.response.data);
-    //   });
-
-    // fetch('http://localhost:3333/accounts/', { method: 'GET', credentials: 'include' }) // or 'PUT'
-    //   .then(res => res.json())
-    //   .then(x => {
-    //     console.log('eeee', x);
-    //   });
+    this.getList('joined-rooms');
   }
+
+  getList = async list => {
+    const response = await server.get(`/accounts/${list}`).catch(error => error.response.data);
+    const result = response.data.data;
+    let resultJSX = null;
+
+    if (list === 'joined-rooms' || list === 'created-rooms') {
+      resultJSX = result.map(room => <RoomItem title={room.title} id={room._id} creator={room.creator} key={room._id} />);
+    }
+
+    if (list === 'created-questions') {
+      resultJSX = result.map(question => <QuestionItem title={question.title} key={question._id} />);
+    }
+
+    this.setState({ list: resultJSX });
+  };
 
   render() {
     return (
@@ -50,18 +41,18 @@ class HomeView extends Component {
         </div>
         <nav>
           <ul className={css.navigation}>
-            <li className={css.navigation__item} onClick={() => this.setState({ component: <RoomItem /> })}>
+            <li className={css.navigation__item} onClick={() => this.getList('joined-rooms')}>
               Joined Rooms
             </li>
-            <li className={css.navigation__item} onClick={() => this.setState({ component: <QuestionItem /> })}>
+            <li className={css.navigation__item} onClick={() => this.getList('created-questions')}>
               My Questions
             </li>
-            <li className={css.navigation__item} onClick={() => this.setState({ component: <RoomItem /> })}>
+            <li className={css.navigation__item} onClick={() => this.getList('created-rooms')}>
               Created Rooms
             </li>
           </ul>
         </nav>
-        {this.state.component}
+        {this.state.list}
       </Fragment>
     );
   }
