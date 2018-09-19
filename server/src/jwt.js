@@ -18,7 +18,7 @@ export const verifyToken = async (req, res, next) => {
   }
 
   try {
-    const decoded = await JWT.verify(req.cookies.token, JWT_SECRET);
+    const decoded = JWT.verify(req.cookies.token, JWT_SECRET);
     req.account = await AccountModel.findById(decoded.accountID).select('-password');
     next();
   } catch (error) {

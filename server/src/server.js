@@ -22,7 +22,7 @@ const server = express();
 server.use(helmet());
 server.use(compression());
 server.use(logger('dev'));
-server.use(cors());
+server.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 server.use(bodyParser.json());
 server.use(cookieParser());
 server.use(verifyToken);

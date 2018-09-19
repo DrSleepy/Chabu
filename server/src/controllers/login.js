@@ -29,7 +29,7 @@ export const login = async (req, res, next) => {
   }
 
   const token = signToken(account);
-  res.cookie('token', token, { httpOnly: true, secure: SECURE_COOKIES });
+  res.cookie('token', token, { httpOnly: false, secure: SECURE_COOKIES });
 
   response.ok = true;
   res.status(200).json(response);
