@@ -1,9 +1,21 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-// created for consistency reasons with authRoute - removes the need for function as component
 const customRoute = props => {
-  return <Route exact path={props.path} component={() => props.component} />;
+  let component;
+
+  if (props.auth) {
+    component = props.accountID ? props.component : <Redirect to="/login" />;
+  } else {
+    component = props.component;
+  }
+
+  return <Route exact path={props.path} component={() => component} />;
 };
 
-export default customRoute;
+const mapStateToProps = state => {
+  return { accountID: state.accountID };
+};
+
+export default connect(mapStateToProps)(customRoute);

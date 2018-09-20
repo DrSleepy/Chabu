@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Route from './components/Route/Route';
-import AuthRoute from './components/AuthRoute/AuthRoute';
 import LoginView from './components/LoginView/LoginView';
 import HomeView from './components/HomeView/HomeView';
 import RoomView from './components/RoomView/RoomView';
@@ -21,11 +20,11 @@ class App extends Component {
         <Router>
           <Switch>
             <Route path="/login" component={!this.props.accountID ? <LoginView /> : <Redirect to="/" />} />
-            <AuthRoute path="/settings" component={<AccountSettingsView />} />
-            <AuthRoute path="/(joined-rooms|created-questions|created-rooms)/" component={<HomeView />} />
+            <Route auth={true} path="/settings" component={<AccountSettingsView />} />
+            <Route auth={true} path="/(joined-rooms|created-questions|created-rooms)/" component={<HomeView />} />
             <Route path="/r/:roomID" component={<RoomView />} />
             <Route path="/r/:roomID/:questionID" component={<QuestionView />} />
-            <AuthRoute path="/r/:roomID/settings" component={<RoomSettingsView />} />
+            <Route auth={true} path="/r/:roomID/settings" component={<RoomSettingsView />} />
             <Redirect from="/" to="/joined-rooms" />
           </Switch>
         </Router>
@@ -35,9 +34,7 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-  return {
-    accountID: state.accountID
-  };
+  return { accountID: state.accountID };
 };
 
 export default connect(mapStateToProps)(App);
