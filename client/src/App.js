@@ -7,6 +7,7 @@ import RoomView from './components/RoomView/RoomView';
 import QuestionView from './components/QuestionView/QuestionView';
 import AccountSettingsView from './components/AccountSettingsView/AccountSettingsView';
 import RoomSettingsView from './components/RoomSettingsView/RoomSettingsView';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 import './styles/reset.less';
 import './styles/base.less';
@@ -14,18 +15,20 @@ import './styles/base.less';
 class App extends Component {
   render() {
     return (
-      <Router>
-        <div style={{ height: '100%' }}>
+      <div style={{ height: '100%' }}>
+        <Router>
           <Switch>
             <Route exact path="/login" component={LoginView} />
-            <Route exact path="/settings" component={AccountSettingsView} />
+
+            <ProtectedRoute path="/settings" component={<AccountSettingsView />} />
+
             <Route exact path="/r/:roomID" component={RoomView} />
             <Route exact path="/r/:roomID/settings" component={RoomSettingsView} />
             <Route exact path="/q/:questionID" component={QuestionView} />
             <Route path="/" component={HomeView} />
           </Switch>
-        </div>
-      </Router>
+        </Router>
+      </div>
     );
   }
 }
