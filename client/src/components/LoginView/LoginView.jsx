@@ -45,8 +45,6 @@ class LoginView extends Component {
 
     // handle store changes
     this.props.setAccountID(response.data.data.accountID);
-
-    this.props.history.push('/');
   };
 
   render() {

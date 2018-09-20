@@ -1,6 +1,7 @@
 import React, { Fragment, Component } from 'react';
-import { Link, Route, NavLink, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
+import NavBar from '../NavBar/NavBar';
 import RoomItem from '../RoomItem/RoomItem';
 import QuestionItem from '../QuestionItem/QuestionItem';
 import css from './homeView.less';
@@ -8,11 +9,18 @@ import server from '../../axios';
 
 class HomeView extends Component {
   state = {
-    list: null
+    list: null,
+    loading: false
   };
 
   componentWillMount() {
-    this.getList('joined-rooms');
+    const list = window.location.pathname.replace('/', '');
+    this.getList(list);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const list = window.location.pathname.replace('/', '');
+    this.getList(list);
   }
 
   getList = async list => {
@@ -41,35 +49,8 @@ class HomeView extends Component {
           <button className={css.head__create}> Create room </button>
           <Link to="/settings" className={css.head__settings} />
         </div>
-        <nav className={css.navigation}>
-          <NavLink
-            className={css.navigation__item}
-            to="/joined-rooms"
-            onClick={() => this.getList('joined-rooms')}
-            activeClassName={css.active}
-          >
-            Joined Rooms
-          </NavLink>
-          <NavLink
-            className={css.navigation__item}
-            to="/created-questions"
-            onClick={() => this.getList('created-questions')}
-            activeClassName={css.active}
-          >
-            My Questions
-          </NavLink>
-          <NavLink
-            className={css.navigation__item}
-            to="/created-rooms"
-            onClick={() => this.getList('created-rooms')}
-            activeClassName={css.active}
-          >
-            Created Rooms
-          </NavLink>
-        </nav>
-
-        <Route exact path="/(joined-rooms|created-questions|created-rooms)/" component={() => this.state.list} />
-        <Redirect from="/" to="/joined-rooms" />
+        <NavBar />
+        {!this.state.loading && this.state.list}
       </Fragment>
     );
   }
