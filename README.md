@@ -17,9 +17,9 @@ API Endpoints v1
 | POST   | accounts/                                                       | create new account                                                                                           |
 | GET    | accounts/                                                       | get current account settings                                                                                 |
 | PATCH  | accounts/                                                       | update current account settings                                                                              |
-| PATCH  | accounts/joined-rooms                                           | get all joined rooms of user                                                                                 |
-| PATCH  | accounts/created-rooms                                          | get all created rooms of user                                                                                |
-| PATCH  | accounts/created-questions                                      | get all created quesitons of user                                                                            |
+| PATCH  | accounts/joined-rooms                                           | get all joined rooms of current user                                                                         |
+| PATCH  | accounts/created-rooms                                          | get all created rooms of current user                                                                        |
+| PATCH  | accounts/created-questions                                      | get all created quesitons of current user                                                                    |
 | POST   | accounts/verify                                                 | send email verification to current account                                                                   |
 | GET    | accounts/verify/:token                                          | add verified email to current account                                                                        |
 | POST   | accounts/reset                                                  | send email containing password reset link                                                                    |
