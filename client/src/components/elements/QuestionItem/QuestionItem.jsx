@@ -19,16 +19,16 @@ class QuestionItem extends Component {
 
     const response = await server.patch(`/questions/${this.props.id}/like`).catch(error => error.response.data);
     const updatedLikedQuestions = response.data.data.likedQuestions;
-    this.props.updateLikedQuestions(updatedLikedQuestions);
+    this.props.updateLikedQuestions(updatedLikedQuestions); // THIS SHIT RIGHT HERE REFRESHES PAGE. FIX
   };
 
-  mapPropsToState() {
+  appendPropsToState() {
     const liked = this.props.likedQuestions.includes(this.props.id);
     this.setState({ liked, likes: this.props.likes });
   }
 
   componentWillMount() {
-    this.mapPropsToState();
+    this.appendPropsToState();
   }
 
   render() {

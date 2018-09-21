@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import mapStateToProps from './store/state';
 import Route from './components/elements/Route/Route';
 import LoginView from './components/views/Login/Login';
 import HomeView from './components/views/Home/Home';
@@ -32,9 +33,5 @@ class App extends Component {
     );
   }
 }
-
-const mapStateToProps = state => {
-  return { accountID: state.accountID };
-};
 
 export default connect(mapStateToProps)(App);
