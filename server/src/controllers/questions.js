@@ -1,3 +1,4 @@
+import AccountModel from '../models/Account';
 import RoomModel from '../models/Room';
 import QuestionModel from '../models/Question';
 
@@ -124,6 +125,9 @@ export const likeQuestion = async (req, res, next) => {
 
   await Promise.all([updateQuestionResult, updateAccount]);
 
+  const likedQuestions = await AccountModel.findById(req.account._id).select('likedQuestions');
+
   response.ok = true;
+  response.data = likedQuestions;
   res.status(200).json(response);
 };

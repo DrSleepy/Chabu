@@ -35,7 +35,7 @@ class HomeView extends Component {
     }
 
     if (list === 'created-questions') {
-      resultJSX = result.map(question => <QuestionItem title={question.title} key={question._id} />);
+      resultJSX = result.map((question, i) => <QuestionItem {...question} key={i} />);
     }
 
     this.setState({ loading: false, list: resultJSX });

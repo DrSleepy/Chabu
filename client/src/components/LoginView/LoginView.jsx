@@ -43,8 +43,10 @@ class LoginView extends Component {
       return;
     }
 
+    const { accountID, likedQuestions } = response.data.data;
+
     // handle store changes
-    this.props.setAccountID(response.data.data.accountID);
+    this.props.setAccount({ accountID, likedQuestions });
   };
 
   render() {
@@ -74,8 +76,8 @@ class LoginView extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setAccountID: accountID => {
-      dispatch({ type: 'SET_ACCOUNT', accountID });
+    setAccount: ({ accountID, likedQuestions }) => {
+      dispatch({ type: 'SET_ACCOUNT', accountID, likedQuestions });
     }
   };
 };

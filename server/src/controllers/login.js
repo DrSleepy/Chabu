@@ -32,6 +32,6 @@ export const login = async (req, res, next) => {
   res.cookie('token', token, { httpOnly: false, secure: SECURE_COOKIES });
 
   response.ok = true;
-  response.data = { accountID: account._id };
+  response.data = { accountID: account._id, likedQuestions: account.likedQuestions };
   res.status(200).json(response);
 };

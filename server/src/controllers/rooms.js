@@ -49,7 +49,7 @@ export const createRoom = async (req, res) => {
 export const getRoom = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const room = await RoomModel.findById(req.params.roomID);
+  const room = await RoomModel.findById(req.params.roomID).populate('questions');
   if (!room) {
     response.errors.push({ path: ['room'], message: 'Room not found' });
     next({ status: 404, ...response });
