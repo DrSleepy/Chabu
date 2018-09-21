@@ -1,6 +1,7 @@
 import React, { Fragment, Component } from 'react';
 import { Link } from 'react-router-dom';
 
+import Loader from '../Loader/Loader';
 import NavBar from '../NavBar/NavBar';
 import RoomItem from '../RoomItem/RoomItem';
 import QuestionItem from '../QuestionItem/QuestionItem';
@@ -10,7 +11,7 @@ import server from '../../axios';
 class HomeView extends Component {
   state = {
     list: null,
-    loading: false
+    loading: true
   };
 
   componentWillMount() {
@@ -50,7 +51,7 @@ class HomeView extends Component {
           <Link to="/settings" className={css.head__settings} />
         </div>
         <NavBar />
-        {!this.state.loading && this.state.list}
+        {this.state.loading ? <Loader loading={this.state.loading} /> : this.state.list}
       </Fragment>
     );
   }

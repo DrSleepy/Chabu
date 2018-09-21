@@ -22,8 +22,6 @@ class RoomView extends Component {
     const response = await server.get(`/rooms/${roomID}`).catch(error => error.response.data);
     const { id, title, unlocked, creator, account, questions } = response.data.data;
 
-    console.log(questions);
-
     this.setState({
       ...this.setState,
       room: { id, title, unlocked, creator, account },
