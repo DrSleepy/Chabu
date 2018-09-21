@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import Route from './components/Route/Route';
-import LoginView from './components/LoginView/LoginView';
-import HomeView from './components/HomeView/HomeView';
-import RoomView from './components/RoomView/RoomView';
-import QuestionView from './components/QuestionView/QuestionView';
-import AccountSettingsView from './components/AccountSettingsView/AccountSettingsView';
-import RoomSettingsView from './components/RoomSettingsView/RoomSettingsView';
+import Route from './components/elements/Route/Route';
+import LoginView from './components/views/Login/Login';
+import HomeView from './components/views/Home/Home';
+import RoomView from './components/views/Room/Room';
+import QuestionView from './components/views/Question/Question';
+import AccountSettingsView from './components/views/AccountSettings/AccountSettings';
+import RoomSettingsView from './components/views/RoomSettings/RoomSettings';
 
 import './styles/reset.less';
 import './styles/base.less';
@@ -19,7 +19,7 @@ class App extends Component {
       <div style={{ height: '100%' }}>
         <Router>
           <Switch>
-            <Route path="/login" component={!this.props.accountID ? <LoginView /> : <Redirect to="/" />} />
+            <Route path="/login" component={!this.props.accountID ? <LoginView /> : <Redirect to="/joined-rooms" />} />
             <Route auth={true} path="/settings" component={<AccountSettingsView />} />
             <Route auth={true} path="/(joined-rooms|created-questions|created-rooms)/" component={<HomeView />} />
             <Route path="/r/:roomID" component={<RoomView />} />

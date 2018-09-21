@@ -1,0 +1,27 @@
+@import (reference) '../../../styles/index.less';
+
+.head {
+  padding: @size-4;
+  grid-column-gap: @size-2;
+  display: grid;
+  grid-template-columns: max-content max-content 1fr;
+  align-items: center;
+
+  &__join {
+    .btn__primary;
+  }
+
+  &__create {
+    .btn__default;
+  }
+
+  &__settings {
+    .tera;
+    justify-self: end;
+    margin-top: 3px;
+
+    &:before {
+      .settings-icon-before;
+    }
+  }
+}

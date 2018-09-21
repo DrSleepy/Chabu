@@ -12,6 +12,10 @@ const reducer = (state = initState, action) => {
     };
   }
 
+  if (action.type === 'UNSET_ACCOUNT') {
+    return { ...state, accountID: null, likedQuestions: [] };
+  }
+
   if (action.type === 'UPDATE_LIKED_QUESTIONS') {
     return { ...state, likedQuestions: action.likedQuestions };
   }
