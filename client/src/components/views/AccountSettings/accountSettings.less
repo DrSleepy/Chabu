@@ -11,6 +11,10 @@
   margin-bottom: 10px;
 }
 
+.send {
+  float: right;
+}
+
 .buttons {
   position: relative;
   display: grid;
@@ -42,7 +46,7 @@
 
     &--off {
       left: 0;
-      background-color: @danger-color;
+      background-color: @purple-color;
     }
 
     &--off ~ .buttons__button:nth-of-type(1) {
@@ -53,4 +57,14 @@
       color: black;
     }
   }
+}
+
+.logout {
+  .btn__default--danger;
+  .pad-tb-2--5;
+  .pad-lr-10;
+  .milli;
+  justify-self: center;
+  align-self: end;
+  margin-bottom: @size-10;
 }

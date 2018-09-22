@@ -16,6 +16,12 @@
   }
 }
 
+.btn__default--danger {
+  .btn__default(@danger-color);
+  border: solid 1px @danger-color;
+  color: @danger-color;
+}
+
 .btn__primary {
   .btn__default(#fff);
   color: white;

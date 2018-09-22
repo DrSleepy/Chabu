@@ -58,6 +58,7 @@ export const sendEmailVerification = async (req, res, next) => {
 
   if (req.account.email) {
     response.errors.push({ path: ['email'], message: 'Account is already linked to an email' });
+    console.log('-----');
     next({ status: 400, ...response });
     return;
   }

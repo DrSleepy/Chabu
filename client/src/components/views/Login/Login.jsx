@@ -34,7 +34,8 @@ class Login extends Component {
     event.preventDefault();
     this.resetErrorsHandler();
 
-    const response = await server.post('login', { ...this.state.formData }).catch(error => error.response.data);
+    const response = await server.post('login', { ...this.state.formData }).catch(error => error.response);
+    if (!response) return;
 
     // handle errors
     if (response.details || response.errors) {

@@ -5,7 +5,7 @@ import css from './loader.less';
 
 const Loader = props => (
   <div className={css.container}>
-    <ClipLoader color={'#2d8fff'} />
+    <ClipLoader color={props.color || '#2d8fff'} size={props.size || 30} />
   </div>
 );
 

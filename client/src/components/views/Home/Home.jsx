@@ -19,8 +19,8 @@ class Home extends Component {
   getList = async list => {
     this.setState({ loading: true });
 
-    const response = await server.get(`/accounts/${list}`).catch(error => error.response.data);
-    if (response.status === 401) {
+    const response = await server.get(`/accounts/${list}`).catch(error => error.response);
+    if (!response || response.status === 401) {
       this.props.unsetAccount();
       return;
     }
