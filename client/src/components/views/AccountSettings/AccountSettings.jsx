@@ -13,7 +13,8 @@ class AccountSettings extends Component {
     sending: false,
     email: {
       value: '',
-      error: ''
+      error: '',
+      verified: false
     }
   };
 
@@ -31,9 +32,32 @@ class AccountSettings extends Component {
     this.setState({ sending: false });
   };
 
+  showUsernameHandler = async boolean => {
+    const response = await server.patch('accounts/', { showUsername: boolean }).catch(error => error.response);
+    if (!response) return;
+
+    this.setState({ off: boolean });
+  };
+
+  appendSettingsToState = async () => {
+    const response = await server.get('accounts/').catch(error => error.response);
+    if (!response) return;
+
+    if (response.data.data.email) {
+      this.setState({ email: { ...this.state.email, verified: true } });
+    }
+
+    const { showUsername, email } = response.data.data;
+    this.setState({ off: showUsername, email: { ...this.state.email, value: email } });
+  };
+
   bindToState = event => {
     this.setState({ email: { ...this.state.email, value: event.target.value } });
   };
+
+  async componentWillMount() {
+    this.appendSettingsToState();
+  }
 
   render() {
     const cssOff = this.state.off ? css['buttons__background--off'] : null;
@@ -51,15 +75,19 @@ class AccountSettings extends Component {
             placeholder="Email"
             onChange={event => this.bindToState(event)}
             errorMessage={this.state.email.error}
+            value={this.state.email.value}
+            disabled={this.state.email.verified}
           />
 
-          <ButtonWithLoader
-            className={css.send}
-            text="Send"
-            loading={this.state.sending}
-            onClick={this.sendEmail}
-            disabled={this.state.sending}
-          />
+          {!this.state.email.verified && (
+            <ButtonWithLoader
+              className={css.send}
+              text="Send"
+              loading={this.state.sending}
+              onClick={this.sendEmail}
+              disabled={this.state.sending}
+            />
+          )}
         </SettingsSection>
 
         <SettingsSection
@@ -68,10 +96,10 @@ class AccountSettings extends Component {
         >
           <div className={css.buttons}>
             <div className={[css.buttons__background, cssOff].join(' ')} />
-            <button className={css.buttons__button} onClick={() => this.setState({ off: true })}>
+            <button className={css.buttons__button} onClick={() => this.showUsernameHandler(true)}>
               Show
             </button>
-            <button className={css.buttons__button} onClick={() => this.setState({ off: false })}>
+            <button className={css.buttons__button} onClick={() => this.showUsernameHandler(false)}>
               Hide
             </button>
           </div>

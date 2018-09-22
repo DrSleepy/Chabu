@@ -12,8 +12,9 @@ const InputWithError = props => (
       className={[css.input, inputErrorHandler(props.errorMessage)].join(' ')}
       type={props.type || 'text'}
       placeholder={props.placeholder}
-      value={props.value}
+      value={props.value || ''}
       onChange={props.onChange}
+      disabled={props.disabled}
     />
     <p className={css['error-message']}> {props.errorMessage} </p>
   </div>
