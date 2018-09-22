@@ -1,4 +1,3 @@
-import AccountModel from '../models/Account';
 import RoomModel from '../models/Room';
 import QuestionModel from '../models/Question';
 
@@ -19,9 +18,9 @@ export const createQuestion = async (req, res, next) => {
     return;
   }
 
-  const newQuestion = await new QuestionModel({ account: req.account._id, ...req.body }).save();
+  const newQuestion = await new QuestionModel({ account: req.account._id, likedBy: req.account._id, ...req.body }).save();
 
-  const updateRoom = room.update({ $push: { questions: newQuestion._id, likedQuestions: newQuestion._id } }).exec();
+  const updateRoom = room.update({ $push: { questions: newQuestion._id } }).exec();
   const updateAccount = req.account.update({ $push: { createdQuestions: newQuestion._id } }).exec();
 
   await Promise.all([updateRoom, updateAccount]);
@@ -34,25 +33,6 @@ export const getQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
   const question = await QuestionModel.findById(req.params.questionID).populate('comments');
-
-  // const question = await QuestionModel.findById(req.params.questionID)
-  //   .populate({
-  //     path: 'comments',
-  //     populate: {
-  //       path: 'comments',
-  //       populate: {
-  //         path: 'comments',
-  //         populate: {
-  //           path: 'comments',
-  //           populate: {
-  //             path: 'comments'
-  //           }
-  //         }
-  //       }
-  //     }
-  //   })
-  //   .lean()
-  //   .exec();
 
   if (!question) {
     response.errors.push({ path: ['question'], message: 'Question not found' });
@@ -103,31 +83,18 @@ export const deleteQuestion = async (req, res, next) => {
 export const likeQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const liked = req.account.likedQuestions.find(ID => ID === req.params.questionID);
   const question = await QuestionModel.findById(req.params.questionID);
-
   if (!question) {
     response.errors.push({ path: ['question'], message: 'Question not found' });
     next({ status: 404, ...response });
     return;
   }
 
-  let action = '$push';
-  let vote = 1;
+  const liked = question.likedBy.find(accountID => accountID === req.account._id);
+  const action = liked ? '$pull' : '$push';
 
-  if (liked) {
-    action = '$pull';
-    vote = -1;
-  }
-
-  const updateQuestionResult = question.update({ $inc: { likes: vote } }).exec();
-  const updateAccount = req.account.update({ [action]: { likedQuestions: req.params.questionID } }).exec();
-
-  await Promise.all([updateQuestionResult, updateAccount]);
-
-  const likedQuestions = await AccountModel.findById(req.account._id).select('likedQuestions');
+  await question.update({ [action]: { likedBy: req.account._id } });
 
   response.ok = true;
-  response.data = likedQuestions;
   res.status(200).json(response);
 };

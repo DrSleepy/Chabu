@@ -36,12 +36,6 @@ const AccountSchema = new Schema({
     type: String,
     default: null
   },
-  likedQuestions: [
-    {
-      type: String,
-      ref: 'Question'
-    }
-  ],
   joinedRooms: [
     {
       type: String,

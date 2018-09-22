@@ -30,10 +30,12 @@ const QuestionSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  likes: {
-    type: Number,
-    default: 0
-  },
+  likedBy: [
+    {
+      type: String,
+      ref: 'Account'
+    }
+  ],
   comments: [
     {
       type: String,

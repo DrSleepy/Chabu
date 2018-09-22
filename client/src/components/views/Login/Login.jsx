@@ -10,7 +10,7 @@ import css from './login.less';
 class LoginView extends Component {
   state = {
     formData: {
-      username: 'bobby',
+      username: 'sleepy',
       password: '12345678'
     },
     formErrors: {

@@ -22,14 +22,15 @@ class HomeView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const list = window.location.pathname.replace('/', '');
-    this.getList(list);
+    // const list = window.location.pathname.replace('/', '');
+    // this.getList(list);
   }
 
   getList = async list => {
     this.setState({ loading: true });
 
     const response = await server.get(`/accounts/${list}`).catch(error => error.response.data);
+
     if (response.status === 401) {
       this.props.unsetAccount();
       return;

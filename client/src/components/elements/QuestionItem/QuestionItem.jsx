@@ -16,15 +16,12 @@ class QuestionItem extends Component {
   likeHandler = async () => {
     this.setState({ liked: !this.state.liked });
     this.state.liked ? this.setState({ likes: this.state.likes - 1 }) : this.setState({ likes: this.state.likes + 1 });
-
-    const response = await server.patch(`/questions/${this.props.id}/like`).catch(error => error.response.data);
-    const updatedLikedQuestions = response.data.data.likedQuestions;
-    this.props.updateLikedQuestions(updatedLikedQuestions); // THIS SHIT RIGHT HERE REFRESHES PAGE. FIX
+    await server.patch(`/questions/${this.props.id}/like`).catch(error => error.response.data);
   };
 
   appendPropsToState() {
-    const liked = this.props.likedQuestions.includes(this.props.id);
-    this.setState({ liked, likes: this.props.likes });
+    const liked = this.props.likedBy.includes(this.props.accountID);
+    this.setState({ liked, likes: this.props.likedBy.length });
   }
 
   componentWillMount() {
