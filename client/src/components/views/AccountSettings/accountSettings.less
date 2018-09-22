@@ -40,16 +40,16 @@
     transition: 150ms ease-out;
     z-index: -1;
 
-    &--locked {
+    &--off {
       left: 0;
       background-color: @danger-color;
     }
 
-    &--locked ~ .buttons__button:nth-of-type(1) {
+    &--off ~ .buttons__button:nth-of-type(1) {
       color: white;
     }
 
-    &--locked ~ .buttons__button:nth-of-type(2) {
+    &--off ~ .buttons__button:nth-of-type(2) {
       color: black;
     }
   }

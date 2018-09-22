@@ -6,11 +6,11 @@ import css from './accountSettings.less';
 
 class AccountSettings extends Component {
   state = {
-    locked: false
+    off: false
   };
 
   render() {
-    const cssIsLocked = this.state.locked ? css['buttons__background--locked'] : null;
+    const cssOff = this.state.off ? css['buttons__background--off'] : null;
 
     return (
       <div className={css.settings}>
@@ -28,12 +28,12 @@ class AccountSettings extends Component {
           text="Toggle the switch below to hide or show your username when commenting in a question thread."
         >
           <div className={css.buttons}>
-            <div className={[css.buttons__background, cssIsLocked].join(' ')} />
-            <button className={css.buttons__button} onClick={() => this.setState({ locked: true })}>
-              Lock
+            <div className={[css.buttons__background, cssOff].join(' ')} />
+            <button className={css.buttons__button} onClick={() => this.setState({ off: true })}>
+              Show
             </button>
-            <button className={css.buttons__button} onClick={() => this.setState({ locked: false })}>
-              Unlocked
+            <button className={css.buttons__button} onClick={() => this.setState({ off: false })}>
+              Hide
             </button>
           </div>
         </SettingsSection>
