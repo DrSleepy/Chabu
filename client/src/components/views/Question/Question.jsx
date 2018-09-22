@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Comment from '../../elements/Comment/Comment';
 import css from './question.less';
 
-const QuestionView = props => (
+const Question = props => (
   <Fragment>
     <div className={css.question}>
       <div className={css.body}>
@@ -43,4 +43,4 @@ const QuestionView = props => (
   </Fragment>
 );
 
-export default QuestionView;
+export default Question;

@@ -12,19 +12,45 @@
 }
 
 .buttons {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border: solid 1px @light-border-color;
+  border: solid 1px rgba(61, 112, 167, 0.1);
   border-radius: 3px;
 
   &__button {
     .pad-tb-3;
     .pad-lr-5;
+    background: none;
+    color: @black-text-color;
 
-    &--selected {
+    &:nth-of-type(2) {
       color: white;
-      background-color: @primary-color;
-      border-radius: 3px;
+    }
+  }
+
+  &__background {
+    .bottom-box-shadow-with-border;
+    background-color: @primary-color;
+    position: absolute;
+    height: 100%;
+    width: 50%;
+    left: 50%;
+    border-radius: 3px;
+    transition: 150ms ease-out;
+    z-index: -1;
+
+    &--locked {
+      left: 0;
+      background-color: @danger-color;
+    }
+
+    &--locked ~ .buttons__button:nth-of-type(1) {
+      color: white;
+    }
+
+    &--locked ~ .buttons__button:nth-of-type(2) {
+      color: black;
     }
   }
 }

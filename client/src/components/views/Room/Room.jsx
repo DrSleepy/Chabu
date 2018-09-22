@@ -6,7 +6,7 @@ import QuestionItem from '../../elements/QuestionItem/QuestionItem';
 import server from '../../../axios';
 import css from './room.less';
 
-class RoomView extends Component {
+class Room extends Component {
   state = {
     room: {
       id: '',
@@ -88,4 +88,4 @@ class RoomView extends Component {
   }
 }
 
-export default RoomView;
+export default Room;

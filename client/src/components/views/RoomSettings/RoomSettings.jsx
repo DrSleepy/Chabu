@@ -4,7 +4,7 @@ import SettingsHeader from '../../elements/SettingsHeader/SettingsHeader';
 import SettingsSection from '../../elements/SettingsSection/SettingsSection';
 import css from './roomSettings.less';
 
-const RoomSettingsView = props => (
+const RoomSettings = props => (
   <div className={css.settings}>
     <SettingsHeader heading="Room Settings" />
 
@@ -29,4 +29,4 @@ const RoomSettingsView = props => (
   </div>
 );
 
-export default RoomSettingsView;
+export default RoomSettings;

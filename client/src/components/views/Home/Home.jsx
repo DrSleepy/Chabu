@@ -10,7 +10,7 @@ import QuestionItem from '../../elements/QuestionItem/QuestionItem';
 import server from '../../../axios';
 import css from './home.less';
 
-class HomeView extends Component {
+class Home extends Component {
   state = {
     list: null,
     loading: false
@@ -62,4 +62,4 @@ class HomeView extends Component {
 export default connect(
   null,
   mapDispatchToProps
-)(HomeView);
+)(Home);

@@ -7,7 +7,7 @@ import InputWithError from '../../elements/InputWithError/InputWithError';
 import server from '../../../axios';
 import css from './login.less';
 
-class LoginView extends Component {
+class Login extends Component {
   state = {
     formData: {
       username: 'sleepy',
@@ -78,4 +78,4 @@ class LoginView extends Component {
 export default connect(
   null,
   mapDispatchToProps
-)(LoginView);
+)(Login);
