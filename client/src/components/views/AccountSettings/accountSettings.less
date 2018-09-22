@@ -15,6 +15,21 @@
   float: right;
 }
 
+.sent {
+  color: @soft-green-color;
+  float: right;
+
+  &:before {
+    .micro;
+    content: '\e5ca';
+    font-family: 'Material Icons';
+    color: @green-color;
+    margin-right: 5px;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: @green-color;
+  }
+}
+
 .buttons {
   position: relative;
   display: grid;

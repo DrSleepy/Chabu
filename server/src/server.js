@@ -28,11 +28,12 @@ server.use(cookieParser());
 server.use(verifyToken);
 
 // routes
-server.use('/login', login);
 server.use('/accounts', accounts);
 server.use('/rooms', rooms);
 server.use('/questions', questions);
 server.use('/comments', comments);
+server.use('/login', login);
+server.use('/logout', (req, res) => res.clearCookie('token').sendStatus(200));
 
 // error handling
 server.use((err, req, res, next) => res.status(err.status).json(err)); // eslint-disable-line

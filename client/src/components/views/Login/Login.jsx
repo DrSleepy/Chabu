@@ -10,7 +10,7 @@ import css from './login.less';
 class Login extends Component {
   state = {
     formData: {
-      username: 'bobby',
+      username: 'sleepy',
       password: '12345678'
     },
     formErrors: {
@@ -53,7 +53,7 @@ class Login extends Component {
 
   render() {
     return (
-      <form className={css.form} onSubmit={event => this.formHandler(event)}>
+      <form className={css.form}>
         <h1 className={css.company}> Chabu </h1>
         <h2 className={css.title}> Login </h2>
         <InputWithError
@@ -68,7 +68,7 @@ class Login extends Component {
           onChange={event => this.bindToState(event, 'password')}
           errorMessage={this.state.formErrors.password[0]}
         />
-        <button className={css.submit} type="submit">
+        <button className={css.submit} type="submit" onClick={event => this.formHandler(event)}>
           Login
         </button>
       </form>

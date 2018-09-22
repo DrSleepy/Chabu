@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
+import mapDispatchToProps from '../../../store/dispatch';
 import SettingsHeader from '../../elements/SettingsHeader/SettingsHeader';
 import SettingsSection from '../../elements/SettingsSection/SettingsSection';
 import InputWithError from '../../elements/InputWithError/InputWithError';
@@ -10,9 +12,10 @@ import css from './accountSettings.less';
 class AccountSettings extends Component {
   state = {
     off: false,
+    sent: false,
     sending: false,
     email: {
-      value: '',
+      value: 'thesubahi@gmail.com',
       error: '',
       verified: false
     }
@@ -24,9 +27,19 @@ class AccountSettings extends Component {
     const response = await server.post('accounts/verify', { email: this.state.email.value }).catch(error => error.response);
     if (!response) return;
 
+    if (response.data.status === 500) {
+      this.setState({ sending: false, email: { ...this.state.email, error: 'Failed to send email' } });
+      return;
+    }
+
     if (response.data.errors.length) {
       const error = response.data.errors[0].message;
       this.setState({ sending: false, email: { ...this.state.email, error } });
+      return;
+    }
+
+    if (response.data.ok) {
+      this.setState({ sent: true });
     }
 
     this.setState({ sending: false });
@@ -51,11 +64,16 @@ class AccountSettings extends Component {
     this.setState({ off: showUsername, email: { ...this.state.email, value: email } });
   };
 
+  logoutHandler = async () => {
+    await server.post('logout').catch(error => error.response);
+    this.props.unsetAccount();
+  };
+
   bindToState = event => {
     this.setState({ email: { ...this.state.email, value: event.target.value } });
   };
 
-  async componentWillMount() {
+  componentWillMount() {
     this.appendSettingsToState();
   }
 
@@ -79,15 +97,18 @@ class AccountSettings extends Component {
             disabled={this.state.email.verified}
           />
 
-          {!this.state.email.verified && (
-            <ButtonWithLoader
-              className={css.send}
-              text="Send"
-              loading={this.state.sending}
-              onClick={this.sendEmail}
-              disabled={this.state.sending}
-            />
-          )}
+          {this.state.sent && <p className={css.sent}> Sent </p>}
+
+          {!this.state.email.verified &&
+            !this.state.sent && (
+              <ButtonWithLoader
+                className={css.send}
+                text="Send"
+                loading={this.state.sending}
+                onClick={this.sendEmail}
+                disabled={this.state.sending}
+              />
+            )}
         </SettingsSection>
 
         <SettingsSection
@@ -104,10 +125,15 @@ class AccountSettings extends Component {
             </button>
           </div>
         </SettingsSection>
-        <button className={css.logout}> Logout </button>
+        <button className={css.logout} onClick={this.logoutHandler}>
+          Logout
+        </button>
       </div>
     );
   }
 }
 
-export default AccountSettings;
+export default connect(
+  null,
+  mapDispatchToProps
+)(AccountSettings);
