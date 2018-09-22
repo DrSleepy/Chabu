@@ -16,7 +16,7 @@ class QuestionItem extends Component {
   likeHandler = async () => {
     this.setState({ liked: !this.state.liked });
     this.state.liked ? this.setState({ likes: this.state.likes - 1 }) : this.setState({ likes: this.state.likes + 1 });
-    await server.patch(`/questions/${this.props.id}/like`).catch(error => error.response.data);
+    await server.patch(`/questions/${this.props.id}/like`);
   };
 
   appendPropsToState() {

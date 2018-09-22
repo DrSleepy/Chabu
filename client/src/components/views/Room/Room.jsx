@@ -23,13 +23,12 @@ class RoomView extends Component {
     const { id, title, unlocked, creator, account, questions } = response.data.data;
 
     this.setState({
-      ...this.setState,
       room: { id, title, unlocked, creator, account },
       questions
     });
   };
 
-  componentDidMount() {
+  componentWillMount() {
     const roomID = window.location.pathname.replace('/r/', '');
     this.getRoom(roomID);
   }
@@ -59,10 +58,10 @@ class RoomView extends Component {
             </button>
           </div>
           <div className={css.filters}>
-            <div className={css.filters__search}>
+            {/* <div className={css.filters__search}>
               <input className={css['filters__search--input']} type="text" placeholder="Search..." />
               <button className={css['filters__search--icon']} />
-            </div>
+            </div> */}
 
             {/* <ul className={css.filters__list}>
               <li className={css.filters__list__item}> Today </li>

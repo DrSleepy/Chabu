@@ -13,24 +13,13 @@ import css from './home.less';
 class HomeView extends Component {
   state = {
     list: null,
-    loading: true
+    loading: false
   };
-
-  componentWillMount() {
-    const list = window.location.pathname.replace('/', '');
-    this.getList(list);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    // const list = window.location.pathname.replace('/', '');
-    // this.getList(list);
-  }
 
   getList = async list => {
     this.setState({ loading: true });
 
     const response = await server.get(`/accounts/${list}`).catch(error => error.response.data);
-
     if (response.status === 401) {
       this.props.unsetAccount();
       return;
@@ -50,6 +39,11 @@ class HomeView extends Component {
     this.setState({ loading: false, list: resultJSX });
   };
 
+  componentWillMount() {
+    const list = window.location.pathname.replace('/', '');
+    this.getList(list);
+  }
+
   render() {
     return (
       <Fragment>
@@ -59,7 +53,7 @@ class HomeView extends Component {
           <Link to="/settings" className={css.head__settings} />
         </div>
         <NavBar />
-        {this.state.loading ? <Loader loading={this.state.loading} /> : this.state.list}
+        {this.state.loading ? <Loader /> : this.state.list}
       </Fragment>
     );
   }

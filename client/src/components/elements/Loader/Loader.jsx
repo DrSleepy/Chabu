@@ -1,11 +1,11 @@
 import React from 'react';
-import { BarLoader } from 'react-spinners';
+import { ClipLoader } from 'react-spinners';
 
 import css from './loader.less';
 
 const Loader = props => (
   <div className={css.container}>
-    <BarLoader size={36} color={'#0379ff'} loading={props.loading} />
+    <ClipLoader color={'#2d8fff'} />
   </div>
 );
 
