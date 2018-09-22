@@ -38,8 +38,8 @@ class Login extends Component {
     if (!response) return;
 
     // handle errors
-    if (response.details || response.errors) {
-      const errors = response.details || response.errors;
+    if (response.data.errors.length) {
+      const errors = response.data.errors;
       const formErrors = appendErrorsHandler(errors, this.state.formErrors);
       this.setState({ formErrors });
       return;

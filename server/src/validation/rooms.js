@@ -9,7 +9,7 @@ export const createRoom = (req, res, next) => {
   });
 
   const result = Joi.validate(req.body, newRoomSchema, fields.config);
-  result.error ? next({ status: 400, ...result.error }) : next();
+  result.error ? next({ status: 400, errors: [...result.error.details] }) : next();
 };
 
 export const updateRoom = (req, res, next) => {
@@ -20,5 +20,5 @@ export const updateRoom = (req, res, next) => {
   });
 
   const result = Joi.validate(req.body, updateRoomSchema, fields.config);
-  result.error ? next({ status: 400, ...result.error }) : next();
+  result.error ? next({ status: 400, errors: [...result.error.details] }) : next();
 };

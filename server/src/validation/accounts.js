@@ -15,7 +15,7 @@ export const createAccount = (req, res, next) => {
   });
 
   const result = Joi.validate(req.body, newAccountSchema, fields.config);
-  result.error ? next({ status: 400, ...result.error }) : next();
+  result.error ? next({ status: 400, errors: [...result.error.details] }) : next();
 };
 
 export const updateAccount = (req, res, next) => {
@@ -24,7 +24,7 @@ export const updateAccount = (req, res, next) => {
   });
 
   const result = Joi.validate(req.body, updateAccountSchema, fields.config);
-  result.error ? next({ status: 400, ...result.error }) : next();
+  result.error ? next({ status: 400, errors: [...result.error.details] }) : next();
 };
 
 export const verifyEmail = (req, res, next) => {
@@ -33,7 +33,7 @@ export const verifyEmail = (req, res, next) => {
   });
 
   const result = Joi.validate(req.body, verifyEmailSchema, fields.config);
-  result.error ? next({ status: 400, ...result.error }) : next();
+  result.error ? next({ status: 400, errors: [...result.error.details] }) : next();
 };
 
 export const resetPassword = (req, res, next) => {
@@ -42,7 +42,7 @@ export const resetPassword = (req, res, next) => {
   });
 
   const result = Joi.validate(req.body, resetPasswordSchema, fields.config);
-  result.error ? next({ status: 400, ...result.error }) : next();
+  result.error ? next({ status: 400, errors: [...result.error.details] }) : next();
 };
 
 export const resetPasswordVerify = (req, res, next) => {
@@ -52,5 +52,5 @@ export const resetPasswordVerify = (req, res, next) => {
   });
 
   const result = Joi.validate(req.body, resetPasswordVerifySchema, fields.config);
-  result.error ? next({ status: 400, ...result.error }) : next();
+  result.error ? next({ status: 400, errors: [...result.error.details] }) : next();
 };

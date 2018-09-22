@@ -23,11 +23,9 @@ class AccountSettings extends Component {
     const response = await server.post('accounts/verify', { email: this.state.email.value }).catch(error => error.response);
     if (!response) return;
 
-    // handle errors
-    if (response.data.details || response.data.errors) {
-      const error = response.data.details[0].message || response.data.errors[0].message;
+    if (response.data.errors.length) {
+      const error = response.data.errors[0].message;
       this.setState({ sending: false, email: { ...this.state.email, error } });
-      return;
     }
 
     this.setState({ sending: false });
