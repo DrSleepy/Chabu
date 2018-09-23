@@ -6,6 +6,8 @@
   background-color: @light-gray-text-color;
   border-bottom: solid 1px rgba(238, 238, 238, 50%);
   display: grid;
+  animation: fade-in 300ms forwards;
+  opacity: 0;
   align-items: center;
   grid-template-columns: repeat(4, max-content) 1fr;
   grid-template-areas:
@@ -82,5 +84,11 @@
     content: '\e872';
     font-family: 'Material Icons';
     font-size: 16px;
+  }
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
   }
 }

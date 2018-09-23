@@ -1,8 +1,10 @@
 @import (reference) '../../../styles/index.less';
 
 .room {
-  grid-column-gap: @size-2--5;
+  opacity: 0;
+  animation: fade-in 300ms forwards;
   display: grid;
+  grid-column-gap: @size-2--5;
   grid-template-columns: max-content max-content 1fr;
   grid-template-areas:
     'title    title   title'
@@ -39,4 +41,10 @@
 .id {
   grid-area: id;
   color: #6889b9;
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
 }

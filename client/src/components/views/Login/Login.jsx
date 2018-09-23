@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import ButtonWithLoader from '../../elements/ButtonWithLoader/ButtonWithLoader';
+
 import mapDispatchToProps from '../../../store/dispatch';
 import appendErrorsHandler from '../../../helpers/appendErrorsHandler';
 import InputWithError from '../../elements/InputWithError/InputWithError';
@@ -9,6 +11,7 @@ import css from './login.less';
 
 class Login extends Component {
   state = {
+    loggingIn: false,
     formData: {
       username: 'sleepy',
       password: '12345678'
@@ -32,23 +35,29 @@ class Login extends Component {
 
   formHandler = async event => {
     event.preventDefault();
+
+    this.setState({ loggingIn: true });
     this.resetErrorsHandler();
 
     const response = await server.post('login', { ...this.state.formData }).catch(error => error.response);
-    if (!response) return;
+    if (!response) {
+      this.setState({ loggingIn: false });
+      return;
+    }
 
     // handle errors
     if (response.data.errors.length) {
       const errors = response.data.errors;
       const formErrors = appendErrorsHandler(errors, this.state.formErrors);
-      this.setState({ formErrors });
+
+      this.setState({ loggingIn: false, formErrors });
       return;
     }
 
-    const { accountID, likedQuestions } = response.data.data;
+    this.setState({ loggingIn: false });
 
     // handle store changes
-    this.props.setAccount({ accountID, likedQuestions });
+    this.props.setAccount({ accountID: response.data.data.accountID });
   };
 
   render() {
@@ -68,9 +77,14 @@ class Login extends Component {
           onChange={event => this.bindToState(event, 'password')}
           errorMessage={this.state.formErrors.password[0]}
         />
-        <button className={css.submit} type="submit" onClick={event => this.formHandler(event)}>
-          Login
-        </button>
+        <ButtonWithLoader
+          className={css.submit}
+          buttonType="default"
+          text="Login"
+          onClick={event => this.formHandler(event)}
+          loading={this.state.loggingIn}
+          disabled={this.state.loggingIn}
+        />
       </form>
     );
   }

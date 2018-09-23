@@ -21,8 +21,6 @@
   border-radius: 3px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   color: @light-black-text-color;
-  animation: zoom-in 200ms forwards ease-in-out;
-  top: -100%;
 
   &__header {
     display: grid;
@@ -84,11 +82,5 @@
 @keyframes fade-in {
   to {
     background-color: rgba(0, 0, 0, 0.705);
-  }
-}
-
-@keyframes zoom-in {
-  to {
-    top: 0;
   }
 }
