@@ -73,9 +73,9 @@ class AccountSettings extends Component {
     this.setState({ email: { ...this.state.email, value: event.target.value } });
   };
 
-  componentWillMount() {
+  componentWillMount = () => {
     this.appendSettingsToState();
-  }
+  };
 
   render() {
     const cssOff = this.state.off ? css['buttons__background--off'] : null;

@@ -1,0 +1,94 @@
+@import (reference) '../../../styles/index.less';
+
+.background {
+  background-color: rgba(0, 0, 0, 0);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  display: grid;
+  justify-items: center;
+  animation: fade-in 200ms forwards ease-in-out;
+}
+
+.modal {
+  position: absolute;
+  padding: @size-4 @size-5 @size-6 @size-5;
+  margin-top: 10vh;
+  width: 95%;
+  height: max-content;
+  background-color: #fff;
+  border-radius: 3px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  color: @light-black-text-color;
+  animation: zoom-in 200ms forwards ease-in-out;
+  top: -100%;
+
+  &__header {
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    align-items: center;
+    margin-bottom: @size-3--5;
+  }
+
+  &__title {
+    .giga;
+    font-family: 'roboto-medium';
+    color: @primary-color;
+  }
+
+  &__close {
+    .exa;
+    color: @light-border-color;
+    transition: 150ms;
+
+    &:before {
+      content: '\e5cd';
+      font-family: 'Material Icons';
+    }
+
+    &:hover {
+      cursor: pointer;
+      color: @black-text-color;
+    }
+  }
+}
+
+.actions {
+  margin-top: @size-7;
+  display: grid;
+  grid-template-columns: max-content max-content;
+  grid-column-gap: @size-5;
+  justify-content: center;
+
+  & * {
+    .pad-tb-3--5 !important;
+    .pad-lr-10 !important;
+  }
+
+  &__primary {
+    .btn__default;
+  }
+
+  &__secondary {
+    font-family: 'roboto-medium';
+  }
+}
+.danger-text {
+  color: @danger-color;
+}
+.danger-btn {
+  .btn__default--danger;
+}
+
+@keyframes fade-in {
+  to {
+    background-color: rgba(0, 0, 0, 0.705);
+  }
+}
+
+@keyframes zoom-in {
+  to {
+    top: 0;
+  }
+}

@@ -19,14 +19,14 @@ class QuestionItem extends Component {
     await server.patch(`/questions/${this.props.id}/like`);
   };
 
-  appendPropsToState() {
+  appendPropsToState = () => {
     const liked = this.props.likedBy.includes(this.props.accountID);
     this.setState({ liked, likes: this.props.likedBy.length });
-  }
+  };
 
-  componentWillMount() {
+  componentWillMount = () => {
     this.appendPropsToState();
-  }
+  };
 
   render() {
     const cssIsLiked = this.state.liked ? css['thumb--true'] : css['thumb--false'];

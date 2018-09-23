@@ -28,10 +28,10 @@ class Room extends Component {
     });
   };
 
-  componentWillMount() {
+  componentWillMount = () => {
     const roomID = window.location.pathname.replace('/r/', '');
     this.getRoom(roomID);
-  }
+  };
 
   render() {
     return (
