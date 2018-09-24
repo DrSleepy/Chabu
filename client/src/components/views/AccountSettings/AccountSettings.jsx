@@ -15,7 +15,7 @@ class AccountSettings extends Component {
     sent: false,
     sending: false,
     email: {
-      value: 'thesubahi@gmail.com',
+      value: '',
       error: '',
       verified: false
     }
@@ -108,7 +108,6 @@ class AccountSettings extends Component {
                 spinnerColor="#fff"
                 loading={this.state.sending}
                 onClick={this.sendEmail}
-                disabled={this.state.sending}
               />
             )}
         </SettingsSection>

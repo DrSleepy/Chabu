@@ -5,15 +5,17 @@ import { connect } from 'react-redux';
 import mapStateToProps from '../../../store/state';
 
 const customRoute = props => {
-  let component;
+  let component = <Route exact path={props.path} component={props.component} />;
 
   if (props.auth) {
-    component = props.accountID ? props.component : <Redirect to="/login" />;
-  } else {
-    component = props.component;
+    component = props.accountID ? component : <Redirect to="/login" />;
   }
 
-  return <Route exact path={props.path} component={() => component} />;
+  if (props.if) {
+    component = <Redirect to={props.redirect} />;
+  }
+
+  return component;
 };
 
 export default connect(mapStateToProps)(customRoute);

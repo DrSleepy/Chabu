@@ -58,6 +58,7 @@ class Login extends Component {
 
     // handle store changes
     this.props.setAccount({ accountID: response.data.data.accountID });
+    this.props.history.push('/joined-rooms');
   };
 
   render() {
@@ -83,7 +84,6 @@ class Login extends Component {
           text="Login"
           onClick={event => this.formHandler(event)}
           loading={this.state.loggingIn}
-          disabled={this.state.loggingIn}
         />
       </form>
     );

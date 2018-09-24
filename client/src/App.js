@@ -20,12 +20,12 @@ class App extends Component {
       <div style={{ height: '100%' }}>
         <Router>
           <Switch>
-            <Route path="/login" component={!this.props.accountID ? <LoginView /> : <Redirect to="/joined-rooms" />} />
-            <Route auth={true} path="/settings" component={<AccountSettingsView />} />
-            <Route auth={true} path="/(joined-rooms|created-questions|created-rooms)/" component={<HomeView />} />
-            <Route path="/r/:roomID" component={<RoomView />} />
-            <Route path="/r/:roomID/:questionID" component={<QuestionView />} />
-            <Route auth={true} path="/r/:roomID/settings" component={<RoomSettingsView />} />
+            <Route path="/login" component={LoginView} if={this.props.accountID} redirect="/joined-rooms" />
+            <Route auth={true} path="/settings" component={AccountSettingsView} />
+            <Route auth={true} path="/(joined-rooms|created-questions|created-rooms)/" component={HomeView} />
+            <Route path="/r/:roomID" component={RoomView} />
+            <Route path="/r/:roomID/:questionID" component={QuestionView} />
+            <Route auth={true} path="/r/:roomID/settings" component={RoomSettingsView} />
             <Redirect from="/" to="/joined-rooms" />
           </Switch>
         </Router>

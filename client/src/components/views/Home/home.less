@@ -29,3 +29,21 @@
 .loader {
   margin-top: 30px;
 }
+
+.actions {
+  margin-top: @size-7;
+  display: grid;
+  grid-template-columns: max-content max-content;
+  grid-column-gap: @size-5;
+  justify-content: center;
+
+  &__primary,
+  &__secondary {
+    .pad-tb-3--5;
+    .pad-lr-10;
+  }
+
+  &__secondary {
+    font-family: 'roboto-medium';
+  }
+}

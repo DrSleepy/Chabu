@@ -7,7 +7,7 @@ export const config = {
   language: {
     key: '{{label}} ',
     any: {
-      empty: 'is required'
+      required: 'is required'
     }
   }
 };
@@ -46,7 +46,7 @@ export const email = Joi.string()
 
 export const creator = Joi.string()
   .alphanum()
-  .min(3)
+  .allow('')
   .max(20)
   .label('Creator');
 
