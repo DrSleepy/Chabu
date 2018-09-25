@@ -7,7 +7,8 @@ export const config = {
   language: {
     key: '{{label}} ',
     any: {
-      required: 'is required'
+      required: 'is required',
+      empty: 'is required'
     }
   }
 };

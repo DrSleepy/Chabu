@@ -13,7 +13,7 @@
 
 .modal {
   position: absolute;
-  padding: @size-4 @size-5 @size-6 @size-5;
+  padding: @size-3 @size-4 @size-5 @size-4;
   margin-top: 10vh;
   width: 95%;
   height: max-content;
@@ -30,13 +30,13 @@
   }
 
   &__title {
-    .giga;
+    .kilo;
     font-family: 'roboto-medium';
     color: @primary-color;
   }
 
   &__close {
-    .exa;
+    .giga;
     color: @light-border-color;
     transition: 150ms;
 
@@ -50,33 +50,6 @@
       color: @black-text-color;
     }
   }
-}
-
-.actions {
-  margin-top: @size-7;
-  display: grid;
-  grid-template-columns: max-content max-content;
-  grid-column-gap: @size-5;
-  justify-content: center;
-
-  & * {
-    .pad-tb-3--5 !important;
-    .pad-lr-10 !important;
-  }
-
-  &__primary {
-    .btn__default;
-  }
-
-  &__secondary {
-    font-family: 'roboto-medium';
-  }
-}
-.danger-text {
-  color: @danger-color;
-}
-.danger-btn {
-  .btn__default--danger;
 }
 
 @keyframes fade-in {

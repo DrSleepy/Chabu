@@ -47,15 +47,9 @@ class Room extends Component {
           </div>
           <div className={css.actions}>
             <button className={css.actions__submit}> Create Question </button>
-            <button>
-              <span className={[css['actions__item'], css['actions__item--search']].join(' ')}> Search </span>
-            </button>
-            <button>
-              <span className={[css['actions__item'], css['actions__item--view']].join(' ')}> View </span>
-            </button>
-            <button>
-              <span className={[css['actions__item'], css['actions__item--sort']].join(' ')}> Sort </span>
-            </button>
+            <i className={css.actions__view} />
+            <i className={css.actions__search} />
+            <i className={css.actions__sort} />
           </div>
           <div className={css.filters}>
             {/* <div className={css.filters__search}>

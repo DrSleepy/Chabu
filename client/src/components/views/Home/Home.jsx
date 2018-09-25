@@ -41,11 +41,14 @@ class Home extends Component {
   joinRoomHandler = async () => {
     this.setState({ joinRoom: { ...this.state.joinRoom, loader: true } });
 
-    const response = await server.patch(`/rooms/1234567/join`).catch(error => error.response);
-    const error = response.data.errors[0].message;
+    const response = await server.patch(`/rooms/LNlmhM-k4/join`).catch(error => error.response);
+    if (response.data.errors.length) {
+      const error = response.data.errors[0].message;
+      this.setState({ joinRoom: { ...this.state.joinRoom, loader: false, error } });
+      return;
+    }
 
-    this.setState({ joinRoom: { ...this.state.joinRoom, loader: false, error } });
-    this.modalHandler('joinRooms', false);
+    this.setState({ joinRoom: { ...this.state.joinRoom, loader: false, modal: false } });
     this.props.history.push('/joined-rooms');
   };
 
@@ -55,14 +58,12 @@ class Home extends Component {
     const response = await server.post('/rooms', this.state.createRoom.data).catch(error => error.response);
     if (response.data.errors.length) {
       const errors = response.data.errors;
-      const formErrors = appendErrorsHandler(errors, this.state.createRoom.errors);
-
-      this.setState({ createRoom: { ...this.state.createRoom, loader: false, errors: formErrors } });
+      const appendedErrors = appendErrorsHandler(errors, this.state.createRoom.errors);
+      this.setState({ createRoom: { ...this.state.createRoom, loader: false, errors: appendedErrors } });
       return;
     }
 
-    this.setState({ createRoom: { ...this.state.createRoom, loader: false } });
-    this.modalHandler('createRoom', false);
+    this.setState({ createRoom: { ...this.state.createRoom, loader: false, modal: false } });
     this.props.history.push('/created-rooms');
   };
 
@@ -76,7 +77,6 @@ class Home extends Component {
     }
 
     const result = response.data.data.sort((a, b) => new Date(a.date) < new Date(b.date));
-    console.log(result);
     let resultJSX;
 
     if (list === 'joined-rooms' || list === 'created-rooms') {

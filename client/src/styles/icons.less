@@ -1,9 +1,9 @@
 // transform: rotate(0.03deg) is used otherwise icons appear pixilated
 
-.faded-icons {
+.icon(@content) {
+  content: @content;
   font-family: 'Material Icons';
-  color: @faded-icon-color;
-  margin-left: 5px;
+  color: @gray-icon-color;
   transform: rotate(0.03deg);
 }
 
