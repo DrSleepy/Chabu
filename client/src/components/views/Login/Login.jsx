@@ -80,7 +80,6 @@ class Login extends Component {
         />
         <ButtonWithLoader
           className={css.submit}
-          buttonType="default"
           text="Login"
           onClick={event => this.formHandler(event)}
           loading={this.state.loggingIn}

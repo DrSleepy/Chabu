@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import mapStateToProps from '../../../store/state';
 
@@ -16,6 +17,14 @@ const customRoute = props => {
   }
 
   return component;
+};
+
+customRoute.propTypes = {
+  component: PropTypes.any.isRequired,
+  path: PropTypes.string.isRequired,
+  redirect: PropTypes.string,
+  auth: PropTypes.bool,
+  if: PropTypes.any
 };
 
 export default connect(mapStateToProps)(customRoute);

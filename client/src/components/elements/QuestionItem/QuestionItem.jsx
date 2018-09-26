@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import mapStateToProps from '../../../store/state';
 import mapDispatchToProps from '../../../store/dispatch';
@@ -45,6 +46,14 @@ class QuestionItem extends Component {
     );
   }
 }
+
+QuestionItem.propTypes = {
+  timeAgo: PropTypes.string.isRequired,
+  comments: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  likedBy: PropTypes.array
+};
 
 export default connect(
   mapStateToProps,

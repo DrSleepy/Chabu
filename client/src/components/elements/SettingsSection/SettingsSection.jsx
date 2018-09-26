@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './settingsSection.less';
 
@@ -9,5 +10,10 @@ const SettingsSection = props => (
     {props.children}
   </section>
 );
+
+SettingsSection.propTypes = {
+  heading: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired
+};
 
 export default SettingsSection;

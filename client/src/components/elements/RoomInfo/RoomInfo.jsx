@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './roomInfo.less';
 
@@ -10,5 +11,11 @@ const RoomInfo = props => (
     <p className={css.id}> {props.id} </p>
   </div>
 );
+
+RoomInfo.propTypes = {
+  title: PropTypes.string.isRequired,
+  creator: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired
+};
 
 export default RoomInfo;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Portal from '../../../Portal';
 import css from './modal.less';
@@ -18,4 +19,8 @@ const Modal = props => (
   </Portal>
 );
 
+Modal.propTypes = {
+  titleText: PropTypes.string.isRequired,
+  close: PropTypes.func.isRequired
+};
 export default Modal;

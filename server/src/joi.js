@@ -54,7 +54,7 @@ export const creator = Joi.string()
 export const uuid = Joi.string()
   .min(7)
   .max(14)
-  .label('roomID');
+  .label('Room ID');
 
 export const roomTitle = Joi.string()
   .min(5)

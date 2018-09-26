@@ -41,7 +41,15 @@ class Home extends Component {
   joinRoomHandler = async () => {
     this.setState({ joinRoom: { ...this.state.joinRoom, loader: true } });
 
-    const response = await server.patch(`/rooms/LNlmhM-k4/join`).catch(error => error.response);
+    const result = await server.get('/accounts').catch(error => error.response);
+    const joined = result.data.data.joinedRooms.includes(this.state.joinRoom.data.id);
+
+    if (joined) {
+      this.setState({ joinRoom: { ...this.state.joinRoom, loader: false, error: 'Room already joined' } });
+      return;
+    }
+
+    const response = await server.patch(`/rooms/${this.state.joinRoom.data.id}/join`).catch(error => error.response);
     if (response.data.errors.length) {
       const error = response.data.errors[0].message;
       this.setState({ joinRoom: { ...this.state.joinRoom, loader: false, error } });
