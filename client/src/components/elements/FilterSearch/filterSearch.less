@@ -1,0 +1,39 @@
+@import (reference) '../../../styles/index.less';
+
+.search {
+  padding: @size-4;
+  display: grid;
+  grid-template-columns: 1fr max-content;
+
+  &__input {
+    .input__default;
+    border-radius: 3px 0 0 3px;
+  }
+
+  &__icon {
+    .btn__primary;
+    .pad-lr-5;
+    transform: scale(1);
+    display: grid;
+    align-items: center;
+    border-radius: 0 3px 3px 0;
+    transition: 150ms;
+    background-color: @light-border-color;
+    color: @light-black-text-color;
+
+    &:active {
+      transform: scale(1);
+    }
+
+    &:before {
+      content: '\e8b6';
+      font-family: 'Material Icons';
+      transform: rotate(0.03deg);
+    }
+  }
+
+  &__input:not(:placeholder-shown) ~ &__icon {
+    color: #fff;
+    background-color: @primary-color;
+  }
+}

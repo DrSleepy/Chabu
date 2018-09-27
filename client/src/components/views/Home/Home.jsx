@@ -56,7 +56,7 @@ class Home extends Component {
       return;
     }
 
-    this.setState({ joinRoom: { ...this.state.joinRoom, loader: false, modal: false } });
+    this.setState({ joinRoom: { ...this.state.joinRoom, data: { id: '' }, loader: false, modal: false } });
     this.props.history.push('/joined-rooms');
   };
 
@@ -71,7 +71,14 @@ class Home extends Component {
       return;
     }
 
-    this.setState({ createRoom: { ...this.state.createRoom, loader: false, modal: false } });
+    this.setState({
+      createRoom: {
+        ...this.state.createRoom,
+        data: { title: '', creator: '' },
+        loader: false,
+        modal: false
+      }
+    });
     this.props.history.push('/created-rooms');
   };
 
@@ -99,6 +106,7 @@ class Home extends Component {
   };
 
   bindToState = (event, property, input) => {
+    console.log(input);
     this.setState({
       [property]: {
         ...this.state[property],
@@ -123,19 +131,24 @@ class Home extends Component {
   render() {
     return (
       <Fragment>
-        <div className={css.head}>
-          <button className={css.head__join} onClick={() => this.modalHandler('joinRoom', true)}>
-            Join room
-          </button>
-          <button className={css.head__create} onClick={() => this.modalHandler('createRoom', true)}>
-            Create room
-          </button>
-          <Link to="/settings" className={css.head__settings} />
+        <div className={css.container}>
+          <div className={css.head}>
+            <button className={css.head__join} onClick={() => this.modalHandler('joinRoom', true)}>
+              Join room
+            </button>
+            <button className={css.head__create} onClick={() => this.modalHandler('createRoom', true)}>
+              Create room
+            </button>
+            <Link to="/settings" className={css.head__settings} />
+          </div>
+
+          <NavBar />
+
+          <main className={css.main}>
+            {this.state.loadingList ? <Loader className={css.loader} /> : this.state.list}
+            {!this.state.loadingList && !this.state.list.length && <p className={css.notFound}> None found </p>}
+          </main>
         </div>
-
-        <NavBar />
-
-        {this.state.loadingList ? <Loader className={css.loader} /> : this.state.list}
 
         {this.state.joinRoom.modal && (
           <Modal titleText="Join Room" titleColor="red" close={() => this.modalHandler('joinRoom', false)}>
@@ -165,6 +178,7 @@ class Home extends Component {
           <Modal titleText="Create Room" titleColor="red" close={() => this.modalHandler('createRoom', false)}>
             <InputWithError
               placeholder="Title"
+              maxLength={40}
               value={this.state.createRoom.data.title}
               onChange={event => this.bindToState(event, 'createRoom', 'title')}
               errorMessage={this.state.createRoom.errors.title[0]}
@@ -172,6 +186,7 @@ class Home extends Component {
             <InputWithError
               placeholder="Creator (optional)"
               value={this.state.createRoom.data.creator}
+              maxLength={15}
               onChange={event => this.bindToState(event, 'createRoom', 'creator')}
               errorMessage={this.state.createRoom.errors.creator[0]}
             />

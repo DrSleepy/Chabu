@@ -14,13 +14,13 @@ const RoomSchema = new Schema({
     type: String,
     required: true,
     min: 5,
-    max: 100
+    max: 40
   },
   creator: {
     type: String,
     default: null,
     min: 3,
-    max: 20
+    max: 15
   },
   date: {
     type: Date,

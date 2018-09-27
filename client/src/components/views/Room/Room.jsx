@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 
 import RoomInfo from '../../elements/RoomInfo/RoomInfo';
 import QuestionItem from '../../elements/QuestionItem/QuestionItem';
+import FilterSearch from '../../elements/FilterSearch/FilterSearch';
+import FilterList from '../../elements/FilterList/FilterList';
 import server from '../../../axios';
 import css from './room.less';
 
@@ -15,7 +17,58 @@ class Room extends Component {
       creator: '',
       account: ''
     },
-    questions: []
+    questions: [],
+    actions: {
+      view: false,
+      search: false,
+      sort: false
+    },
+    searchValue: '',
+    viewOptions: [
+      { value: 'today', content: 'Today' },
+      { value: 'week', content: 'Week' },
+      { value: 'month', content: 'Month' },
+      { value: 'all', content: 'All' }
+    ],
+    sortOptions: [
+      { value: 'date:1', content: 'New' },
+      { value: 'date:-1', content: 'Old' },
+      { value: 'likes:-1', content: 'Likes 🠛' },
+      { value: 'likes:1', content: 'Likes 🠙' }
+    ]
+  };
+
+  bindToState = (event, property) => {
+    this.setState({ [property]: event.target.value });
+  };
+
+  searchQuery = () => {
+    const encodedSearch = encodeURI(this.state.searchValue);
+    this.props.history.push({ pathname: `/r/${this.state.room.id}`, search: `?keywords=${encodedSearch}` });
+  };
+
+  activeIcon = icon => {
+    if (this.state.actions[icon]) {
+      this.setState({
+        actions: {
+          view: false,
+          search: false,
+          sort: false
+        }
+      });
+      return;
+    }
+
+    this.setState({
+      actions: {
+        view: false,
+        search: false,
+        sort: false,
+        [icon]: true
+      }
+    });
+
+    return css.activeIcon;
   };
 
   getRoom = async roomID => {
@@ -34,6 +87,10 @@ class Room extends Component {
   };
 
   render() {
+    const cssActiveIconView = this.state.actions.view ? css.activeIcon : '';
+    const cssActiveIconSearch = this.state.actions.search ? css.activeIcon : '';
+    const cssActiveIconSort = this.state.actions.sort ? css.activeIcon : '';
+
     return (
       <Fragment>
         <header className={css.head}>
@@ -47,29 +104,20 @@ class Room extends Component {
           </div>
           <div className={css.actions}>
             <button className={css.actions__submit}> Create Question </button>
-            <i className={css.actions__view} />
-            <i className={css.actions__search} />
-            <i className={css.actions__sort} />
+            <i className={[css.actions__search, cssActiveIconSearch].join(' ')} onClick={() => this.activeIcon('search')} />
+            <i className={[css.actions__view, cssActiveIconView].join(' ')} onClick={() => this.activeIcon('view')} />
+            <i className={[css.actions__sort, cssActiveIconSort].join(' ')} onClick={() => this.activeIcon('sort')} />
           </div>
           <div className={css.filters}>
-            {/* <div className={css.filters__search}>
-              <input className={css['filters__search--input']} type="text" placeholder="Search..." />
-              <button className={css['filters__search--icon']} />
-            </div> */}
-
-            {/* <ul className={css.filters__list}>
-              <li className={css.filters__list__item}> Today </li>
-              <li className={css.filters__list__item}> Week </li>
-              <li className={css.filters__list__item}> Month </li>
-              <li className={css.filters__list__item}> All </li>
-            </ul>
-
-            <ul className={css.filters__list}>
-              <li className={css.filters__list__item}> New </li>
-              <li className={css.filters__list__item}> Old </li>
-              <li className={css.filters__list__item}> Likes - Asc </li>
-              <li className={css.filters__list__item}> Likes - Desc </li>
-            </ul> */}
+            {this.state.actions.search && (
+              <FilterSearch
+                value={this.state.searchValue}
+                onChange={event => this.bindToState(event, 'searchValue')}
+                onClick={this.searchQuery}
+              />
+            )}
+            {this.state.actions.sort && <FilterList list={this.state.sortOptions} roomID={this.state.room.id} />}
+            {this.state.actions.view && <FilterList list={this.state.viewOptions} roomID={this.state.room.id} />}
           </div>
         </header>
         <main>

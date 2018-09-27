@@ -12,9 +12,10 @@ const InputWithError = props => {
         className={[css.input, cssErrorStyle].join(' ')}
         type={props.type || 'text'}
         placeholder={props.placeholder}
-        value={props.value}
+        value={props.value || ''}
         onChange={props.onChange}
         disabled={props.disabled}
+        maxLength={props.maxLength}
       />
       <p className={css['error-message']}> {props.errorMessage} </p>
     </div>
@@ -22,11 +23,12 @@ const InputWithError = props => {
 };
 
 InputWithError.propTypes = {
-  value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
+  value: PropTypes.string,
   type: PropTypes.string,
   disabled: PropTypes.bool,
-  placeholder: PropTypes.string
+  placeholder: PropTypes.string,
+  maxLength: PropTypes.number
 };
 
 export default InputWithError;

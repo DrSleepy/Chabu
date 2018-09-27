@@ -49,7 +49,6 @@
 }
 
 .actions {
-  .bottom-box-shadow-with-border;
   padding: @size-2 @size-4 @size-4 @size-4;
   display: grid;
   grid-template-columns: 1fr repeat(3, max-content);
@@ -68,6 +67,7 @@
     display: grid;
     grid-auto-flow: column;
     align-items: center;
+    color: @gray-icon-color;
 
     &:hover {
       cursor: pointer;
@@ -79,59 +79,17 @@
   }
   &__view:after {
     .icon('\e417');
-    -webkit-text-stroke-width: 0.2px;
-    -webkit-text-stroke-color: #fff;
   }
 
   &__sort:after {
     .icon('\e164');
   }
 }
-
 .filters {
-  background-color: @faded-white-color;
+  background-color: rgba(246, 249, 255, 0.363);
+  border-top: solid 1px rgba(209, 221, 233, 0.411);
+}
 
-  &__search {
-    padding: @size-4;
-    display: grid;
-    grid-template-columns: 1fr max-content;
-
-    &--input {
-      .input__default;
-      border-radius: 3px 0 0 3px;
-    }
-
-    &--icon {
-      .pad-lr-5;
-      display: grid;
-      align-items: center;
-      border-radius: 0 3px 3px 0;
-      transition: 150ms;
-      background-color: @light-border-color;
-      color: @light-black-text-color;
-
-      &:before {
-        content: '\e8b6';
-        font-family: 'Material Icons';
-        transform: rotate(0.03deg);
-      }
-    }
-
-    &--input:not(:placeholder-shown) ~ &--icon {
-      color: #fff;
-      background-color: @primary-color;
-    }
-  }
-
-  &__list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    justify-items: center;
-    font-family: 'roboto-medium';
-    color: @black-text-color;
-
-    &__item {
-      padding: @size-4;
-    }
-  }
+.activeIcon {
+  color: @primary-color;
 }

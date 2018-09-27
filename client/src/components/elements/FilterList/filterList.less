@@ -1,0 +1,17 @@
+@import (reference) '../../../styles/index.less';
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-items: center;
+  font-family: 'roboto-medium';
+  color: @black-text-color;
+
+  &__item {
+    padding: @size-4 @size-3;
+  }
+}
+
+.active {
+  border: solid 1px red;
+}

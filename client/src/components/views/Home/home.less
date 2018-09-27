@@ -1,4 +1,14 @@
 @import (reference) '../../../styles/index.less';
+.container {
+  height: 100%;
+  display: grid;
+  grid-template-rows: max-content max-content 1fr;
+  position: relative;
+  grid-template-areas:
+    'head'
+    'nav'
+    'main';
+}
 
 .head {
   padding: @size-4;
@@ -26,6 +36,15 @@
   }
 }
 
+.main {
+  position: absolute;
+  grid-area: main;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
 .loader {
   margin-top: 30px;
 }
@@ -46,4 +65,10 @@
   &__secondary {
     font-family: 'roboto-medium';
   }
+}
+
+.notFound {
+  .pad-tb-6--5;
+  color: @light-black-text-color;
+  text-align: center;
 }

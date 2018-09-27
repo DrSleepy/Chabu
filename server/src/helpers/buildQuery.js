@@ -17,7 +17,7 @@ const buildQuery = criteria => {
   if (criteria.view) {
     let timeAgo;
 
-    if (criteria.view === 'day') {
+    if (criteria.view === 'today') {
       timeAgo = moment().subtract(1, 'day');
     }
 

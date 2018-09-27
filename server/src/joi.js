@@ -48,17 +48,18 @@ export const email = Joi.string()
 export const creator = Joi.string()
   .alphanum()
   .allow('')
-  .max(20)
+  .max(15)
   .label('Creator');
 
 export const uuid = Joi.string()
+  .required()
   .min(7)
   .max(14)
   .label('Room ID');
 
 export const roomTitle = Joi.string()
   .min(5)
-  .max(100)
+  .max(40)
   .label('Room Title');
 
 export const questionTitle = Joi.string()

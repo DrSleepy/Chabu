@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import mapStateToProps from './store/state';
@@ -18,7 +18,7 @@ class App extends Component {
   render() {
     return (
       <div style={{ height: '100%' }}>
-        <Router>
+        <BrowserRouter>
           <Switch>
             <Route path="/login" component={LoginView} if={this.props.accountID} redirect="/joined-rooms" />
             <Route auth path="/settings" component={AccountSettingsView} />
@@ -28,7 +28,7 @@ class App extends Component {
             <Route auth path="/r/:roomID/settings" component={RoomSettingsView} />
             <Redirect from="/" to="/joined-rooms" />
           </Switch>
-        </Router>
+        </BrowserRouter>
       </div>
     );
   }
