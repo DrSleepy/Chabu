@@ -5,11 +5,13 @@ import RoomInfo from '../../elements/RoomInfo/RoomInfo';
 import QuestionItem from '../../elements/QuestionItem/QuestionItem';
 import FilterSearch from '../../elements/FilterSearch/FilterSearch';
 import FilterList from '../../elements/FilterList/FilterList';
+import Loader from '../../elements/Loader/Loader';
 import server from '../../../axios';
 import css from './room.less';
 
 class Room extends Component {
   state = {
+    loading: false,
     room: {
       id: '',
       title: '',
@@ -72,13 +74,12 @@ class Room extends Component {
   };
 
   getRoom = async roomID => {
+    this.setState({ loading: true });
+
     const response = await server.get(`/rooms/${roomID}`).catch(error => error.response.data);
     const { id, title, unlocked, creator, account, questions } = response.data.data;
 
-    this.setState({
-      room: { id, title, unlocked, creator, account },
-      questions
-    });
+    this.setState({ room: { id, title, unlocked, creator, account }, questions, loading: false });
   };
 
   componentWillMount = () => {
@@ -121,9 +122,9 @@ class Room extends Component {
           </div>
         </header>
         <main>
-          {this.state.questions.map((question, i) => (
-            <QuestionItem {...question} key={i} />
-          ))}
+          {this.state.loading && <Loader className={css.loader} />}
+          {!this.state.loading && this.state.questions.map((question, i) => <QuestionItem {...question} key={i} />)}
+          {!this.state.loading && !this.state.questions.length && <p className={css.notFound}> No Questions </p>}
         </main>
       </Fragment>
     );

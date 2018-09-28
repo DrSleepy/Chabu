@@ -106,7 +106,6 @@ class Home extends Component {
   };
 
   bindToState = (event, property, input) => {
-    console.log(input);
     this.setState({
       [property]: {
         ...this.state[property],
