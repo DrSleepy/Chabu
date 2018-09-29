@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import mapStateToProps from '../../../store/state';
 import Comment from '../../elements/Comment/Comment';
 import Modal from '../../elements/Modal/Modal';
+import DeleteQuestionModal from '../../elements/DeleteQuestionModal/DeleteQuestionModal';
 import ButtonWithLoader from '../../elements/ButtonWithLoader/ButtonWithLoader';
 import server from '../../../axios';
 import css from './question.less';
@@ -22,13 +23,10 @@ class Question extends Component {
     edited: false,
     likedBy: [],
     comments: [],
+    deleteModal: false,
     editModal: {
       modal: false,
       data: { text: '' },
-      loader: false
-    },
-    deleteModal: {
-      modal: false,
       loader: false
     }
   };
@@ -52,12 +50,15 @@ class Question extends Component {
     this.setState({ editModal: { ...this.state.editModal, loader: false, modal: false } });
   };
 
-  deleteQuestionHandler = () => {};
-
   getAndSetQuestion = async questionID => {
     this.setState({ loading: true });
 
     const response = await server.get(`/questions/${questionID}`).catch(error => error.response.data);
+    if (!response.data.ok) {
+      const roomID = window.location.pathname.split('/')[2];
+      this.props.history.replace(`/r/${roomID}`);
+      return;
+    }
 
     const liked = response.data.data.likedBy.includes(this.props.accountID);
 
@@ -78,10 +79,7 @@ class Question extends Component {
   };
 
   componentWillMount = () => {
-    const urlPath = window.location.pathname;
-    const indexOflastSlash = window.location.pathname.lastIndexOf('/') + 1;
-    const questionID = urlPath.substring(indexOflastSlash);
-
+    const questionID = window.location.pathname.split('/')[3];
     this.getAndSetQuestion(questionID);
   };
 
@@ -154,22 +152,7 @@ class Question extends Component {
         )}
 
         {this.state.deleteModal.modal && (
-          <Modal titleText="Delete Question" titleColor="#ef4573" close={() => this.modalHandler('deleteModal', false)}>
-            <p> Please confirm your choice to delete </p>
-            <div className={css['modal-actions']}>
-              <button className={css['modal-actions__secondary']} onClick={() => this.modalHandler('deleteModal', false)}>
-                Cancel
-              </button>
-              <ButtonWithLoader
-                className={css['modal-actions__primary']}
-                text="Delete"
-                buttonType="primary--danger"
-                spinnerColor="#fff"
-                onClick={this.deleteQuestionHandler}
-                loading={this.state.deleteModal.loader}
-              />
-            </div>
-          </Modal>
+          <DeleteQuestionModal questionID={this.state.id} close={() => this.modalHandler('deleteModal', false)} />
         )}
       </Fragment>
     );

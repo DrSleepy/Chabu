@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
+import DeleteQuestionModal from '../DeleteQuestionModal/DeleteQuestionModal';
 import mapStateToProps from '../../../store/state';
 import mapDispatchToProps from '../../../store/dispatch';
 import server from '../../../axios';
@@ -12,13 +13,18 @@ import css from './questionItem.less';
 class QuestionItem extends Component {
   state = {
     liked: false,
-    likes: 0
+    likes: 0,
+    deleteModal: false
   };
 
   likeHandler = async () => {
     this.setState({ liked: !this.state.liked });
     this.state.liked ? this.setState({ likes: this.state.likes - 1 }) : this.setState({ likes: this.state.likes + 1 });
     await server.patch(`/questions/${this.props.id}/like`);
+  };
+
+  modalHandler = (property, boolean) => {
+    this.setState({ [property]: { ...this.state[property], modal: boolean } });
   };
 
   appendPropsToState = () => {
@@ -31,8 +37,6 @@ class QuestionItem extends Component {
   };
 
   render() {
-    const cssIsLiked = this.state.liked ? css['thumb--true'] : css['thumb--false'];
-
     const createdAt = moment(this.props.date).format('MMM Do YY');
     const dateToday = moment(new Date()).format('MMM Do YY');
     const isCreatedToday = createdAt === dateToday;
@@ -44,23 +48,30 @@ class QuestionItem extends Component {
 
     const roomID = window.location.pathname.replace('/r/', '');
 
+    const cssIsLiked = this.state.liked ? css['thumb--true'] : css['thumb--false'];
+    const cssQuestionToday = isCreatedToday ? css['question-today'] : '';
+
     return (
-      <div className={css.question}>
-        <i className={[css.thumb, cssIsLiked].join(' ')} onClick={this.likeHandler} />
-        <h3 className={css.title}>
-          <Link className={css.link} to={`${roomID}/${this.props.id}`}>
-            {this.props.title}
-          </Link>
-        </h3>
+      <Fragment>
+        <div className={[css.question, cssQuestionToday].join(' ')}>
+          <i className={[css.thumb, cssIsLiked].join(' ')} onClick={this.likeHandler} />
+          <h3 className={css.title}>
+            <Link className={css.link} to={`${roomID}/${this.props.id}`}>
+              {this.props.title}
+            </Link>
+          </h3>
 
-        {isCreatedToday && <p className={css.likes}> new </p>}
-        {!isCreatedToday && <p className={css.likes}> {this.state.likes} likes </p>}
+          {!isCreatedToday && <p className={css.likes}> {this.state.likes} likes </p>}
 
-        <p className={css.comments}> {this.props.comments.length} comments </p>
-        <p className={css.time}> {this.props.timeAgo} </p>
+          <p className={css.comments}> {this.props.comments.length} comments </p>
+          <p className={css.time}> {this.props.timeAgo} </p>
 
-        {shouldSeeDelete && <i className={css.delete} />}
-      </div>
+          {shouldSeeDelete && <i className={css.delete} onClick={() => this.modalHandler('deleteModal', true)} />}
+        </div>
+        {this.state.deleteModal.modal && (
+          <DeleteQuestionModal questionID={this.props.id} close={() => this.modalHandler('deleteModal', false)} />
+        )}
+      </Fragment>
     );
   }
 }

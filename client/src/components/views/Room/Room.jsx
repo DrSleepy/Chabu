@@ -114,6 +114,11 @@ class Room extends Component {
     this.setState({ loading: true });
 
     const response = await server.get(`/rooms/${roomID}`).catch(error => error.response.data);
+    if (!response.data.ok) {
+      this.props.history.replace('/joined-rooms');
+      return;
+    }
+
     const { id, title, unlocked, creator, account, questions } = response.data.data;
 
     this.categoriseQuestionsByDates(questions);

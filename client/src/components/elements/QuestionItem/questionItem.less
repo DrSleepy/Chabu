@@ -15,6 +15,13 @@
     'thumb  likes  comments  time   delete';
 }
 
+.question-today {
+  grid-template-columns: repeat(3, max-content) 1fr;
+  grid-template-areas:
+    'thumb  title     title     title'
+    'thumb  comments  time   delete';
+}
+
 .thumb {
   .pad-lr-2;
   .giga;
