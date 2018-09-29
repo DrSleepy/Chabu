@@ -49,17 +49,12 @@
   margin-top: 30px;
 }
 
-.actions {
-  margin-top: @size-7;
-  display: grid;
-  grid-template-columns: max-content max-content;
-  grid-column-gap: @size-5;
-  justify-content: center;
+.modal-actions {
+  .modal-actions-container;
 
   &__primary,
   &__secondary {
-    .pad-tb-2--5;
-    .pad-lr-6;
+    .modal-actions-buttons;
   }
 
   &__secondary {

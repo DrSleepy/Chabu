@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import mapStateToProps from '../../../store/state';
 import Comment from '../../elements/Comment/Comment';
+import Modal from '../../elements/Modal/Modal';
+import ButtonWithLoader from '../../elements/ButtonWithLoader/ButtonWithLoader';
 import server from '../../../axios';
 import css from './question.less';
 
@@ -19,7 +21,21 @@ class Question extends Component {
     liked: false,
     edited: false,
     likedBy: [],
-    comments: []
+    comments: [],
+    editModal: {
+      modal: false,
+      data: { text: '' },
+      loader: false,
+      error: ''
+    },
+    deleteModal: {
+      modal: false,
+      loader: false
+    }
+  };
+
+  bindToState = (event, property) => {
+    this.setState({ [property]: event.target.value });
   };
 
   likeHandler = async () => {
@@ -43,6 +59,12 @@ class Question extends Component {
     });
   };
 
+  deleteQuestionHandler = () => {};
+
+  modalHandler = (property, boolean) => {
+    this.setState({ [property]: { ...this.state[property], modal: boolean } });
+  };
+
   componentWillMount = () => {
     const urlPath = window.location.pathname;
     const indexOflastSlash = window.location.pathname.lastIndexOf('/') + 1;
@@ -55,7 +77,6 @@ class Question extends Component {
     const createdByMe = this.props.accountID === this.state.account;
     const cssIsLikedButton = this.state.liked && css['details__likes-button--liked'];
     const cssIsLikedSpan = this.state.liked && css['details__likes-span--liked'];
-    const isDisabled = this.props.accountID ? false : true;
 
     return (
       <Fragment>
@@ -71,15 +92,19 @@ class Question extends Component {
             <button
               className={[css['details__likes-button'], cssIsLikedButton].join(' ')}
               onClick={this.likeHandler}
-              disabled={isDisabled}
+              disabled={!this.props.accountID}
             >
               <span className={[css['details__likes-span'], cssIsLikedSpan].join(' ')}>{this.state.likes} likes</span>
             </button>
           </div>
           {createdByMe && (
             <div className={css.actions}>
-              <button className={css.actions__edit}> Edit </button>
-              <button className={css.actions__delete}> Delete </button>
+              <button className={css.actions__edit} onClick={() => this.modalHandler('editModal', true)}>
+                Edit
+              </button>
+              <button className={css.actions__delete} onClick={() => this.modalHandler('deleteModal', true)}>
+                Delete
+              </button>
             </div>
           )}
         </div>
@@ -90,6 +115,48 @@ class Question extends Component {
           <Comment />
           <Comment />
         </section>
+
+        {this.state.editModal.modal && (
+          <Modal titleText="Edit Question" close={() => this.modalHandler('editModal', false)}>
+            <textarea
+              placeholder="Additional information"
+              value={this.state.text}
+              onChange={event => this.bindToState(event, 'text')}
+            />
+            <div className={css['modal-actions']}>
+              <button className={css['modal-actions__secondary']} onClick={() => this.modalHandler('editModal', false)}>
+                Cancel
+              </button>
+              <ButtonWithLoader
+                className={css['modal-actions__primary']}
+                text="Update"
+                buttonType="primary"
+                spinnerColor="#fff"
+                onClick={this.deleteQuestionHandler}
+                loading={this.state.deleteModal.loader}
+              />
+            </div>
+          </Modal>
+        )}
+
+        {this.state.deleteModal.modal && (
+          <Modal titleText="Delete Question" titleColor="#ef4573" close={() => this.modalHandler('deleteModal', false)}>
+            <p> Please confirm your choice to delete </p>
+            <div className={css['modal-actions']}>
+              <button className={css['modal-actions__secondary']} onClick={() => this.modalHandler('deleteModal', false)}>
+                Cancel
+              </button>
+              <ButtonWithLoader
+                className={css['modal-actions__primary']}
+                text="Delete"
+                buttonType="primary--danger"
+                spinnerColor="#fff"
+                onClick={this.deleteQuestionHandler}
+                loading={this.state.deleteModal.loader}
+              />
+            </div>
+          </Modal>
+        )}
       </Fragment>
     );
   }

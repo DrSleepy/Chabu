@@ -9,7 +9,9 @@ const Modal = props => (
     <div className={css.background} onClick={props.close}>
       <div className={css.modal} onClick={event => event.stopPropagation()}>
         <header className={css.modal__header}>
-          <p className={css.modal__title}> {props.titleText} </p>
+          <p className={css.modal__title} style={{ color: props.titleColor }}>
+            {props.titleText}
+          </p>
           <i className={css.modal__close} onClick={props.close} />
         </header>
 
@@ -21,6 +23,7 @@ const Modal = props => (
 
 Modal.propTypes = {
   titleText: PropTypes.string.isRequired,
-  close: PropTypes.func.isRequired
+  close: PropTypes.func.isRequired,
+  titleColor: PropTypes.string
 };
 export default Modal;

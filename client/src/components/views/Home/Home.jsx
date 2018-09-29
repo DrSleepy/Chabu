@@ -150,19 +150,19 @@ class Home extends Component {
         </div>
 
         {this.state.joinRoom.modal && (
-          <Modal titleText="Join Room" titleColor="red" close={() => this.modalHandler('joinRoom', false)}>
+          <Modal titleText="Join Room" close={() => this.modalHandler('joinRoom', false)}>
             <InputWithError
               placeholder="Room ID"
               value={this.state.joinRoom.data.id}
               onChange={event => this.bindToState(event, 'joinRoom', 'id')}
               errorMessage={this.state.joinRoom.error}
             />
-            <div className={css.actions}>
-              <button className={css.actions__secondary} onClick={() => this.modalHandler('joinRoom', false)}>
+            <div className={css['modal-actions']}>
+              <button className={css['modal-actions__secondary']} onClick={() => this.modalHandler('joinRoom', false)}>
                 Cancel
               </button>
               <ButtonWithLoader
-                className={css.actions__primary}
+                className={css['modal-actions__primary']}
                 text="Join"
                 buttonType="primary"
                 spinnerColor="#fff"
@@ -174,7 +174,7 @@ class Home extends Component {
         )}
 
         {this.state.createRoom.modal && (
-          <Modal titleText="Create Room" titleColor="red" close={() => this.modalHandler('createRoom', false)}>
+          <Modal titleText="Create Room" close={() => this.modalHandler('createRoom', false)}>
             <InputWithError
               placeholder="Title"
               maxLength={40}
@@ -189,12 +189,12 @@ class Home extends Component {
               onChange={event => this.bindToState(event, 'createRoom', 'creator')}
               errorMessage={this.state.createRoom.errors.creator[0]}
             />
-            <div className={css.actions}>
-              <button className={css.actions__secondary} onClick={() => this.modalHandler('createRoom', false)}>
+            <div className={css['modal-actions']}>
+              <button className={css['modal-actions__secondary']} onClick={() => this.modalHandler('createRoom', false)}>
                 Cancel
               </button>
               <ButtonWithLoader
-                className={css.actions__primary}
+                className={css['modal-actions__primary']}
                 text="Create"
                 buttonType="primary"
                 spinnerColor="#fff"

@@ -8,7 +8,7 @@
 .body {
   display: grid;
   grid-gap: @size-3;
-  margin-bottom: @size-3--5;
+  margin-bottom: @size-3;
   grid-template-columns: max-content 1fr;
   align-items: center;
   grid-template-areas:
@@ -101,5 +101,18 @@
 
   &__delete {
     color: @danger-color;
+  }
+}
+
+.modal-actions {
+  .modal-actions-container;
+
+  &__primary,
+  &__secondary {
+    .modal-actions-buttons;
+  }
+
+  &__secondary {
+    font-family: 'roboto-medium';
   }
 }
