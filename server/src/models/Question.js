@@ -19,7 +19,6 @@ const QuestionSchema = new Schema({
   text: {
     type: String,
     default: null,
-    min: 5,
     max: 20000
   },
   edited: {

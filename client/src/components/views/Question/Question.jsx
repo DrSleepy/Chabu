@@ -25,8 +25,7 @@ class Question extends Component {
     editModal: {
       modal: false,
       data: { text: '' },
-      loader: false,
-      error: ''
+      loader: false
     },
     deleteModal: {
       modal: false,
@@ -44,6 +43,17 @@ class Question extends Component {
     await server.patch(`/questions/${this.state.id}/like`);
   };
 
+  editQuestionHandler = async () => {
+    this.setState({ editModal: { ...this.state.editModal, loader: true } });
+
+    const data = { text: this.state.text };
+    await server.patch(`/questions/${this.state.id}`, data).catch(error => error.response);
+
+    this.setState({ editModal: { ...this.state.editModal, loader: false, modal: false } });
+  };
+
+  deleteQuestionHandler = () => {};
+
   getAndSetQuestion = async questionID => {
     this.setState({ loading: true });
 
@@ -55,11 +65,13 @@ class Question extends Component {
       loading: false,
       likes: response.data.data.likedBy.length,
       liked: liked,
-      ...response.data.data
+      ...response.data.data,
+      editModal: {
+        ...this.state.editModal,
+        data: { text: response.data.data.text }
+      }
     });
   };
-
-  deleteQuestionHandler = () => {};
 
   modalHandler = (property, boolean) => {
     this.setState({ [property]: { ...this.state[property], modal: boolean } });
@@ -119,9 +131,11 @@ class Question extends Component {
         {this.state.editModal.modal && (
           <Modal titleText="Edit Question" close={() => this.modalHandler('editModal', false)}>
             <textarea
+              className={css.editTextarea}
               placeholder="Additional information"
               value={this.state.text}
               onChange={event => this.bindToState(event, 'text')}
+              maxLength="20000"
             />
             <div className={css['modal-actions']}>
               <button className={css['modal-actions__secondary']} onClick={() => this.modalHandler('editModal', false)}>
@@ -132,8 +146,8 @@ class Question extends Component {
                 text="Update"
                 buttonType="primary"
                 spinnerColor="#fff"
-                onClick={this.deleteQuestionHandler}
-                loading={this.state.deleteModal.loader}
+                onClick={this.editQuestionHandler}
+                loading={this.state.editModal.loader}
               />
             </div>
           </Modal>

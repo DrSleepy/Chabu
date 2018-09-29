@@ -68,8 +68,8 @@ export const questionTitle = Joi.string()
   .label('Question Title');
 
 export const questionText = Joi.string()
-  .min(5)
   .max(20000)
+  .allow('')
   .label('Question Text');
 
 export const commentText = Joi.string()
