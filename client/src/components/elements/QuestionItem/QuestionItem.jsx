@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 import mapStateToProps from '../../../store/state';
 import mapDispatchToProps from '../../../store/dispatch';
@@ -32,6 +33,15 @@ class QuestionItem extends Component {
   render() {
     const cssIsLiked = this.state.liked ? css['thumb--true'] : css['thumb--false'];
 
+    const createdAt = moment(this.props.date).format('MMM Do YY');
+    const dateToday = moment(new Date()).format('MMM Do YY');
+    const isCreatedToday = createdAt === dateToday;
+
+    const createdByMe = this.props.accountID === this.props.account;
+    const isRoomCreator = this.props.roomCreator === this.props.accountID;
+
+    const shouldSeeDelete = isRoomCreator || createdByMe;
+
     return (
       <div className={css.question}>
         <i className={[css.thumb, cssIsLiked].join(' ')} onClick={this.likeHandler} />
@@ -40,10 +50,14 @@ class QuestionItem extends Component {
             {this.props.title}
           </Link>
         </h3>
-        <p className={css.likes}> {this.state.likes} likes </p>
+
+        {isCreatedToday && <p className={css.likes}> new </p>}
+        {!isCreatedToday && <p className={css.likes}> {this.state.likes} likes </p>}
+
         <p className={css.comments}> {this.props.comments.length} comments </p>
         <p className={css.time}> {this.props.timeAgo} </p>
-        <i className={css.delete} />
+
+        {shouldSeeDelete && <i className={css.delete} />}
       </div>
     );
   }
@@ -54,7 +68,8 @@ QuestionItem.propTypes = {
   comments: PropTypes.array.isRequired,
   title: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
-  likedBy: PropTypes.array
+  likedBy: PropTypes.array,
+  roomCreator: PropTypes.string
 };
 
 export default connect(

@@ -116,8 +116,8 @@ class Room extends Component {
     const response = await server.get(`/rooms/${roomID}`).catch(error => error.response.data);
     const { id, title, unlocked, creator, account, questions } = response.data.data;
 
-    this.setState({ room: { id, title, unlocked, creator, account }, questions, loading: false });
     this.categoriseQuestionsByDates(questions);
+    this.setState({ room: { id, title, unlocked, creator, account }, questions, loading: false });
   };
 
   componentWillMount = () => {
@@ -126,9 +126,11 @@ class Room extends Component {
   };
 
   render() {
-    const cssActiveIconView = this.state.actions.view ? css.activeIcon : '';
-    const cssActiveIconSearch = this.state.actions.search ? css.activeIcon : '';
-    const cssActiveIconSort = this.state.actions.sort ? css.activeIcon : '';
+    const { view, search, sort } = this.state.actions;
+
+    const cssActiveIconView = view ? css.activeIcon : '';
+    const cssActiveIconSearch = search ? css.activeIcon : '';
+    const cssActiveIconSort = sort ? css.activeIcon : '';
 
     return (
       <Fragment>
@@ -167,7 +169,7 @@ class Room extends Component {
             this.state.sortedDates.map((date, dateIndex) => (
               <CollapsibleDate date={date} key={dateIndex}>
                 {this.state.categorisedQuestions[date].map((question, questionIndex) => (
-                  <QuestionItem {...question} key={questionIndex} />
+                  <QuestionItem {...question} roomCreator={this.state.room.account} key={questionIndex} />
                 ))}
               </CollapsibleDate>
             ))}

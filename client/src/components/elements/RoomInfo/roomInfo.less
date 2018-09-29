@@ -7,8 +7,15 @@
   grid-column-gap: @size-2--5;
   grid-template-columns: max-content max-content 1fr;
   grid-template-areas:
-    'title    title   title'
-    'unlocked creator id';
+    'title     title    title'
+    'unlocked  creator  id';
+}
+
+.room-no-creator {
+  grid-template-columns: max-content 1fr;
+  grid-template-areas:
+    'title     title'
+    'unlocked  id';
 }
 
 .title {

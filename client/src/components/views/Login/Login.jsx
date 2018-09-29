@@ -65,7 +65,7 @@ class Login extends Component {
     return (
       <form className={css.form}>
         <h1 className={css.company}> Chabu </h1>
-        <h2 className={css.title}> Login </h2>
+        <h2 className={css.title}> Login (test) </h2>
         <InputWithError
           placeholder="Username"
           value={this.state.formData.username}
@@ -74,6 +74,7 @@ class Login extends Component {
         />
         <InputWithError
           placeholder="Password"
+          type="password"
           value={this.state.formData.password}
           onChange={event => this.bindToState(event, 'password')}
           errorMessage={this.state.formErrors.password[0]}
