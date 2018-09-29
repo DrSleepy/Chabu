@@ -42,11 +42,13 @@ class QuestionItem extends Component {
 
     const shouldSeeDelete = isRoomCreator || createdByMe;
 
+    const roomID = window.location.pathname.replace('/r/', '');
+
     return (
       <div className={css.question}>
         <i className={[css.thumb, cssIsLiked].join(' ')} onClick={this.likeHandler} />
         <h3 className={css.title}>
-          <Link className={css.link} to="/q/q">
+          <Link className={css.link} to={`${roomID}/${this.props.id}`}>
             {this.props.title}
           </Link>
         </h3>

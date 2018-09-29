@@ -52,12 +52,14 @@
     color: @gray-text-color;
   }
 
-  &__likes--button {
+  &__likes-button {
     .btn__default;
     padding: @size-0--5 @size-2--5;
+    color: @gray-text-color;
+    border: solid 1px @light-border-color;
   }
 
-  &__likes--span {
+  &__likes-span {
     display: grid;
     grid-auto-flow: column;
     align-items: center;
@@ -68,7 +70,18 @@
       .kilo;
       margin-bottom: 2.5px;
       -webkit-text-stroke-width: 1px;
+      -webkit-text-stroke-color: @light-border-color;
     }
+  }
+
+  // enabled styles
+  &__likes-button--liked {
+    color: @primary-color;
+    border: solid 1px @primary-color;
+  }
+
+  &__likes-span--liked:after {
+    -webkit-text-stroke-color: @primary-color;
   }
 }
 
