@@ -1,10 +1,12 @@
 import React, { Fragment, Component } from 'react';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 import RoomInfo from '../../elements/RoomInfo/RoomInfo';
 import QuestionItem from '../../elements/QuestionItem/QuestionItem';
 import FilterSearch from '../../elements/FilterSearch/FilterSearch';
 import FilterList from '../../elements/FilterList/FilterList';
+import CollapsibleDate from '../../elements/CollapsibleDate/CollapsibleDate';
 import Loader from '../../elements/Loader/Loader';
 import server from '../../../axios';
 import css from './room.less';
@@ -20,6 +22,8 @@ class Room extends Component {
       account: ''
     },
     questions: [],
+    categorisedQuestions: {},
+    sortedDates: [],
     actions: {
       view: false,
       search: false,
@@ -73,6 +77,39 @@ class Room extends Component {
     return css.activeIcon;
   };
 
+  sortDates = () => {
+    const dates = Object.keys(this.state.categorisedQuestions);
+    const sortedDates = dates.sort((a, b) => moment(a, 'MMM Do YY').toISOString() < moment(b, 'MMM Do YY').toISOString());
+    this.setState({ sortedDates });
+  };
+
+  sortQuestions = () => {
+    const dates = Object.keys(this.state.categorisedQuestions);
+
+    dates.forEach(date => {
+      const sortedQuestions = this.state.categorisedQuestions[date].sort((a, b) => a.date < b.date);
+      this.setState({ categorisedQuestions: { ...this.state.categorisedQuestions, [date]: sortedQuestions } });
+    });
+  };
+
+  categoriseQuestionsByDates = questions => {
+    const categorisedQuestions = {};
+
+    questions.forEach(question => {
+      const date = moment(question.date).format('MMM Do YY');
+
+      if (Object.keys(categorisedQuestions).includes(date)) {
+        categorisedQuestions[date].push(question);
+        return;
+      }
+      categorisedQuestions[date] = [question];
+    });
+
+    this.setState({ categorisedQuestions });
+    this.sortDates();
+    this.sortQuestions();
+  };
+
   getRoom = async roomID => {
     this.setState({ loading: true });
 
@@ -80,6 +117,7 @@ class Room extends Component {
     const { id, title, unlocked, creator, account, questions } = response.data.data;
 
     this.setState({ room: { id, title, unlocked, creator, account }, questions, loading: false });
+    this.categoriseQuestionsByDates(questions);
   };
 
   componentWillMount = () => {
@@ -123,8 +161,16 @@ class Room extends Component {
         </header>
         <main>
           {this.state.loading && <Loader className={css.loader} />}
-          {!this.state.loading && this.state.questions.map((question, i) => <QuestionItem {...question} key={i} />)}
           {!this.state.loading && !this.state.questions.length && <p className={css.notFound}> No Questions </p>}
+
+          {!this.state.loading &&
+            this.state.sortedDates.map((date, dateIndex) => (
+              <CollapsibleDate date={date} key={dateIndex}>
+                {this.state.categorisedQuestions[date].map((question, questionIndex) => (
+                  <QuestionItem {...question} key={questionIndex} />
+                ))}
+              </CollapsibleDate>
+            ))}
         </main>
       </Fragment>
     );

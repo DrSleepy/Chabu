@@ -35,9 +35,11 @@ class QuestionItem extends Component {
     return (
       <div className={css.question}>
         <i className={[css.thumb, cssIsLiked].join(' ')} onClick={this.likeHandler} />
-        <h2 className={css.title}>
-          <Link to="/q/q"> {this.props.title} </Link>
-        </h2>
+        <h3 className={css.title}>
+          <Link className={css.link} to="/q/q">
+            {this.props.title}
+          </Link>
+        </h3>
         <p className={css.likes}> {this.state.likes} likes </p>
         <p className={css.comments}> {this.props.comments.length} comments </p>
         <p className={css.time}> {this.props.timeAgo} </p>
