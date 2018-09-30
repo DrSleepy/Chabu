@@ -1,15 +1,15 @@
 import React, { Fragment, Component } from 'react';
 import { Link } from 'react-router-dom';
-import moment from 'moment';
 
 import RoomInfo from '../../elements/RoomInfo/RoomInfo';
 import QuestionItem from '../../elements/QuestionItem/QuestionItem';
 import CreateQuestion from '../../elements/CreateQuestion/CreateQuestion';
 import FilterSearch from '../../elements/FilterSearch/FilterSearch';
 import FilterList from '../../elements/FilterList/FilterList';
+import { populateDatesWithQuestion, sortQuestionsInDate, getSortedDates } from '../../../helpers/questions';
 import CollapsibleDate from '../../elements/CollapsibleDate/CollapsibleDate';
 import Loader from '../../elements/Loader/Loader';
-import server from '../../../axios';
+import { getRoom } from '../../../API/Room';
 import css from './room.less';
 
 class Room extends Component {
@@ -22,8 +22,7 @@ class Room extends Component {
       creator: '',
       account: ''
     },
-    questions: [],
-    categorisedQuestions: {},
+    questions: {},
     sortedDates: [],
     createQuestion: false,
     actions: {
@@ -55,27 +54,14 @@ class Room extends Component {
     this.props.history.push({ pathname: `/r/${this.state.room.id}`, search: `?keywords=${encodedSearch}` });
   };
 
-  createQuestionToggler = () => {
-    this.setState({
-      createQuestion: !this.state.createQuestion,
-      actions: {
-        view: false,
-        search: false,
-        sort: false
-      }
-    });
-  };
+  actionToggler = icon => {
+    if (!icon) {
+      this.setState({ createQuestion: !this.state.createQuestion, actions: { view: false, search: false, sort: false } });
+      return;
+    }
 
-  activeIcon = icon => {
     if (this.state.actions[icon]) {
-      this.setState({
-        createQuestion: false,
-        actions: {
-          view: false,
-          search: false,
-          sort: false
-        }
-      });
+      this.setState({ createQuestion: false, actions: { view: false, search: false, sort: false } });
       return;
     }
 
@@ -83,65 +69,36 @@ class Room extends Component {
     return css.activeIcon;
   };
 
-  sortDates = () => {
-    const dates = Object.keys(this.state.categorisedQuestions);
-    const sortedDates = dates.sort((a, b) => moment(a, 'MMM Do YY').toISOString() < moment(b, 'MMM Do YY').toISOString());
-    this.setState({ sortedDates });
-  };
-
-  sortQuestions = () => {
-    const dates = Object.keys(this.state.categorisedQuestions);
-
-    dates.forEach(date => {
-      const sortedQuestions = this.state.categorisedQuestions[date].sort((a, b) => a.date < b.date);
-      this.setState({ categorisedQuestions: { ...this.state.categorisedQuestions, [date]: sortedQuestions } });
-    });
-  };
-
-  categoriseQuestionsByDates = questions => {
-    const categorisedQuestions = {};
-
-    questions.forEach(question => {
-      const date = moment(question.date).format('MMM Do YY');
-
-      if (Object.keys(categorisedQuestions).includes(date)) {
-        categorisedQuestions[date].push(question);
-        return;
-      }
-      categorisedQuestions[date] = [question];
-    });
-
-    this.setState({ categorisedQuestions });
-    this.sortDates();
-    this.sortQuestions();
-  };
-
-  getRoom = async roomID => {
+  setupRoom = async () => {
     this.setState({ loading: true });
 
-    const response = await server.get(`/rooms/${roomID}`).catch(error => error.response.data);
-    if (!response.data.ok) {
-      this.props.history.replace('/joined-rooms');
-      return;
-    }
+    const roomID = window.location.pathname.replace('/r/', '');
+    const response = await getRoom(roomID);
 
-    const { id, title, unlocked, creator, account, questions } = response.data.data;
+    const { id, title, unlocked, creator, account, questions } = response;
 
-    this.categoriseQuestionsByDates(questions);
-    this.setState({ room: { id, title, unlocked, creator, account }, questions, loading: false });
+    const questionsInDates = populateDatesWithQuestion(questions);
+    const sortedDates = getSortedDates(Object.keys(questionsInDates));
+    Object.keys(questionsInDates).forEach(date => sortQuestionsInDate(questionsInDates[date]));
+
+    this.setState({
+      room: { id, title, unlocked, creator, account },
+      sortedDates,
+      questions: questionsInDates,
+      loading: false
+    });
   };
 
   componentWillMount = () => {
-    const roomID = window.location.pathname.replace('/r/', '');
-    this.getRoom(roomID);
+    this.setupRoom();
   };
 
   render() {
     const { view, search, sort } = this.state.actions;
 
-    const cssActiveIconView = view ? css.activeIcon : '';
-    const cssActiveIconSearch = search ? css.activeIcon : '';
-    const cssActiveIconSort = sort ? css.activeIcon : '';
+    const cssView = view ? css.activeIcon : '';
+    const cssSearch = search ? css.activeIcon : '';
+    const cssSort = sort ? css.activeIcon : '';
 
     return (
       <Fragment>
@@ -155,12 +112,12 @@ class Room extends Component {
             <Link to={'/settings'} className={css.room__settings} />
           </div>
           <div className={css.actions}>
-            <button className={css.actions__submit} onClick={this.createQuestionToggler}>
+            <button className={css.actions__submit} onClick={() => this.actionToggler(null)}>
               Create Question
             </button>
-            <i className={[css.actions__search, cssActiveIconSearch].join(' ')} onClick={() => this.activeIcon('search')} />
-            <i className={[css.actions__view, cssActiveIconView].join(' ')} onClick={() => this.activeIcon('view')} />
-            <i className={[css.actions__sort, cssActiveIconSort].join(' ')} onClick={() => this.activeIcon('sort')} />
+            <i className={[css.actions__search, cssSearch].join(' ')} onClick={() => this.actionToggler('search')} />
+            <i className={[css.actions__view, cssView].join(' ')} onClick={() => this.actionToggler('view')} />
+            <i className={[css.actions__sort, cssSort].join(' ')} onClick={() => this.actionToggler('sort')} />
           </div>
           <div className={css.filters}>
             {this.state.actions.search && (
@@ -172,17 +129,19 @@ class Room extends Component {
             )}
             {this.state.actions.sort && <FilterList list={this.state.sortOptions} roomID={this.state.room.id} />}
             {this.state.actions.view && <FilterList list={this.state.viewOptions} roomID={this.state.room.id} />}
-            {this.state.createQuestion && <CreateQuestion roomID={this.state.room.id} cancel={this.createQuestionToggler} />}
+            {this.state.createQuestion && (
+              <CreateQuestion roomID={this.state.room.id} cancel={() => this.actionToggler(null)} />
+            )}
           </div>
         </header>
         <main>
           {this.state.loading && <Loader className={css.loader} />}
-          {!this.state.loading && !this.state.questions.length && <p className={css.notFound}> No Questions </p>}
+          {!this.state.loading && Object.keys(this.state.questions) < 1 && <p className={css.notFound}> No Questions </p>}
 
           {!this.state.loading &&
             this.state.sortedDates.map((date, dateIndex) => (
               <CollapsibleDate date={date} key={dateIndex}>
-                {this.state.categorisedQuestions[date].map((question, questionIndex) => (
+                {this.state.questions[date].map((question, questionIndex) => (
                   <QuestionItem {...question} roomCreator={this.state.room.account} key={questionIndex} />
                 ))}
               </CollapsibleDate>

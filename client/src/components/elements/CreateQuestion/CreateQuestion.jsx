@@ -37,10 +37,6 @@ class CreateQuestion extends Component {
     window.location.reload();
   };
 
-  componentWillMount = () => {
-    console.log(this.props);
-  };
-
   render() {
     return (
       <form className={css.question}>
