@@ -9,6 +9,7 @@ const ButtonWithLoader = props => (
     className={[props.className, css[props.buttonType] || css.default].join(' ')}
     onClick={props.onClick}
     disabled={props.loading}
+    type={props.type}
   >
     <span className={css.span}>
       {props.loading && <Loader color={props.spinnerColor || '#0379ff'} size={props.spinnerSize || 13} />}

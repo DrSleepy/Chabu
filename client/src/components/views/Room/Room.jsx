@@ -56,7 +56,14 @@ class Room extends Component {
   };
 
   createQuestionToggler = () => {
-    this.setState({ createQuestion: !this.state.createQuestion });
+    this.setState({
+      createQuestion: !this.state.createQuestion,
+      actions: {
+        view: false,
+        search: false,
+        sort: false
+      }
+    });
   };
 
   activeIcon = icon => {
