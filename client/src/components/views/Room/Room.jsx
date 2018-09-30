@@ -9,7 +9,7 @@ import FilterList from '../../elements/FilterList/FilterList';
 import { populateDatesWithQuestion, sortQuestionsInDate, getSortedDates } from '../../../helpers/questions';
 import CollapsibleDate from '../../elements/CollapsibleDate/CollapsibleDate';
 import Loader from '../../elements/Loader/Loader';
-import { getRoom } from '../../../API/Room';
+import server from '../../../axios';
 import css from './room.less';
 
 class Room extends Component {
@@ -66,16 +66,16 @@ class Room extends Component {
     }
 
     this.setState({ createQuestion: false, actions: { view: false, search: false, sort: false, [icon]: true } });
-    return css.activeIcon;
   };
 
   setupRoom = async () => {
     this.setState({ loading: true });
 
-    const roomID = window.location.pathname.replace('/r/', '');
-    const response = await getRoom(roomID);
+    const roomID = window.location.pathname.split('/')[2];
+    const response = await server.get(`/rooms/${roomID}`).catch(error => error.response.data);
+    if (!response || !response.data) return this.props.history.push('/joined-rooms');
 
-    const { id, title, unlocked, creator, account, questions } = response;
+    const { id, title, unlocked, creator, account, questions } = response.data.data;
 
     const questionsInDates = populateDatesWithQuestion(questions);
     const sortedDates = getSortedDates(Object.keys(questionsInDates));
