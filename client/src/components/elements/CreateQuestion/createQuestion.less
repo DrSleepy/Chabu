@@ -1,0 +1,22 @@
+@import (reference) '../../../styles/index.less';
+
+.question {
+  padding: @size-4;
+}
+
+.actions {
+  margin-top: @size-2;
+  display: grid;
+  justify-content: end;
+  grid-auto-flow: column;
+
+  &__primary,
+  &__secondary {
+    .pad-tb-2;
+    .pad-lr-4;
+  }
+
+  &__secondary {
+    font-family: 'roboto-medium';
+  }
+}

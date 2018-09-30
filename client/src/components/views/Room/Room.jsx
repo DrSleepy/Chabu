@@ -4,6 +4,7 @@ import moment from 'moment';
 
 import RoomInfo from '../../elements/RoomInfo/RoomInfo';
 import QuestionItem from '../../elements/QuestionItem/QuestionItem';
+import CreateQuestion from '../../elements/CreateQuestion/CreateQuestion';
 import FilterSearch from '../../elements/FilterSearch/FilterSearch';
 import FilterList from '../../elements/FilterList/FilterList';
 import CollapsibleDate from '../../elements/CollapsibleDate/CollapsibleDate';
@@ -24,6 +25,7 @@ class Room extends Component {
     questions: [],
     categorisedQuestions: {},
     sortedDates: [],
+    createQuestion: false,
     actions: {
       view: false,
       search: false,
@@ -53,9 +55,14 @@ class Room extends Component {
     this.props.history.push({ pathname: `/r/${this.state.room.id}`, search: `?keywords=${encodedSearch}` });
   };
 
+  createQuestionToggler = () => {
+    this.setState({ createQuestion: !this.state.createQuestion });
+  };
+
   activeIcon = icon => {
     if (this.state.actions[icon]) {
       this.setState({
+        createQuestion: false,
         actions: {
           view: false,
           search: false,
@@ -65,15 +72,7 @@ class Room extends Component {
       return;
     }
 
-    this.setState({
-      actions: {
-        view: false,
-        search: false,
-        sort: false,
-        [icon]: true
-      }
-    });
-
+    this.setState({ createQuestion: false, actions: { view: false, search: false, sort: false, [icon]: true } });
     return css.activeIcon;
   };
 
@@ -149,7 +148,9 @@ class Room extends Component {
             <Link to={'/settings'} className={css.room__settings} />
           </div>
           <div className={css.actions}>
-            <button className={css.actions__submit}> Create Question </button>
+            <button className={css.actions__submit} onClick={this.createQuestionToggler}>
+              Create Question
+            </button>
             <i className={[css.actions__search, cssActiveIconSearch].join(' ')} onClick={() => this.activeIcon('search')} />
             <i className={[css.actions__view, cssActiveIconView].join(' ')} onClick={() => this.activeIcon('view')} />
             <i className={[css.actions__sort, cssActiveIconSort].join(' ')} onClick={() => this.activeIcon('sort')} />
@@ -164,6 +165,7 @@ class Room extends Component {
             )}
             {this.state.actions.sort && <FilterList list={this.state.sortOptions} roomID={this.state.room.id} />}
             {this.state.actions.view && <FilterList list={this.state.viewOptions} roomID={this.state.room.id} />}
+            {this.state.createQuestion && <CreateQuestion roomID={this.state.room.id} cancel={this.createQuestionToggler} />}
           </div>
         </header>
         <main>
