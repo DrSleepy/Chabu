@@ -49,11 +49,6 @@ class Room extends Component {
     this.setState({ [property]: event.target.value });
   };
 
-  searchQuery = () => {
-    const encodedSearch = encodeURI(this.state.searchValue);
-    this.props.history.push({ pathname: `/r/${this.state.room.id}`, search: `?keywords=${encodedSearch}` });
-  };
-
   actionToggler = icon => {
     if (!icon) {
       this.setState({ createQuestion: !this.state.createQuestion, actions: { view: false, search: false, sort: false } });
@@ -68,6 +63,26 @@ class Room extends Component {
     this.setState({ createQuestion: false, actions: { view: false, search: false, sort: false, [icon]: true } });
   };
 
+  questionsHandler = questions => {
+    const questionsInDates = populateDatesWithQuestion(questions);
+    const sortedDates = getSortedDates(Object.keys(questionsInDates));
+
+    Object.keys(questionsInDates).forEach(date => sortQuestionsInDate(questionsInDates[date]));
+
+    this.setState({ sortedDates, questions: questionsInDates, loading: false });
+  };
+
+  searchHandler = async () => {
+    this.setState({ loading: true });
+    this.props.history.push({ search: `?keywords=${this.state.searchValue}` });
+
+    const response = await server
+      .get(`/rooms/${this.state.room.id}?keywords=${this.state.searchValue}`)
+      .catch(error => error.response.data);
+
+    this.questionsHandler(response.data.data.questions);
+  };
+
   setupRoom = async () => {
     this.setState({ loading: true });
 
@@ -75,18 +90,10 @@ class Room extends Component {
     const response = await server.get(`/rooms/${roomID}`).catch(error => error.response.data);
     if (!response || !response.data) return this.props.history.push('/joined-rooms');
 
-    const { id, title, unlocked, creator, account, questions } = response.data.data;
+    const { id, title, unlocked, creator, account } = response.data.data;
 
-    const questionsInDates = populateDatesWithQuestion(questions);
-    const sortedDates = getSortedDates(Object.keys(questionsInDates));
-    Object.keys(questionsInDates).forEach(date => sortQuestionsInDate(questionsInDates[date]));
-
-    this.setState({
-      room: { id, title, unlocked, creator, account },
-      sortedDates,
-      questions: questionsInDates,
-      loading: false
-    });
+    this.questionsHandler(response.data.data.questions);
+    this.setState({ room: { id, title, unlocked, creator, account } });
   };
 
   componentWillMount = () => {
@@ -124,7 +131,7 @@ class Room extends Component {
               <FilterSearch
                 value={this.state.searchValue}
                 onChange={event => this.bindToState(event, 'searchValue')}
-                onClick={this.searchQuery}
+                onClick={this.searchHandler}
               />
             )}
             {this.state.actions.sort && <FilterList list={this.state.sortOptions} roomID={this.state.room.id} />}
