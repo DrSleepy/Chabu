@@ -6,7 +6,8 @@ import RoomInfo from '../RoomInfo/RoomInfo';
 import css from './roomItem.less';
 
 const RoomItem = props => (
-  <Link className={css.room} to={`/r/${props.id}`}>
+
+  <Link className={css.room} to={`/r/${props.id}?view=all`}>
     <RoomInfo {...props} />
     <i className={css.arrow} />
   </Link>

@@ -15,6 +15,7 @@ const buildQuery = criteria => {
   }
 
   if (criteria.view) {
+    criteria.view = criteria.view.toLowerCase();
     let timeAgo;
 
     if (criteria.view === 'today') {
@@ -25,12 +26,11 @@ const buildQuery = criteria => {
       timeAgo = moment().subtract(1, [criteria.view]);
     }
 
-    query.find = { date: { $gte: timeAgo } };
-  }
+    if (criteria.view === 'all') {
+      timeAgo = 0;
+    }
 
-  if (criteria.sort) {
-    const [selection, direction] = criteria.sort.split(':');
-    query.sort = { [selection]: direction };
+    query.find = { date: { $gte: timeAgo } };
   }
 
   return query;

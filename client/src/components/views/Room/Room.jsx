@@ -27,22 +27,9 @@ class Room extends Component {
     createQuestion: false,
     actions: {
       view: false,
-      search: false,
-      sort: false
+      search: false
     },
-    searchValue: '',
-    viewOptions: [
-      { value: 'today', content: 'Today' },
-      { value: 'week', content: 'Week' },
-      { value: 'month', content: 'Month' },
-      { value: 'all', content: 'All' }
-    ],
-    sortOptions: [
-      { value: 'date:1', content: 'New' },
-      { value: 'date:-1', content: 'Old' },
-      { value: 'likes:-1', content: 'Likes 🠛' },
-      { value: 'likes:1', content: 'Likes 🠙' }
-    ]
+    searchValue: ''
   };
 
   bindToState = (event, property) => {
@@ -51,20 +38,40 @@ class Room extends Component {
 
   actionToggler = icon => {
     if (!icon) {
-      this.setState({ createQuestion: !this.state.createQuestion, actions: { view: false, search: false, sort: false } });
+      this.setState({ createQuestion: !this.state.createQuestion, actions: { view: false, search: false } });
       return;
     }
 
     if (this.state.actions[icon]) {
-      this.setState({ createQuestion: false, actions: { view: false, search: false, sort: false } });
+      this.setState({ createQuestion: false, actions: { view: false, search: false } });
       return;
     }
 
-    this.setState({ createQuestion: false, actions: { view: false, search: false, sort: false, [icon]: true } });
+    this.setState({ createQuestion: false, actions: { view: false, search: false, [icon]: true } });
   };
 
-  questionsHandler = questions => {
-    const questionsInDates = populateDatesWithQuestion(questions);
+  searchHandler = async search => {
+    this.setState({ loading: true });
+    this.props.history.push({ search: `?keywords=${this.state.searchValue}` });
+  };
+
+  setupRoom = async roomID => {
+    this.setState({ loading: true });
+
+    const response = await server.get(`/rooms/${roomID}`).catch(error => error.response.data);
+    if (!response || !response.data) return this.props.history.push('/joined-rooms');
+
+    const { id, title, unlocked, creator, account } = response.data.data;
+    this.setState({ room: { id, title, unlocked, creator, account } });
+  };
+
+  setupQuestions = async roomID => {
+    this.setState({ loading: true });
+
+    const [category, value] = window.location.search.replace('?', '').split('=');
+    const response = await server.get(`/rooms/${roomID}?${category}=${value}`).catch(error => error.response.data);
+
+    const questionsInDates = populateDatesWithQuestion(response.data.data.questions);
     const sortedDates = getSortedDates(Object.keys(questionsInDates));
 
     Object.keys(questionsInDates).forEach(date => sortQuestionsInDate(questionsInDates[date]));
@@ -72,40 +79,20 @@ class Room extends Component {
     this.setState({ sortedDates, questions: questionsInDates, loading: false });
   };
 
-  searchHandler = async () => {
-    this.setState({ loading: true });
-    this.props.history.push({ search: `?keywords=${this.state.searchValue}` });
-
-    const response = await server
-      .get(`/rooms/${this.state.room.id}?keywords=${this.state.searchValue}`)
-      .catch(error => error.response.data);
-
-    this.questionsHandler(response.data.data.questions);
-  };
-
-  setupRoom = async () => {
-    this.setState({ loading: true });
-
-    const roomID = window.location.pathname.split('/')[2];
-    const response = await server.get(`/rooms/${roomID}`).catch(error => error.response.data);
-    if (!response || !response.data) return this.props.history.push('/joined-rooms');
-
-    const { id, title, unlocked, creator, account } = response.data.data;
-
-    this.questionsHandler(response.data.data.questions);
-    this.setState({ room: { id, title, unlocked, creator, account } });
-  };
-
   componentWillMount = () => {
-    this.setupRoom();
+    const roomID = window.location.pathname.split('/')[2];
+    this.setupRoom(roomID);
+    this.setupQuestions(roomID);
+  };
+
+  componentWillReceiveProps = async () => {
+    const roomID = window.location.pathname.split('/')[2];
+    this.setupQuestions(roomID);
   };
 
   render() {
-    const { view, search, sort } = this.state.actions;
-
-    const cssView = view ? css.activeIcon : '';
-    const cssSearch = search ? css.activeIcon : '';
-    const cssSort = sort ? css.activeIcon : '';
+    const cssView = this.state.actions.view ? css.activeIcon : '';
+    const cssSearch = this.state.actions.search ? css.activeIcon : '';
 
     return (
       <Fragment>
@@ -124,18 +111,16 @@ class Room extends Component {
             </button>
             <i className={[css.actions__search, cssSearch].join(' ')} onClick={() => this.actionToggler('search')} />
             <i className={[css.actions__view, cssView].join(' ')} onClick={() => this.actionToggler('view')} />
-            <i className={[css.actions__sort, cssSort].join(' ')} onClick={() => this.actionToggler('sort')} />
           </div>
           <div className={css.filters}>
             {this.state.actions.search && (
               <FilterSearch
                 value={this.state.searchValue}
                 onChange={event => this.bindToState(event, 'searchValue')}
-                onClick={this.searchHandler}
+                onClick={() => this.searchHandler(this.state.searchValue)}
               />
             )}
-            {this.state.actions.sort && <FilterList list={this.state.sortOptions} roomID={this.state.room.id} />}
-            {this.state.actions.view && <FilterList list={this.state.viewOptions} roomID={this.state.room.id} />}
+            {this.state.actions.view && <FilterList list={['Today', 'Week', 'Month', 'All']} roomID={this.state.room.id} />}
             {this.state.createQuestion && (
               <CreateQuestion roomID={this.state.room.id} cancel={() => this.actionToggler(null)} />
             )}
