@@ -118,7 +118,7 @@ class Home extends Component {
   };
 
   componentWillMount = () => {
-    const list = window.location.pathname.replace('/', '');
+    const list = this.props.location.pathname.replace('/', '');
     this.getListHandler(list);
   };
 

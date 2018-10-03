@@ -29,6 +29,10 @@ const QuestionSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  room: {
+    type: String,
+    ref: 'Room'
+  },
   likedBy: [
     {
       type: String,

@@ -15,9 +15,15 @@ class deleteQuestionModal extends Component {
   deleteQuestionHandler = async () => {
     this.setState({ loader: true });
 
-    const roomID = window.location.pathname.split('/')[2];
-    await server.delete(`/rooms/${roomID}/${this.props.questionID}`).catch(error => error.response);
-    this.props.history.replace(`${roomID}?view=all`);
+    const isInsideRoom = this.props.location.pathname === '/created-questions';
+    await server.delete(`/rooms/${this.props.roomID}/${this.props.questionID}`).catch(error => error.response);
+
+    if (!isInsideRoom) {
+      this.props.history.replace(`${this.props.roomID}?view=all`);
+      return;
+    }
+
+    this.props.history.push('/created-questions');
   };
 
   render() {

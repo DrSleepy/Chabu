@@ -34,7 +34,8 @@ class CreateQuestion extends Component {
     }
 
     this.setState({ loader: false });
-    window.location.reload();
+    this.props.close();
+    this.props.history.push(`/r/${this.props.roomID}?view=all`);
   };
 
   render() {
@@ -54,7 +55,7 @@ class CreateQuestion extends Component {
           maxLength="20000"
         />
         <div className={css.actions}>
-          <button className={css.actions__secondary} onClick={this.props.cancel}>
+          <button className={css.actions__secondary} onClick={this.props.close}>
             Cancel
           </button>
           <ButtonWithLoader
@@ -74,7 +75,7 @@ class CreateQuestion extends Component {
 
 CreateQuestion.propTypes = {
   roomID: PropTypes.string.isRequired,
-  cancel: PropTypes.func.isRequired
+  close: PropTypes.func.isRequired
 };
 
 export default withRouter(CreateQuestion);

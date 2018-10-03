@@ -18,7 +18,12 @@ export const createQuestion = async (req, res, next) => {
     return;
   }
 
-  const newQuestion = await new QuestionModel({ account: req.account._id, likedBy: req.account._id, ...req.body }).save();
+  const newQuestion = await new QuestionModel({
+    account: req.account._id,
+    likedBy: req.account._id,
+    room: room.id,
+    ...req.body
+  }).save();
 
   const updateRoom = room.update({ $push: { questions: newQuestion._id } }).exec();
   const updateAccount = req.account.update({ $push: { createdQuestions: newQuestion._id } }).exec();

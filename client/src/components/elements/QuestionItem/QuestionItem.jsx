@@ -43,11 +43,7 @@ class QuestionItem extends Component {
 
     const createdByMe = this.props.accountID === this.props.account;
     const isRoomCreator = this.props.roomCreator === this.props.accountID;
-
     const shouldSeeDelete = isRoomCreator || createdByMe;
-    const insideRoom = window.location.pathname !== '/created-questions';
-
-    const roomID = window.location.pathname.replace('/r/', '');
 
     const cssIsLiked = this.state.liked ? css['thumb--true'] : css['thumb--false'];
     const cssQuestionToday = isCreatedToday ? css['question-today'] : '';
@@ -57,7 +53,7 @@ class QuestionItem extends Component {
         <div className={[css.question, cssQuestionToday].join(' ')}>
           <i className={[css.thumb, cssIsLiked].join(' ')} onClick={this.likeHandler} />
           <h3 className={css.title}>
-            <Link className={css.link} to={`${roomID}/${this.props.id}`}>
+            <Link className={css.link} to={`/r/${this.props.room}/${this.props.id}`}>
               {this.props.title}
             </Link>
           </h3>
@@ -67,11 +63,14 @@ class QuestionItem extends Component {
           <p className={css.comments}> {this.props.comments.length} comments </p>
           <p className={css.time}> {this.props.timeAgo} </p>
 
-          {shouldSeeDelete &&
-            insideRoom && <i className={css.delete} onClick={() => this.modalHandler('deleteModal', true)} />}
+          {shouldSeeDelete && <i className={css.delete} onClick={() => this.modalHandler('deleteModal', true)} />}
         </div>
         {this.state.deleteModal.modal && (
-          <DeleteQuestionModal questionID={this.props.id} close={() => this.modalHandler('deleteModal', false)} />
+          <DeleteQuestionModal
+            roomID={this.props.room}
+            questionID={this.props.id}
+            close={() => this.modalHandler('deleteModal', false)}
+          />
         )}
       </Fragment>
     );

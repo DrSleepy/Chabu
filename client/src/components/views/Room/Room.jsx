@@ -93,7 +93,7 @@ class Room extends Component {
   setupQuestions = async roomID => {
     this.setState({ loadingData: true });
 
-    const [category, value] = window.location.search.replace('?', '').split('=');
+    const [category, value] = this.props.location.search.replace('?', '').split('=');
     const response = await server.get(`/rooms/${roomID}?${category}=${value}`).catch(error => error.response.data);
 
     const questionsInDates = populateDatesWithQuestion(response.data.data.questions);
@@ -105,13 +105,17 @@ class Room extends Component {
   };
 
   componentWillMount = () => {
-    const roomID = window.location.pathname.split('/')[2];
+    const roomID = this.props.location.pathname.split('/')[2];
     this.setupRoom(roomID);
     this.setupQuestions(roomID);
+
+    if (!this.props.location.search) {
+      this.props.history.push('?view=all');
+    }
   };
 
   componentWillReceiveProps = async () => {
-    const roomID = window.location.pathname.split('/')[2];
+    const roomID = this.props.location.pathname.split('/')[2];
     this.setupQuestions(roomID);
   };
 
@@ -147,7 +151,7 @@ class Room extends Component {
             )}
             {this.state.actions.view && <FilterList list={['Today', 'Week', 'Month', 'All']} roomID={this.state.room.id} />}
             {this.state.createQuestion && (
-              <CreateQuestion roomID={this.state.room.id} cancel={() => this.actionToggler(null)} />
+              <CreateQuestion roomID={this.state.room.id} close={() => this.actionToggler(null)} />
             )}
           </div>
         </header>

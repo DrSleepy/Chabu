@@ -29,6 +29,17 @@ class App extends Component {
             <Redirect from="/" to="/joined-rooms" />
           </Switch>
         </BrowserRouter>
+        {/* <BrowserRouter>
+          <Switch>
+            <Route path="/login" component={LoginView} if={this.props.accountID} redirect="/joined-rooms" />
+            <Route auth path="/settings" component={AccountSettingsView} />
+            <Route auth path="/(joined-rooms|created-questions|created-rooms)/" component={HomeView} />
+            <Route auth path="/r/:roomID/settings" component={RoomSettingsView} />
+            <Route path="/r/:roomID" component={RoomView} />
+            <Route path="/q/:questionID" component={QuestionView} />
+            <Redirect from="/" to="/joined-rooms" />
+          </Switch>
+        </BrowserRouter> */}
       </div>
     );
   }
