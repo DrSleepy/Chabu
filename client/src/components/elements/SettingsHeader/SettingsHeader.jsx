@@ -6,13 +6,14 @@ import css from './settingsHeader.less';
 
 const SettingsHeader = props => (
   <div className={css.header}>
-    <Link to="/" className={css.back} />
+    <Link to={props.backLink} className={css.back} />
     <h1 className={css.title}> {props.heading} </h1>
   </div>
 );
 
 SettingsHeader.propTypes = {
-  heading: PropTypes.string.isRequired
+  heading: PropTypes.string.isRequired,
+  backLink: PropTypes.string.isRequired
 };
 
 export default SettingsHeader;

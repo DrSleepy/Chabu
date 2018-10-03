@@ -1,11 +1,15 @@
 import React, { Fragment, Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
+import mapStateToProps from '../../../store/state';
 import RoomInfo from '../../elements/RoomInfo/RoomInfo';
+import Modal from '../../elements/Modal/Modal';
 import QuestionItem from '../../elements/QuestionItem/QuestionItem';
 import CreateQuestion from '../../elements/CreateQuestion/CreateQuestion';
 import FilterSearch from '../../elements/FilterSearch/FilterSearch';
 import FilterList from '../../elements/FilterList/FilterList';
+import ButtonWithLoader from '../../elements/ButtonWithLoader/ButtonWithLoader';
 import { populateDatesWithQuestion, sortQuestionsInDate, getSortedDates } from '../../../helpers/questions';
 import CollapsibleDate from '../../elements/CollapsibleDate/CollapsibleDate';
 import Loader from '../../elements/Loader/Loader';
@@ -14,7 +18,9 @@ import css from './room.less';
 
 class Room extends Component {
   state = {
-    loading: false,
+    loadingData: false,
+    leaveLoader: false,
+    leaveModal: false,
     room: {
       id: '',
       title: '',
@@ -22,6 +28,8 @@ class Room extends Component {
       creator: '',
       account: ''
     },
+    isJoined: false,
+    isOwner: false,
     questions: {},
     sortedDates: [],
     createQuestion: false,
@@ -34,6 +42,12 @@ class Room extends Component {
 
   bindToState = (event, property) => {
     this.setState({ [property]: event.target.value });
+  };
+
+  leaveHandler = async () => {
+    this.setState({ leaveLoader: true });
+    await server.patch(`/rooms/${this.state.room.id}/join`).catch(error => error.response.data);
+    this.props.history.push('/joined-rooms');
   };
 
   actionToggler = icon => {
@@ -51,22 +65,33 @@ class Room extends Component {
   };
 
   searchHandler = async search => {
-    this.setState({ loading: true });
+    this.setState({ loadingData: true });
     this.props.history.push({ search: `?keywords=${this.state.searchValue}` });
   };
 
   setupRoom = async roomID => {
-    this.setState({ loading: true });
+    this.setState({ loadingData: true });
 
     const response = await server.get(`/rooms/${roomID}`).catch(error => error.response.data);
     if (!response || !response.data) return this.props.history.push('/joined-rooms');
+
+    const isJoined = response.data.data.members.includes(this.props.accountID);
+    const isOwner = response.data.data.account === this.props.accountID;
+
+    if (isJoined) {
+      this.setState({ isJoined });
+    }
+
+    if (isOwner) {
+      this.setState({ isOwner });
+    }
 
     const { id, title, unlocked, creator, account } = response.data.data;
     this.setState({ room: { id, title, unlocked, creator, account } });
   };
 
   setupQuestions = async roomID => {
-    this.setState({ loading: true });
+    this.setState({ loadingData: true });
 
     const [category, value] = window.location.search.replace('?', '').split('=');
     const response = await server.get(`/rooms/${roomID}?${category}=${value}`).catch(error => error.response.data);
@@ -76,7 +101,7 @@ class Room extends Component {
 
     Object.keys(questionsInDates).forEach(date => sortQuestionsInDate(questionsInDates[date]));
 
-    this.setState({ sortedDates, questions: questionsInDates, loading: false });
+    this.setState({ sortedDates, questions: questionsInDates, loadingData: false });
   };
 
   componentWillMount = () => {
@@ -98,12 +123,12 @@ class Room extends Component {
       <Fragment>
         <header className={css.head}>
           <div className={css.room}>
-            <Link to="/" className={css.room__back} />
+            <Link to="/joined-rooms" className={css.room__back} />
             <div className={css['room__room-info']}>
               <RoomInfo {...this.state.room} />
             </div>
-            <i className={css.room__leave} />
-            <Link to={'/settings'} className={css.room__settings} />
+            {this.state.isJoined && <i className={css.room__leave} onClick={() => this.setState({ leaveModal: true })} />}
+            {this.state.isOwner && <Link to={`${this.state.room.id}/settings`} className={css.room__settings} />}
           </div>
           <div className={css.actions}>
             <button className={css.actions__submit} onClick={() => this.actionToggler(null)}>
@@ -127,10 +152,11 @@ class Room extends Component {
           </div>
         </header>
         <main>
-          {this.state.loading && <Loader className={css.loader} />}
-          {!this.state.loading && Object.keys(this.state.questions) < 1 && <p className={css.notFound}> No Questions </p>}
+          {this.state.loadingData && <Loader className={css.loader} />}
+          {!this.state.loadingData &&
+            Object.keys(this.state.questions) < 1 && <p className={css.notFound}> No Questions </p>}
 
-          {!this.state.loading &&
+          {!this.state.loadingData &&
             this.state.sortedDates.map((date, dateIndex) => (
               <CollapsibleDate date={date} key={dateIndex}>
                 {this.state.questions[date].map((question, questionIndex) => (
@@ -139,9 +165,28 @@ class Room extends Component {
               </CollapsibleDate>
             ))}
         </main>
+
+        {this.state.leaveModal && (
+          <Modal titleText="Leave Room" titleColor="#ef4573" close={() => this.setState({ leaveModal: false })}>
+            <p> Are you sure you want to leave this room? </p>
+            <div className={css['modal-actions']}>
+              <button className={css['modal-actions__secondary']} onClick={() => this.setState({ leaveModal: false })}>
+                Cancel
+              </button>
+              <ButtonWithLoader
+                className={css['modal-actions__primary']}
+                text="Leave"
+                buttonType="primary--danger"
+                spinnerColor="#fff"
+                onClick={this.leaveHandler}
+                loading={this.state.leaveLoader}
+              />
+            </div>
+          </Modal>
+        )}
       </Fragment>
     );
   }
 }
 
-export default Room;
+export default connect(mapStateToProps)(Room);

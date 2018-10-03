@@ -45,6 +45,7 @@ class QuestionItem extends Component {
     const isRoomCreator = this.props.roomCreator === this.props.accountID;
 
     const shouldSeeDelete = isRoomCreator || createdByMe;
+    const insideRoom = window.location.pathname !== '/created-questions';
 
     const roomID = window.location.pathname.replace('/r/', '');
 
@@ -66,7 +67,8 @@ class QuestionItem extends Component {
           <p className={css.comments}> {this.props.comments.length} comments </p>
           <p className={css.time}> {this.props.timeAgo} </p>
 
-          {shouldSeeDelete && <i className={css.delete} onClick={() => this.modalHandler('deleteModal', true)} />}
+          {shouldSeeDelete &&
+            insideRoom && <i className={css.delete} onClick={() => this.modalHandler('deleteModal', true)} />}
         </div>
         {this.state.deleteModal.modal && (
           <DeleteQuestionModal questionID={this.props.id} close={() => this.modalHandler('deleteModal', false)} />

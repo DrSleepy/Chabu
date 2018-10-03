@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Modal from '../Modal/Modal';
@@ -16,7 +17,7 @@ class deleteQuestionModal extends Component {
 
     const roomID = window.location.pathname.split('/')[2];
     await server.delete(`/rooms/${roomID}/${this.props.questionID}`).catch(error => error.response);
-    window.location.replace(`${window.location.origin}/r/${roomID}`);
+    this.props.history.replace(`${roomID}?view=all`);
   };
 
   render() {
@@ -46,4 +47,4 @@ deleteQuestionModal.propTypes = {
   close: PropTypes.func.isRequired
 };
 
-export default deleteQuestionModal;
+export default withRouter(deleteQuestionModal);

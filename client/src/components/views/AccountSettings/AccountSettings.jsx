@@ -82,7 +82,7 @@ class AccountSettings extends Component {
 
     return (
       <div className={css.settings}>
-        <SettingsHeader heading="Account Settings" />
+        <SettingsHeader backLink="/joined-rooms" heading="Account Settings" />
 
         <SettingsSection
           heading="Secure your account"

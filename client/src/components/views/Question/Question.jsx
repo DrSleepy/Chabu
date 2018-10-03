@@ -50,7 +50,7 @@ class Question extends Component {
     this.setState({ editModal: { ...this.state.editModal, loader: false, modal: false } });
   };
 
-  getAndSetQuestion = async questionID => {
+  setupQuestion = async questionID => {
     this.setState({ loading: true });
 
     const response = await server.get(`/questions/${questionID}`).catch(error => error.response.data);
@@ -80,7 +80,7 @@ class Question extends Component {
 
   componentWillMount = () => {
     const questionID = window.location.pathname.split('/')[3];
-    this.getAndSetQuestion(questionID);
+    this.setupQuestion(questionID);
   };
 
   render() {

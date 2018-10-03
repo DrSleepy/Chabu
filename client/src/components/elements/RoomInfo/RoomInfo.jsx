@@ -14,8 +14,8 @@ const RoomInfo = props => (
 
 RoomInfo.propTypes = {
   title: PropTypes.string.isRequired,
-  creator: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired
+  id: PropTypes.string.isRequired,
+  creator: PropTypes.string
 };
 
 export default RoomInfo;

@@ -22,8 +22,8 @@ const Modal = props => (
 );
 
 Modal.propTypes = {
-  titleText: PropTypes.string.isRequired,
   close: PropTypes.func.isRequired,
+  titleText: PropTypes.string.isRequired,
   titleColor: PropTypes.string
 };
 export default Modal;
