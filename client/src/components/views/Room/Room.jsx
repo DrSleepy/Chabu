@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import mapStateToProps from '../../../store/state';
+import Popup from '../../elements/Popup/Popup';
 import RoomInfo from '../../elements/RoomInfo/RoomInfo';
 import Modal from '../../elements/Modal/Modal';
 import QuestionItem from '../../elements/QuestionItem/QuestionItem';
@@ -30,6 +31,8 @@ class Room extends Component {
     },
     isJoined: false,
     isOwner: false,
+    canJoin: false,
+    joinedPopup: false,
     questions: {},
     sortedDates: [],
     createQuestion: false,
@@ -42,6 +45,11 @@ class Room extends Component {
 
   bindToState = (event, property) => {
     this.setState({ [property]: event.target.value });
+  };
+
+  joinHandler = async () => {
+    this.setState({ isJoined: true, joinedPopup: true });
+    await server.patch(`/rooms/${this.state.room.id}/join`).catch(error => error.response.data);
   };
 
   leaveHandler = async () => {
@@ -77,6 +85,7 @@ class Room extends Component {
 
     const isJoined = response.data.data.members.includes(this.props.accountID);
     const isOwner = response.data.data.account === this.props.accountID;
+    const canJoin = !isJoined && this.props.accountID;
 
     if (isJoined) {
       this.setState({ isJoined });
@@ -86,6 +95,10 @@ class Room extends Component {
       this.setState({ isOwner });
     }
 
+    if (canJoin) {
+      this.setState({ canJoin });
+    }
+
     const { id, title, unlocked, creator, account } = response.data.data;
     this.setState({ room: { id, title, unlocked, creator, account } });
   };
@@ -93,7 +106,7 @@ class Room extends Component {
   setupQuestions = async roomID => {
     this.setState({ loadingData: true });
 
-    const [category, value] = this.props.location.search.replace('?', '').split('=');
+    const [category, value] = window.location.search.replace('?', '').split('=');
     const response = await server.get(`/rooms/${roomID}?${category}=${value}`).catch(error => error.response.data);
 
     const questionsInDates = populateDatesWithQuestion(response.data.data.questions);
@@ -105,17 +118,17 @@ class Room extends Component {
   };
 
   componentWillMount = () => {
-    const roomID = this.props.location.pathname.split('/')[2];
-    this.setupRoom(roomID);
-    this.setupQuestions(roomID);
-
-    if (!this.props.location.search) {
+    if (!window.location.search) {
       this.props.history.push('?view=all');
     }
+
+    const roomID = window.location.pathname.split('/')[2];
+    this.setupRoom(roomID);
+    this.setupQuestions(roomID);
   };
 
   componentWillReceiveProps = async () => {
-    const roomID = this.props.location.pathname.split('/')[2];
+    const roomID = window.location.pathname.split('/')[2];
     this.setupQuestions(roomID);
   };
 
@@ -131,6 +144,7 @@ class Room extends Component {
             <div className={css['room__room-info']}>
               <RoomInfo {...this.state.room} />
             </div>
+            {!this.state.isJoined && this.state.canJoin && <i className={css.room__join} onClick={this.joinHandler} />}
             {this.state.isJoined && <i className={css.room__leave} onClick={() => this.setState({ leaveModal: true })} />}
             {this.state.isOwner && <Link to={`${this.state.room.id}/settings`} className={css.room__settings} />}
           </div>
@@ -169,6 +183,8 @@ class Room extends Component {
               </CollapsibleDate>
             ))}
         </main>
+
+        {this.state.joinedPopup && <Popup text="Room Joined" />}
 
         {this.state.leaveModal && (
           <Modal titleText="Leave Room" titleColor="#ef4573" close={() => this.setState({ leaveModal: false })}>

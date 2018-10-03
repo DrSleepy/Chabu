@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -17,13 +17,20 @@ class QuestionItem extends Component {
     deleteModal: false
   };
 
-  likeHandler = async () => {
+  likeHandler = async event => {
+    event.stopPropagation();
+
     this.setState({ liked: !this.state.liked });
     this.state.liked ? this.setState({ likes: this.state.likes - 1 }) : this.setState({ likes: this.state.likes + 1 });
     await server.patch(`/questions/${this.props.id}/like`);
   };
 
-  modalHandler = (property, boolean) => {
+  openQuestionHandler = () => {
+    this.props.history.push(`/r/${this.props.room}/${this.props.id}`);
+  };
+
+  modalHandler = (event, property, boolean) => {
+    event.stopPropagation();
     this.setState({ [property]: { ...this.state[property], modal: boolean } });
   };
 
@@ -50,8 +57,8 @@ class QuestionItem extends Component {
 
     return (
       <Fragment>
-        <div className={[css.question, cssQuestionToday].join(' ')}>
-          <i className={[css.thumb, cssIsLiked].join(' ')} onClick={this.likeHandler} />
+        <div className={[css.question, cssQuestionToday].join(' ')} onClick={this.openQuestionHandler}>
+          <i className={[css.thumb, cssIsLiked].join(' ')} onClick={event => this.likeHandler(event)} />
           <h3 className={css.title}>
             <Link className={css.link} to={`/r/${this.props.room}/${this.props.id}`}>
               {this.props.title}
@@ -63,13 +70,13 @@ class QuestionItem extends Component {
           <p className={css.comments}> {this.props.comments.length} comments </p>
           <p className={css.time}> {this.props.timeAgo} </p>
 
-          {shouldSeeDelete && <i className={css.delete} onClick={() => this.modalHandler('deleteModal', true)} />}
+          {shouldSeeDelete && <i className={css.delete} onClick={event => this.modalHandler(event, 'deleteModal', true)} />}
         </div>
         {this.state.deleteModal.modal && (
           <DeleteQuestionModal
             roomID={this.props.room}
             questionID={this.props.id}
-            close={() => this.modalHandler('deleteModal', false)}
+            close={event => this.modalHandler(event, 'deleteModal', false)}
           />
         )}
       </Fragment>
@@ -89,4 +96,4 @@ QuestionItem.propTypes = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(QuestionItem);
+)(withRouter(QuestionItem));

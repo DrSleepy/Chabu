@@ -46,10 +46,9 @@ class AccountSettings extends Component {
   };
 
   showUsernameHandler = async boolean => {
+    this.setState({ off: boolean });
     const response = await server.patch('accounts/', { showUsername: boolean }).catch(error => error.response);
     if (!response) return;
-
-    this.setState({ off: boolean });
   };
 
   appendSettingsToState = async () => {

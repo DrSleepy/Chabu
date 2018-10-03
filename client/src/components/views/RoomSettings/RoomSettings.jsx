@@ -5,7 +5,7 @@ import SettingsSection from '../../elements/SettingsSection/SettingsSection';
 import css from './roomSettings.less';
 
 const RoomSettings = props => {
-  const roomID = this.props.location.pathname.split('/')[2];
+  const roomID = window.location.pathname.split('/')[2];
 
   return (
     <div className={css.settings}>

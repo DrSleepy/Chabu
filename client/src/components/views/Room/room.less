@@ -25,6 +25,20 @@
     grid-area: roomInfo;
   }
 
+  &__join {
+    .giga;
+    grid-area: leave;
+    color: @green-color;
+
+    &:before {
+      content: '\e145';
+      font-family: 'Material Icons';
+      transform: rotate(0.03deg);
+      -webkit-text-stroke-width: 1px;
+      -webkit-text-stroke-color: @green-color;
+    }
+  }
+
   &__leave {
     .giga;
     grid-area: leave;
