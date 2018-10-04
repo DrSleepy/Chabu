@@ -5,6 +5,7 @@ import mapDispatchToProps from '../../../store/dispatch';
 import SettingsHeader from '../../elements/SettingsHeader/SettingsHeader';
 import SettingsSection from '../../elements/SettingsSection/SettingsSection';
 import InputWithError from '../../elements/InputWithError/InputWithError';
+import OnOff from '../../elements/OnOff/OnOff';
 import ButtonWithLoader from '../../elements/ButtonWithLoader/ButtonWithLoader';
 import server from '../../../axios';
 import css from './accountSettings.less';
@@ -77,8 +78,6 @@ class AccountSettings extends Component {
   };
 
   render() {
-    const cssOff = this.state.off ? css['buttons__background--off'] : null;
-
     return (
       <div className={css.settings}>
         <SettingsHeader backLink="/joined-rooms" heading="Account Settings" />
@@ -115,15 +114,7 @@ class AccountSettings extends Component {
           heading="Username"
           text="Toggle the switch below to hide or show your username when commenting in a question thread."
         >
-          <div className={css.buttons}>
-            <div className={[css.buttons__background, cssOff].join(' ')} />
-            <button className={css.buttons__button} onClick={() => this.showUsernameHandler(true)}>
-              Show
-            </button>
-            <button className={css.buttons__button} onClick={() => this.showUsernameHandler(false)}>
-              Hide
-            </button>
-          </div>
+          <OnOff offText="Hide" onText="Show" state={this.state.off} toggler={this.showUsernameHandler} />
         </SettingsSection>
         <button className={css.logout} onClick={this.logoutHandler}>
           Logout

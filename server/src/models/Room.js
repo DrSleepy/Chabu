@@ -26,9 +26,9 @@ const RoomSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  unlocked: {
+  locked: {
     type: Boolean,
-    default: true
+    default: false
   },
   questions: [
     {

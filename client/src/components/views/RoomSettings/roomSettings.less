@@ -6,33 +6,36 @@
   grid-template-rows: repeat(3, max-content) 1fr;
 }
 
-.buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border: solid 1px @light-border-color;
-  border-radius: 3px;
+.input {
+  margin-bottom: @size-2--5;
+}
 
-  &__button {
-    .pad-tb-3;
-    .pad-lr-5;
-
-    &--selected {
-      color: white;
-      background-color: @primary-color;
-      border-radius: 3px;
-    }
-  }
+.delete {
+  .btn__primary--danger;
 }
 
 .footer {
   display: grid;
+  margin-top: @size-5;
+}
 
-  &__update {
-    .btn__default;
-    .pad-tb-3;
-    .pad-lr-10;
-    justify-self: center;
-    align-self: end;
-    margin-bottom: @size-10;
+.update {
+  .pad-tb-2--5;
+  .pad-lr-7;
+  justify-self: center;
+  align-self: end;
+  margin-bottom: @size-5;
+}
+
+.modal-actions {
+  .modal-actions-container;
+
+  &__primary,
+  &__secondary {
+    .modal-actions-buttons;
+  }
+
+  &__secondary {
+    font-family: 'roboto-medium';
   }
 }

@@ -79,4 +79,4 @@ export const commentText = Joi.string()
 
 export const showUsername = Joi.boolean().label('Show Username');
 
-export const unlocked = Joi.boolean().label('Unlocked');
+export const locked = Joi.boolean().label('Locked');

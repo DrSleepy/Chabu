@@ -25,7 +25,7 @@ class Room extends Component {
     room: {
       id: '',
       title: '',
-      unlocked: '',
+      locked: '',
       creator: '',
       account: ''
     },
@@ -99,8 +99,8 @@ class Room extends Component {
       this.setState({ canJoin });
     }
 
-    const { id, title, unlocked, creator, account } = response.data.data;
-    this.setState({ room: { id, title, unlocked, creator, account } });
+    const { id, title, locked, creator, account } = response.data.data;
+    this.setState({ room: { id, title, locked, creator, account } });
   };
 
   setupQuestions = async roomID => {
@@ -135,7 +135,7 @@ class Room extends Component {
   render() {
     const cssView = this.state.actions.view ? css.activeIcon : '';
     const cssSearch = this.state.actions.search ? css.activeIcon : '';
-    const cssCreateDisabled = !this.state.room.unlocked ? css['actions__create--disabled'] : '';
+    const cssCreateDisabled = this.state.room.locked ? css['actions__create--disabled'] : '';
 
     return (
       <Fragment>
@@ -153,7 +153,7 @@ class Room extends Component {
             <button
               className={[css.actions__create, cssCreateDisabled].join(' ')}
               onClick={() => this.actionToggler(null)}
-              disabled={!this.state.room.unlocked}
+              disabled={this.state.room.locked}
             >
               Create Question
             </button>

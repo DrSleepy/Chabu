@@ -16,7 +16,7 @@ export const updateRoom = (req, res, next) => {
   const updateRoomSchema = Joi.object().keys({
     title: fields.roomTitle,
     creator: fields.creator,
-    unlocked: fields.unlocked
+    locked: fields.locked
   });
 
   const result = Joi.validate(req.body, updateRoomSchema, fields.config);

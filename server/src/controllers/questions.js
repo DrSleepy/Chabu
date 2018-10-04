@@ -12,7 +12,7 @@ export const createQuestion = async (req, res, next) => {
     return;
   }
 
-  if (!room.unlocked) {
+  if (room.locked) {
     response.errors.push({ path: ['room'], message: 'Room is locked' });
     next({ status: 409, ...response });
     return;

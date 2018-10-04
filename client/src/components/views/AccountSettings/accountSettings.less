@@ -6,11 +6,6 @@
   grid-template-rows: repeat(3, max-content) 1fr;
 }
 
-.input {
-  .input__default;
-  margin-bottom: 10px;
-}
-
 .send {
   float: right;
 }
@@ -27,49 +22,6 @@
     margin-right: 5px;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: @green-color;
-  }
-}
-
-.buttons {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border: solid 1px rgba(61, 112, 167, 0.1);
-  border-radius: 3px;
-
-  &__button {
-    .pad-tb-2--5;
-    background: none;
-    color: @black-text-color;
-
-    &:nth-of-type(2) {
-      color: white;
-    }
-  }
-
-  &__background {
-    .bottom-box-shadow-with-border;
-    background-color: @primary-color;
-    position: absolute;
-    height: 100%;
-    width: 50%;
-    left: 50%;
-    border-radius: 3px;
-    transition: 150ms ease-out;
-    z-index: -1;
-
-    &--off {
-      left: 0;
-      background-color: @purple-color;
-    }
-
-    &--off ~ .buttons__button:nth-of-type(1) {
-      color: white;
-    }
-
-    &--off ~ .buttons__button:nth-of-type(2) {
-      color: black;
-    }
   }
 }
 
