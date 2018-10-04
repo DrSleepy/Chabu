@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import mapDispatchToProps from '../../../store/dispatch';
 import Modal from '../../elements/Modal/Modal';
-import ButtonWithLoader from '../../elements/ButtonWithLoader/ButtonWithLoader';
 import Loader from '../../elements/Loader/Loader';
 import appendErrorsHandler from '../../../helpers/appendErrorsHandler';
 import NavBar from '../../elements/NavBar/NavBar';
@@ -150,31 +149,30 @@ class Home extends Component {
         </div>
 
         {this.state.joinRoom.modal && (
-          <Modal titleText="Join Room" close={() => this.modalHandler('joinRoom', false)}>
+          <Modal
+            titleText="Join Room"
+            buttonText="Join"
+            buttonLoader={this.state.joinRoom.loader}
+            onSubmit={this.joinRoomHandler}
+            onClose={() => this.modalHandler('joinRoom', false)}
+          >
             <InputWithError
               placeholder="Room ID"
               value={this.state.joinRoom.data.id}
               onChange={event => this.bindToState(event, 'joinRoom', 'id')}
               errorMessage={this.state.joinRoom.error}
             />
-            <div className={css['modal-actions']}>
-              <button className={css['modal-actions__secondary']} onClick={() => this.modalHandler('joinRoom', false)}>
-                Cancel
-              </button>
-              <ButtonWithLoader
-                className={css['modal-actions__primary']}
-                text="Join"
-                buttonType="primary"
-                spinnerColor="#fff"
-                onClick={this.joinRoomHandler}
-                loading={this.state.joinRoom.loader}
-              />
-            </div>
           </Modal>
         )}
 
         {this.state.createRoom.modal && (
-          <Modal titleText="Create Room" close={() => this.modalHandler('createRoom', false)}>
+          <Modal
+            titleText="Create Room"
+            buttonText="Create"
+            buttonLoader={this.state.createRoom.loader}
+            onSubmit={this.createRoomHandler}
+            onClose={() => this.modalHandler('createRoom', false)}
+          >
             <InputWithError
               placeholder="Title"
               maxLength={40}
@@ -189,19 +187,6 @@ class Home extends Component {
               onChange={event => this.bindToState(event, 'createRoom', 'creator')}
               errorMessage={this.state.createRoom.errors.creator[0]}
             />
-            <div className={css['modal-actions']}>
-              <button className={css['modal-actions__secondary']} onClick={() => this.modalHandler('createRoom', false)}>
-                Cancel
-              </button>
-              <ButtonWithLoader
-                className={css['modal-actions__primary']}
-                text="Create"
-                buttonType="primary"
-                spinnerColor="#fff"
-                onClick={this.createRoomHandler}
-                loading={this.state.createRoom.loader}
-              />
-            </div>
           </Modal>
         )}
       </Fragment>

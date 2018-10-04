@@ -52,6 +52,24 @@
   }
 }
 
+.actions {
+  .modal-actions-container;
+
+  &__primary,
+  &__secondary {
+    .modal-actions-buttons;
+  }
+
+  &__secondary {
+    font-family: 'roboto-medium';
+  }
+}
+
+// danger styles
+.danger-btn {
+  .btn__primary--danger;
+}
+
 @keyframes fade-in {
   from {
     background-color: rgba(0, 0, 0, 0);

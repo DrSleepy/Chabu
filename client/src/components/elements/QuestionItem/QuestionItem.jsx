@@ -76,7 +76,7 @@ class QuestionItem extends Component {
           <DeleteQuestionModal
             roomID={this.props.room}
             questionID={this.props.id}
-            close={event => this.modalHandler(event, 'deleteModal', false)}
+            onClose={event => this.modalHandler(event, 'deleteModal', false)}
           />
         )}
       </Fragment>

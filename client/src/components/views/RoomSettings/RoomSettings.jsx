@@ -93,8 +93,7 @@ class RoomSettings extends Component {
 
           <SettingsSection heading="Delete" headingColor="#ef4573" text="This action cannot be undone.">
             <button className={css.delete} onClick={() => this.modalHandler('deleteModal', true)}>
-              {' '}
-              Delete{' '}
+              Delete
             </button>
           </SettingsSection>
 
@@ -110,21 +109,15 @@ class RoomSettings extends Component {
         </div>
 
         {this.state.deleteModal && (
-          <Modal titleText="Delete Room" titleColor="#ef4573" close={() => this.modalHandler('deleteModal', false)}>
+          <Modal
+            type="danger"
+            titleText="Delete Room"
+            buttonText="Delete"
+            buttonLoader={this.state.deleteLoader}
+            onSubmit={this.deleteRoom}
+            onClose={() => this.modalHandler('deleteModal', false)}
+          >
             <p> Are you sure you want to delete this room? </p>
-            <div className={css['modal-actions']}>
-              <button className={css['modal-actions__secondary']} onClick={() => this.modalHandler('deleteModal', false)}>
-                Cancel
-              </button>
-              <ButtonWithLoader
-                className={css['modal-actions__primary']}
-                text="Delete"
-                buttonType="primary--danger"
-                onClick={this.deleteRoom}
-                spinnerColor="#fff"
-                loading={this.state.deleteLoader}
-              />
-            </div>
           </Modal>
         )}
       </Fragment>

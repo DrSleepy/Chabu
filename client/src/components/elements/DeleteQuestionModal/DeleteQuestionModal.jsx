@@ -3,9 +3,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Modal from '../Modal/Modal';
-import ButtonWithLoader from '../ButtonWithLoader/ButtonWithLoader';
 import server from '../../../axios';
-import css from './deleteQuestionModal.less';
 
 class deleteQuestionModal extends Component {
   state = {
@@ -28,21 +26,15 @@ class deleteQuestionModal extends Component {
 
   render() {
     return (
-      <Modal titleText="Delete Question" titleColor="#ef4573" close={this.props.close}>
+      <Modal
+        type="danger"
+        titleText="Delete Question"
+        buttonText="Delete"
+        buttonLoader={this.state.loader}
+        onSubmit={this.deleteQuestionHandler}
+        onClose={this.props.onClose}
+      >
         <p> Please confirm your choice to delete </p>
-        <div className={css['modal-actions']}>
-          <button className={css['modal-actions__secondary']} onClick={this.props.close}>
-            Cancel
-          </button>
-          <ButtonWithLoader
-            className={css['modal-actions__primary']}
-            text="Delete"
-            buttonType="primary--danger"
-            spinnerColor="#fff"
-            onClick={this.deleteQuestionHandler}
-            loading={this.state.loader}
-          />
-        </div>
       </Modal>
     );
   }
@@ -50,7 +42,8 @@ class deleteQuestionModal extends Component {
 
 deleteQuestionModal.propTypes = {
   questionID: PropTypes.string.isRequired,
-  close: PropTypes.func.isRequired
+  roomID: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired
 };
 
 export default withRouter(deleteQuestionModal);
