@@ -135,6 +135,7 @@ class Room extends Component {
   render() {
     const cssView = this.state.actions.view ? css.activeIcon : '';
     const cssSearch = this.state.actions.search ? css.activeIcon : '';
+    const cssCreateDisabled = !this.state.room.unlocked ? css['actions__create--disabled'] : '';
 
     return (
       <Fragment>
@@ -149,7 +150,11 @@ class Room extends Component {
             {this.state.isOwner && <Link to={`${this.state.room.id}/settings`} className={css.room__settings} />}
           </div>
           <div className={css.actions}>
-            <button className={css.actions__submit} onClick={() => this.actionToggler(null)}>
+            <button
+              className={[css.actions__create, cssCreateDisabled].join(' ')}
+              onClick={() => this.actionToggler(null)}
+              disabled={!this.state.room.unlocked}
+            >
               Create Question
             </button>
             <i className={[css.actions__search, cssSearch].join(' ')} onClick={() => this.actionToggler('search')} />
@@ -187,7 +192,15 @@ class Room extends Component {
         {this.state.joinedPopup && <Popup text="Room Joined" />}
 
         {this.state.leaveModal && (
-          <Modal titleText="Leave Room" titleColor="#ef4573" close={() => this.setState({ leaveModal: false })}>
+          <Modal
+            titleText="Leave Room"
+            titleColor="#ef4573"
+            close={() =>
+              this.setState({
+                leaveModal: false
+              })
+            }
+          >
             <p> Are you sure you want to leave this room? </p>
             <div className={css['modal-actions']}>
               <button className={css['modal-actions__secondary']} onClick={() => this.setState({ leaveModal: false })}>

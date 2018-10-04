@@ -53,11 +53,10 @@ class QuestionItem extends Component {
     const shouldSeeDelete = isRoomCreator || createdByMe;
 
     const cssIsLiked = this.state.liked ? css['thumb--true'] : css['thumb--false'];
-    const cssQuestionToday = isCreatedToday ? css['question-today'] : '';
 
     return (
       <Fragment>
-        <div className={[css.question, cssQuestionToday].join(' ')} onClick={this.openQuestionHandler}>
+        <div className={css.question} onClick={this.openQuestionHandler}>
           <i className={[css.thumb, cssIsLiked].join(' ')} onClick={event => this.likeHandler(event)} />
           <h3 className={css.title}>
             <Link className={css.link} to={`/r/${this.props.room}/${this.props.id}`}>
@@ -65,10 +64,11 @@ class QuestionItem extends Component {
             </Link>
           </h3>
 
+          {isCreatedToday && <p className={css.likes}> new </p>}
           {!isCreatedToday && <p className={css.likes}> {this.state.likes} likes </p>}
 
           <p className={css.comments}> {this.props.comments.length} comments </p>
-          <p className={css.time}> {this.props.timeAgo} </p>
+          <p className={css.time}> {this.props.timeAgo === 'a few seconds ago' ? 'just now' : this.props.timeAgo} </p>
 
           {shouldSeeDelete && <i className={css.delete} onClick={event => this.modalHandler(event, 'deleteModal', true)} />}
         </div>

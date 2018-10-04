@@ -68,9 +68,14 @@
   grid-template-columns: 1fr repeat(2, max-content);
   grid-column-gap: @size-5;
 
-  &__submit {
+  &__create {
     .btn__default;
     width: max-content;
+  }
+
+  &__create--disabled {
+    color: @gray-text-color;
+    border: solid 1px @light-border-color;
   }
 
   &__search,

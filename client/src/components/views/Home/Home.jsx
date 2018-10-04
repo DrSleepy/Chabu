@@ -95,11 +95,11 @@ class Home extends Component {
     let resultJSX;
 
     if (list === 'joined-rooms' || list === 'created-rooms') {
-      resultJSX = result.map(room => <RoomItem title={room.title} id={room._id} creator={room.creator} key={room._id} />);
+      resultJSX = result.map(room => <RoomItem {...room} key={room._id} />);
     }
 
     if (list === 'created-questions') {
-      resultJSX = result.map((question, i) => <QuestionItem {...question} key={i} />);
+      resultJSX = result.map(question => <QuestionItem {...question} key={question._id} />);
     }
 
     this.setState({ loadingList: false, list: resultJSX });

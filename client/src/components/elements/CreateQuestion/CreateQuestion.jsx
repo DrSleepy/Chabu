@@ -40,7 +40,7 @@ class CreateQuestion extends Component {
 
   render() {
     return (
-      <form className={css.question}>
+      <div className={css.question}>
         <InputWithError
           placeholder="Title"
           value={this.state.title}
@@ -61,14 +61,13 @@ class CreateQuestion extends Component {
           <ButtonWithLoader
             className={css.actions__primary}
             text="Submit"
-            type="submit"
             buttonType="primary"
             spinnerColor="#fff"
             onClick={this.createQuestionHandler}
             loading={this.state.loader}
           />
         </div>
-      </form>
+      </div>
     );
   }
 }

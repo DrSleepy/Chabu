@@ -23,7 +23,7 @@ server.use(helmet());
 server.use(compression());
 server.use(logger('dev'));
 server.use(cors({ origin: 'http://localhost:3000', credentials: true }));
-// server.use(cors({ origin: 'https://1917ffc5.ngrok.io', credentials: true }));
+// server.use(cors({ origin: 'https://6f9198a8.ngrok.io', credentials: true }));
 server.use(bodyParser.json());
 server.use(cookieParser());
 server.use(verifyToken);

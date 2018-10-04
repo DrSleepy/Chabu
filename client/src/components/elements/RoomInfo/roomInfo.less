@@ -27,18 +27,27 @@
   overflow-x: scroll;
 }
 
+.locked,
 .unlocked {
   grid-area: unlocked;
   width: max-content;
 
   &:before {
     .micro;
-    content: '\e5ca';
     font-family: 'Material Icons';
     color: @green-color;
     -webkit-text-stroke-width: 1.5px;
-    -webkit-text-stroke-color: @green-color;
   }
+}
+
+.locked&:before {
+  content: '\e5cd';
+  -webkit-text-stroke-color: @danger-color;
+}
+
+.unlocked&:before {
+  content: '\e5ca';
+  -webkit-text-stroke-color: @green-color;
 }
 
 .creator {
