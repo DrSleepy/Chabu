@@ -100,7 +100,8 @@ class RoomSettings extends Component {
           <div className={css.footer}>
             <ButtonWithLoader
               text="Update"
-              buttonType="default"
+              buttonType="primary"
+              spinnerColor="#fff"
               className={css.update}
               onClick={this.updateRoom}
               loading={this.state.updateLoader}

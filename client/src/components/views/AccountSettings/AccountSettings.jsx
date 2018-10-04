@@ -102,8 +102,7 @@ class AccountSettings extends Component {
               <ButtonWithLoader
                 className={css.send}
                 text="Send"
-                buttonType="primary"
-                spinnerColor="#fff"
+                buttonType="default"
                 loading={this.state.sending}
                 onClick={this.sendEmail}
               />

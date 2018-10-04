@@ -80,8 +80,10 @@ class Login extends Component {
           errorMessage={this.state.formErrors.password[0]}
         />
         <ButtonWithLoader
+          buttonType="primary"
           className={css.submit}
           text="Login"
+          spinnerColor="#fff"
           onClick={event => this.formHandler(event)}
           loading={this.state.loggingIn}
         />

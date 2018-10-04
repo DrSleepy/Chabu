@@ -10,7 +10,6 @@ import QuestionItem from '../../elements/QuestionItem/QuestionItem';
 import CreateQuestion from '../../elements/CreateQuestion/CreateQuestion';
 import FilterSearch from '../../elements/FilterSearch/FilterSearch';
 import FilterList from '../../elements/FilterList/FilterList';
-import ButtonWithLoader from '../../elements/ButtonWithLoader/ButtonWithLoader';
 import { populateDatesWithQuestion, sortQuestionsInDate, getSortedDates } from '../../../helpers/questions';
 import CollapsibleDate from '../../elements/CollapsibleDate/CollapsibleDate';
 import Loader from '../../elements/Loader/Loader';
@@ -146,7 +145,16 @@ class Room extends Component {
               <RoomInfo {...this.state.room} />
             </div>
             {!this.state.isJoined && this.state.canJoin && <i className={css.room__join} onClick={this.joinHandler} />}
-            {this.state.isJoined && <i className={css.room__leave} onClick={() => this.setState({ leaveModal: true })} />}
+            {this.state.isJoined && (
+              <i
+                className={css.room__leave}
+                onClick={() =>
+                  this.setState({
+                    leaveModal: true
+                  })
+                }
+              />
+            )}
             {this.state.isOwner && <Link to={`${this.state.room.id}/settings`} className={css.room__settings} />}
           </div>
           <div className={css.actions}>
@@ -193,28 +201,14 @@ class Room extends Component {
 
         {this.state.leaveModal && (
           <Modal
+            type="danger"
             titleText="Leave Room"
-            titleColor="#ef4573"
-            close={() =>
-              this.setState({
-                leaveModal: false
-              })
-            }
+            buttonText="Leave"
+            buttonLoader={this.state.leaveLoader}
+            onSubmit={this.leaveHandler}
+            onClose={() => this.setState({ leaveModal: false })}
           >
             <p> Are you sure you want to leave this room? </p>
-            <div className={css['modal-actions']}>
-              <button className={css['modal-actions__secondary']} onClick={() => this.setState({ leaveModal: false })}>
-                Cancel
-              </button>
-              <ButtonWithLoader
-                className={css['modal-actions__primary']}
-                text="Leave"
-                buttonType="primary--danger"
-                spinnerColor="#fff"
-                onClick={this.leaveHandler}
-                loading={this.state.leaveLoader}
-              />
-            </div>
           </Modal>
         )}
       </Fragment>
