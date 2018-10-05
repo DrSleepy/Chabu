@@ -49,6 +49,11 @@ class Home extends Component {
     }
 
     const response = await server.patch(`/rooms/${this.state.joinRoom.data.id}/join`).catch(error => error.response);
+    if (response.status === 404) {
+      this.setState({ joinRoom: { ...this.state.joinRoom, loader: false, error: 'Room not found' } });
+      return;
+    }
+
     if (response.data.errors.length) {
       const error = response.data.errors[0].message;
       this.setState({ joinRoom: { ...this.state.joinRoom, loader: false, error } });
@@ -117,12 +122,12 @@ class Home extends Component {
   };
 
   componentWillMount = () => {
-    const list = this.props.location.pathname.replace('/', '');
+    const list = this.props.location.pathname.split('/')[1];
     this.getListHandler(list);
   };
 
   componentWillReceiveProps = nextProps => {
-    const list = nextProps.location.pathname.replace('/', '');
+    const list = this.props.location.pathname.split('/')[1];
     this.getListHandler(list);
   };
 

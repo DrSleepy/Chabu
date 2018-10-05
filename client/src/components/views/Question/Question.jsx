@@ -6,7 +6,6 @@ import mapStateToProps from '../../../store/state';
 import Comment from '../../elements/Comment/Comment';
 import Modal from '../../elements/Modal/Modal';
 import DeleteQuestionModal from '../../elements/DeleteQuestionModal/DeleteQuestionModal';
-import ButtonWithLoader from '../../elements/ButtonWithLoader/ButtonWithLoader';
 import server from '../../../axios';
 import css from './question.less';
 
@@ -84,18 +83,18 @@ class Question extends Component {
 
   render() {
     const createdByMe = this.props.accountID === this.state.account;
+    const cssHasText = this.state.text ? css['body--with-text'] : '';
     const cssIsLikedButton = this.state.liked && css['details__likes-button--liked'];
     const cssIsLikedSpan = this.state.liked && css['details__likes-span--liked'];
-
     const roomID = this.props.location.pathname.split('/')[2];
 
     return (
       <Fragment>
         <div className={css.question}>
-          <div className={css.body}>
+          <div className={[css.body, cssHasText].join(' ')}>
             <Link to={`/r/${roomID}`} className={css.body__back} />
             <h1 className={css.body__title}> {this.state.title} </h1>
-            <p className={css.body__text}> {this.state.text} </p>
+            {this.state.text && <p className={css.body__text}> {this.state.text} </p>}
           </div>
           <div className={css.details}>
             <p className={css.details__comments}> 2 comments </p>
@@ -128,7 +127,13 @@ class Question extends Component {
         </section>
 
         {this.state.editModal.modal && (
-          <Modal titleText="Edit Question" close={() => this.modalHandler('editModal', false)}>
+          <Modal
+            titleText="Edit Question"
+            buttonText="Update"
+            buttonLoader={this.state.editModal.loader}
+            onSubmit={this.editQuestionHandler}
+            onClose={() => this.modalHandler('editModal', false)}
+          >
             <textarea
               className={css.editTextarea}
               placeholder="Additional information"
@@ -136,19 +141,6 @@ class Question extends Component {
               onChange={event => this.bindToState(event, 'text')}
               maxLength="20000"
             />
-            <div className={css['modal-actions']}>
-              <button className={css['modal-actions__secondary']} onClick={() => this.modalHandler('editModal', false)}>
-                Cancel
-              </button>
-              <ButtonWithLoader
-                className={css['modal-actions__primary']}
-                text="Update"
-                buttonType="primary"
-                spinnerColor="#fff"
-                onClick={this.editQuestionHandler}
-                loading={this.state.editModal.loader}
-              />
-            </div>
           </Modal>
         )}
 

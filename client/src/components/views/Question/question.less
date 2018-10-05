@@ -8,12 +8,22 @@
 .body {
   display: grid;
   grid-gap: @size-3;
-  margin-bottom: @size-3;
   grid-template-columns: max-content 1fr;
   align-items: center;
-  grid-template-areas:
-    'back  title'
-    'text  text';
+  grid-template-areas: 'back  title';
+
+  &--with-text {
+    margin-bottom: @size-3;
+    grid-template-areas:
+      'back  title'
+      'text  text';
+  }
+
+  display: grid;
+  grid-gap: @size-3;
+  grid-template-columns: max-content 1fr;
+  align-items: center;
+  grid-template-areas: 'back  title';
 
   &__back {
     grid-area: back;

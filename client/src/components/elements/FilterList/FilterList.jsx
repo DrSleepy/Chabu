@@ -8,13 +8,17 @@ const FilterSearch = props => {
   const active = window.location.search.replace('?', '').split('=')[1];
 
   return (
-    <ul className={css.list}>
+    <nav className={css.list}>
       {props.list.map((item, i) => (
-        <li className={[css.list__item, item.toLowerCase() === active ? css.active : ''].join(' ')} key={i}>
-          <Link to={{ pathname: `/r/${props.roomID}`, search: `?view=${item.toLowerCase()}` }}> {item}</Link>
-        </li>
+        <Link
+          className={[css.list__item, item.toLowerCase() === active ? css.active : ''].join(' ')}
+          to={{ pathname: `/r/${props.roomID}`, search: `?view=${item.toLowerCase()}` }}
+          key={i}
+        >
+          {item}
+        </Link>
       ))}
-    </ul>
+    </nav>
   );
 };
 

@@ -53,6 +53,8 @@ export const creator = Joi.string()
 
 export const uuid = Joi.string()
   .required()
+  // .alphanum()
+  // .allow(['-', '_'])
   .min(7)
   .max(14)
   .label('Room ID');

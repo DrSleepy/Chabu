@@ -80,7 +80,10 @@ class Room extends Component {
     this.setState({ loadingData: true });
 
     const response = await server.get(`/rooms/${roomID}`).catch(error => error.response.data);
-    if (!response || !response.data) return this.props.history.push('/joined-rooms');
+    if (!response || !response.data) {
+      this.props.history.push('/joined-rooms');
+      return false;
+    }
 
     const isJoined = response.data.data.members.includes(this.props.accountID);
     const isOwner = response.data.data.account === this.props.accountID;
@@ -100,6 +103,8 @@ class Room extends Component {
 
     const { id, title, locked, creator, account } = response.data.data;
     this.setState({ room: { id, title, locked, creator, account } });
+
+    return true;
   };
 
   setupQuestions = async roomID => {
@@ -116,13 +121,18 @@ class Room extends Component {
     this.setState({ sortedDates, questions: questionsInDates, loadingData: false });
   };
 
-  componentWillMount = () => {
+  com;
+
+  componentWillMount = async () => {
+    const roomID = window.location.pathname.split('/')[2];
+    const found = await this.setupRoom(roomID);
+    if (!found) return;
+
     if (!window.location.search) {
       this.props.history.push('?view=all');
+      return;
     }
 
-    const roomID = window.location.pathname.split('/')[2];
-    this.setupRoom(roomID);
     this.setupQuestions(roomID);
   };
 

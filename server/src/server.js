@@ -18,6 +18,10 @@ import './connection';
 
 const server = express();
 
+const redirectUnmatched = (req, res, next) => {
+  next({ status: 404, message: 'Invalid endpoint' });
+};
+
 // middleware
 server.use(helmet());
 server.use(compression());
@@ -35,6 +39,7 @@ server.use('/questions', questions);
 server.use('/comments', comments);
 server.use('/login', login);
 server.use('/logout', (req, res) => res.clearCookie('token').sendStatus(200));
+server.use(redirectUnmatched);
 
 // error handling
 server.use((err, req, res, next) => res.status(err.status).json(err)); // eslint-disable-line
