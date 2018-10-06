@@ -17,14 +17,18 @@ class PostCommentModal extends Component {
 
   postCommentHandler = async () => {
     this.setState({ loader: true });
+
     const questionID = this.props.location.pathname.split('/')[3];
     const endpoint = this.props.commentID ? `/comments/${this.props.commentID}` : `/questions/${questionID}`;
-
     const data = { text: this.state.text };
-    await server.post(endpoint, data).catch(error => error.response);
+
+    const response = await server.post(endpoint, data).catch(error => error.response);
+    const newComment = response.data.data;
 
     this.setState({ loader: false, text: '' });
-    this.props.reloadQuestion();
+    
+    
+    this.props.newCommentHandler(newComment);
     this.props.onClose();
   };
 
@@ -49,8 +53,7 @@ class PostCommentModal extends Component {
 }
 
 PostCommentModal.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  reloadQuestion: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired
 };
 
 export default withRouter(PostCommentModal);

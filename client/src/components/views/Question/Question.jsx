@@ -33,6 +33,10 @@ class Question extends Component {
     }
   };
 
+  newCommentHandler = newComment => {
+    this.setState({ comments: [...this.state.comments, newComment] });
+  };
+
   likeHandler = async () => {
     this.setState({ liked: !this.state.liked });
     this.state.liked ? this.setState({ likes: this.state.likes - 1 }) : this.setState({ likes: this.state.likes + 1 });
@@ -126,12 +130,11 @@ class Question extends Component {
             this.state.comments
               .map((comment, i) => (
                 <div className={css.children} key={i}>
-                  <Comment {...comment} username={comment.account.username} reloadQuestion={this.setupQuestion} />
+                  <Comment {...comment} />
                 </div>
               ))
               .reverse()}
         </section>
-
         {this.state.editModal.modal && (
           <Modal
             titleText="Edit Question"
@@ -148,11 +151,12 @@ class Question extends Component {
             />
           </Modal>
         )}
-
         {this.state.postCommentModal && (
-          <PostCommentModal reloadQuestion={this.setupQuestion} onClose={() => this.setState({ postCommentModal: false })} />
+          <PostCommentModal
+            newCommentHandler={this.newCommentHandler}
+            onClose={() => this.setState({ postCommentModal: false })}
+          />
         )}
-
         {this.state.deleteModal.modal && (
           <DeleteQuestionModal questionID={this.state.id} onClose={() => this.setState({ deleteModal: false })} />
         )}

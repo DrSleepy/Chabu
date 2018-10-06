@@ -21,6 +21,10 @@ class Comment extends Component {
     postCommentModal: false
   };
 
+  newCommentHandler = newComment => {
+    this.setState({ children: [...this.state.children, newComment] });
+  };
+
   editCommentHandler = async () => {
     this.setState({ editLoader: true });
 
@@ -28,7 +32,6 @@ class Comment extends Component {
     await server.patch(`/comments/${this.props.id}`, data).catch(error => error.response);
 
     this.setState({ editModal: false, editLoader: false });
-    this.props.reloadQuestion();
   };
 
   deleteCommentHandler = async () => {
@@ -36,7 +39,6 @@ class Comment extends Component {
     await server.delete(`/comments/${this.props.id}`).catch(error => error.response);
 
     this.setState({ deleteLoader: false, deleteModal: false });
-    this.props.reloadQuestion();
   };
 
   componentWillMount = async () => {
@@ -47,12 +49,13 @@ class Comment extends Component {
   render() {
     const cssIsCollapsed = !this.state.show ? css.isCollapsed : '';
     const cssIsCollapsedComment = !this.state.show ? css.isCollapsedComment : '';
+
     const isMyComment = this.props.accountID === this.props.account._id;
 
     return (
       <div className={[css.comment, cssIsCollapsedComment].join(' ')}>
         <header className={css.header} onClick={() => this.setState({ show: !this.state.show })}>
-          <p className={css.header__username}> {this.props.showUsername ? this.props.username : 'Anonymous'} </p>
+          <p className={css.header__username}> {this.props.showUsername ? this.props.account.username : 'Anonymous'} </p>
           <p className={css.header__time}>
             {this.props.timeAgo} <span className={css.header__edited}> {this.props.edited && '(edited)'} </span>
           </p>
@@ -80,11 +83,13 @@ class Comment extends Component {
               </footer>
             )}
 
-            {this.state.children.map((comment, i) => (
-              <div className={css.children} key={i}>
-                <Comment {...comment} username={comment.account.username} reloadQuestion={this.props.reloadQuestion} />
-              </div>
-            ))}
+            {this.state.children
+              .map((comment, i) => (
+                <div className={css.children} key={i}>
+                  <Comment {...comment} />
+                </div>
+              ))
+              .reverse()}
           </Fragment>
         )}
 
@@ -99,11 +104,7 @@ class Comment extends Component {
             <textarea
               placeholder="Type comment here..."
               value={this.state.content}
-              onChange={event =>
-                this.setState({
-                  content: event.target.value
-                })
-              }
+              onChange={event => this.setState({ content: event.target.value })}
               maxLength="20000"
             />
           </Modal>
@@ -124,8 +125,8 @@ class Comment extends Component {
 
         {this.state.postCommentModal && (
           <PostCommentModal
+            newCommentHandler={this.newCommentHandler}
             commentID={this.state.id}
-            reloadQuestion={this.props.reloadQuestion}
             onClose={() => this.setState({ postCommentModal: false })}
           />
         )}

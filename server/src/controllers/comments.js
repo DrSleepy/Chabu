@@ -22,12 +22,18 @@ export const createComment = async (req, res, next) => {
     ...req.body
   }).save();
 
+  const comment = await CommentModel.findById(newComment._id).populate({
+    path: 'account',
+    select: ['username', 'showUsername']
+  });
+
   const updateResource = resource.update({ $push: { comments: newComment._id } }).exec();
   const updateAccount = req.account.update({ $push: { createdComments: newComment._id } }).exec();
 
   await Promise.all([updateResource, updateAccount]);
 
   response.ok = true;
+  response.data = comment;
   res.status(200).json(response);
 };
 
