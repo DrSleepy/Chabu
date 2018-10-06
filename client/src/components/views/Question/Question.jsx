@@ -34,7 +34,7 @@ class Question extends Component {
   };
 
   newCommentHandler = newComment => {
-    this.setState({ comments: [...this.state.comments, newComment] });
+    this.setState({ comments: [...this.state.comments, newComment.id] });
   };
 
   likeHandler = async () => {
@@ -101,7 +101,9 @@ class Question extends Component {
           </div>
           <div className={css.details}>
             <p className={css.details__comments}> 2 comments </p>
-            <p className={css.details__time}> {this.state.timeAgo} </p>
+            <p className={css.details__time}>
+              {this.state.timeAgo === 'a few seconds ago' ? 'just now' : this.state.timeAgo}
+            </p>
             <button
               className={[css['details__likes-button'], cssIsLikedButton].join(' ')}
               onClick={this.likeHandler}
@@ -128,9 +130,9 @@ class Question extends Component {
           {this.state.loading && <Loader className={css.loader} />}
           {!this.state.loadingList &&
             this.state.comments
-              .map((comment, i) => (
+              .map((commentID, i) => (
                 <div className={css.children} key={i}>
-                  <Comment {...comment} />
+                  <Comment commentID={commentID} accountID={this.props.accountID} />
                 </div>
               ))
               .reverse()}
@@ -146,7 +148,11 @@ class Question extends Component {
             <textarea
               placeholder="Additional information..."
               value={this.state.text}
-              onChange={event => this.setState({ text: event.target.value })}
+              onChange={event =>
+                this.setState({
+                  text: event.target.value
+                })
+              }
               maxLength="20000"
             />
           </Modal>
@@ -158,7 +164,14 @@ class Question extends Component {
           />
         )}
         {this.state.deleteModal.modal && (
-          <DeleteQuestionModal questionID={this.state.id} onClose={() => this.setState({ deleteModal: false })} />
+          <DeleteQuestionModal
+            questionID={this.state.id}
+            onClose={() =>
+              this.setState({
+                deleteModal: false
+              })
+            }
+          />
         )}
       </Fragment>
     );

@@ -22,10 +22,7 @@ export const createComment = async (req, res, next) => {
     ...req.body
   }).save();
 
-  const comment = await CommentModel.findById(newComment._id).populate({
-    path: 'account',
-    select: ['username', 'showUsername']
-  });
+  const comment = await CommentModel.findById(newComment._id).populate({ path: 'account', select: ['username'] });
 
   const updateResource = resource.update({ $push: { comments: newComment._id } }).exec();
   const updateAccount = req.account.update({ $push: { createdComments: newComment._id } }).exec();
@@ -40,13 +37,7 @@ export const createComment = async (req, res, next) => {
 export const getComment = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const comment = await CommentModel.findById(req.params.commentID).populate({
-    path: 'comments',
-    populate: {
-      path: 'account',
-      select: ['username', 'showUsername']
-    }
-  });
+  const comment = await CommentModel.findById(req.params.commentID).populate({ path: 'account', select: ['username'] });
 
   if (!comment) {
     response.errors.push({ path: ['comment'], message: 'Comment not found' });
@@ -90,7 +81,9 @@ export const updateComment = async (req, res, next) => {
   }
 
   await comment.update({ edited: true, ...req.body });
+  const updatedComment = await CommentModel.findById(req.params.commentID);
 
   response.ok = true;
+  response.data = updatedComment;
   res.status(200).json(response);
 };

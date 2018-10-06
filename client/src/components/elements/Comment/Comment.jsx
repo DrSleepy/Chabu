@@ -1,19 +1,24 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
 
 import Modal from '../Modal/Modal';
 import PostCommentModal from '../PostCommentModal/PostCommentModal';
 import server from '../../../axios';
 import css from './comment.less';
-import mapStateToProps from '../../../store/state';
 
 class Comment extends Component {
   state = {
-    id: '',
+    comment: {
+      id: '',
+      text: '',
+      comments: [],
+      edited: false,
+      deleted: false,
+      showUsername: '',
+      account: { _id: '', username: '' }
+    },
+    loading: false,
     show: true,
-    content: '',
-    children: [],
     editModal: false,
     editLoader: false,
     deleteModal: false,
@@ -22,50 +27,62 @@ class Comment extends Component {
   };
 
   newCommentHandler = newComment => {
-    this.setState({ children: [...this.state.children, newComment] });
+    this.setState({ comment: { ...this.state.comment, comments: [...this.state.comment.comments, newComment.id] } });
   };
 
   editCommentHandler = async () => {
     this.setState({ editLoader: true });
 
-    const data = { text: this.state.content };
-    await server.patch(`/comments/${this.props.id}`, data).catch(error => error.response);
+    const data = { text: this.state.comment.text };
+    const response = await server.patch(`/comments/${this.state.comment.id}`, data).catch(error => error.response);
 
-    this.setState({ editModal: false, editLoader: false });
+    this.setState({
+      comment: { ...this.state.comment, text: response.data.data.text },
+      editModal: false,
+      editLoader: false
+    });
   };
 
   deleteCommentHandler = async () => {
     this.setState({ deleteLoader: true });
-    await server.delete(`/comments/${this.props.id}`).catch(error => error.response);
+    await server.delete(`/comments/${this.state.comment.id}`).catch(error => error.response);
 
-    this.setState({ deleteLoader: false, deleteModal: false });
+    this.setState({
+      comment: { ...this.state.comment, deleted: true },
+      deleteLoader: false,
+      deleteModal: false
+    });
   };
 
-  componentWillMount = async () => {
-    const comment = await server.get(`/comments/${this.props.id}`).catch(error => error.response);
-    this.setState({ id: comment.data.data._id, content: this.props.text, children: comment.data.data.comments });
+  setupCommentHandler = async () => {
+    const response = await server.get(`/comments/${this.props.commentID}`).catch(error => error.response);
+    const { id, text, showUsername, edited, deleted, comments, account } = response.data.data;
+    this.setState({ comment: { id, text, showUsername, edited, deleted, comments, account } });
+  };
+
+  componentWillMount = () => {
+    this.setupCommentHandler();
   };
 
   render() {
     const cssIsCollapsed = !this.state.show ? css.isCollapsed : '';
     const cssIsCollapsedComment = !this.state.show ? css.isCollapsedComment : '';
-
-    const isMyComment = this.props.accountID === this.props.account._id;
+    const isMyComment = this.props.accountID === this.state.comment.account._id;
 
     return (
       <div className={[css.comment, cssIsCollapsedComment].join(' ')}>
         <header className={css.header} onClick={() => this.setState({ show: !this.state.show })}>
-          <p className={css.header__username}> {this.props.showUsername ? this.props.account.username : 'Anonymous'} </p>
+          <p className={css.header__username}> {this.state.showUsername ? this.state.account.username : 'Anonymous'} </p>
           <p className={css.header__time}>
-            {this.props.timeAgo} <span className={css.header__edited}> {this.props.edited && '(edited)'} </span>
+            {this.state.timeAgo} <span className={css.header__edited}> {this.state.edited && '(edited)'} </span>
           </p>
           <i className={[css.header__arrow, cssIsCollapsed].join(' ')} />
         </header>
 
         {this.state.show && (
           <Fragment>
-            <p className={css.text}>{!this.props.deleted ? this.props.text : '[deleted]'}</p>
-            {!this.props.deleted && (
+            <p className={css.text}>{!this.state.comment.deleted ? this.state.comment.text : '[deleted]'}</p>
+            {!this.state.comment.deleted && (
               <footer className={css.footer}>
                 {isMyComment && (
                   <Fragment>
@@ -83,10 +100,10 @@ class Comment extends Component {
               </footer>
             )}
 
-            {this.state.children
-              .map((comment, i) => (
+            {this.state.comment.comments
+              .map((commentID, i) => (
                 <div className={css.children} key={i}>
-                  <Comment {...comment} />
+                  <Comment commentID={commentID} accountID={this.props.accountID} />
                 </div>
               ))
               .reverse()}
@@ -103,8 +120,8 @@ class Comment extends Component {
           >
             <textarea
               placeholder="Type comment here..."
-              value={this.state.content}
-              onChange={event => this.setState({ content: event.target.value })}
+              value={this.state.comment.text}
+              onChange={event => this.setState({ comment: { ...this.state.comment, text: event.target.value } })}
               maxLength="20000"
             />
           </Modal>
@@ -126,7 +143,7 @@ class Comment extends Component {
         {this.state.postCommentModal && (
           <PostCommentModal
             newCommentHandler={this.newCommentHandler}
-            commentID={this.state.id}
+            commentID={this.state.comment.id}
             onClose={() => this.setState({ postCommentModal: false })}
           />
         )}
@@ -135,4 +152,4 @@ class Comment extends Component {
   }
 }
 
-export default connect(mapStateToProps)(withRouter(Comment));
+export default withRouter(Comment);
