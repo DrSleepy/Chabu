@@ -6,6 +6,7 @@ import mapStateToProps from '../../../store/state';
 import Comment from '../../elements/Comment/Comment';
 import Modal from '../../elements/Modal/Modal';
 import DeleteQuestionModal from '../../elements/DeleteQuestionModal/DeleteQuestionModal';
+import Loader from '../../elements/Loader/Loader';
 import server from '../../../axios';
 import css from './question.less';
 
@@ -25,19 +26,30 @@ class Question extends Component {
     deleteModal: false,
     editModal: {
       modal: false,
-      data: { text: '' },
-      loader: false
+      loader: false,
+      text: ''
+    },
+    postModal: {
+      modal: false,
+      loader: false,
+      text: ''
     }
-  };
-
-  bindToState = (event, property) => {
-    this.setState({ [property]: event.target.value });
   };
 
   likeHandler = async () => {
     this.setState({ liked: !this.state.liked });
     this.state.liked ? this.setState({ likes: this.state.likes - 1 }) : this.setState({ likes: this.state.likes + 1 });
     await server.patch(`/questions/${this.state.id}/like`);
+  };
+
+  postCommentHandler = async () => {
+    this.setState({ postModal: { ...this.state.postModal, loader: true } });
+
+    const data = { text: this.state.postModal.text };
+    await server.post(`/questions/${this.state.id}`, data).catch(error => error.response);
+
+    this.setState({ postModal: { loader: false, modal: false, text: '' } });
+    this.setupQuestion();
   };
 
   editQuestionHandler = async () => {
@@ -68,7 +80,7 @@ class Question extends Component {
       ...response.data.data,
       editModal: {
         ...this.state.editModal,
-        data: { text: response.data.data.text }
+        text: response.data.data.text
       }
     });
   };
@@ -107,23 +119,28 @@ class Question extends Component {
               <span className={[css['details__likes-span'], cssIsLikedSpan].join(' ')}>{this.state.likes} likes</span>
             </button>
           </div>
-          {createdByMe && (
-            <div className={css.actions}>
-              <button className={css.actions__edit} onClick={() => this.modalHandler('editModal', true)}>
-                Edit
-              </button>
-              <button className={css.actions__delete} onClick={() => this.modalHandler('deleteModal', true)}>
-                Delete
-              </button>
-            </div>
-          )}
+          <div className={css.actions}>
+            {createdByMe && (
+              <Fragment>
+                <button className={css.actions__edit} onClick={() => this.modalHandler('editModal', true)}>
+                  Edit
+                </button>
+                <button className={css.actions__delete} onClick={() => this.modalHandler('deleteModal', true)}>
+                  Delete
+                </button>
+              </Fragment>
+            )}
+            <i className={css.actions__post} onClick={() => this.modalHandler('postModal', true)} />
+          </div>
         </div>
         <section>
-          <Comment />
-          <Comment />
-          <Comment />
-          <Comment />
-          <Comment />
+          {this.state.loading && <Loader className={css.loader} />}
+          {!this.state.loadingList &&
+            this.state.comments
+              .map((comment, i) => (
+                <Comment {...comment} username={comment.account.username} reloadQuestion={this.setupQuestion} key={i} />
+              ))
+              .reverse()}
         </section>
 
         {this.state.editModal.modal && (
@@ -135,17 +152,34 @@ class Question extends Component {
             onClose={() => this.modalHandler('editModal', false)}
           >
             <textarea
-              className={css.editTextarea}
-              placeholder="Additional information"
+              placeholder="Additional information..."
               value={this.state.text}
-              onChange={event => this.bindToState(event, 'text')}
+              onChange={event => this.setState({ text: event.target.value })}
+              maxLength="20000"
+            />
+          </Modal>
+        )}
+
+        {this.state.postModal.modal && (
+          <Modal
+            titleText="Post Comment"
+            buttonText="Post"
+            buttonLoader={this.state.postModal.loader}
+            onSubmit={this.postCommentHandler}
+            onClose={() => this.modalHandler('postModal', false)}
+          >
+            <textarea
+              className={css.editTextarea}
+              placeholder="Type your comment here..."
+              value={this.state.postModal.text}
+              onChange={event => this.setState({ postModal: { ...this.state.postModal, text: event.target.value } })}
               maxLength="20000"
             />
           </Modal>
         )}
 
         {this.state.deleteModal.modal && (
-          <DeleteQuestionModal questionID={this.state.id} close={() => this.modalHandler('deleteModal', false)} />
+          <DeleteQuestionModal questionID={this.state.id} onClose={() => this.modalHandler('deleteModal', false)} />
         )}
       </Fragment>
     );

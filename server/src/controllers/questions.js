@@ -37,7 +37,13 @@ export const createQuestion = async (req, res, next) => {
 export const getQuestion = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 
-  const question = await QuestionModel.findById(req.params.questionID).populate('comments');
+  const question = await QuestionModel.findById(req.params.questionID).populate({
+    path: 'comments',
+    populate: {
+      path: 'account',
+      select: ['username', 'showUsername']
+    }
+  });
 
   if (!question) {
     response.errors.push({ path: ['question'], message: 'Question not found' });

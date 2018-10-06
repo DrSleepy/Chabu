@@ -101,7 +101,7 @@ class AccountSettings extends Component {
             !this.state.sent && (
               <ButtonWithLoader
                 className={css.send}
-                text="Send"
+                text="Send Confirmation"
                 buttonType="default"
                 loading={this.state.sending}
                 onClick={this.sendEmail}

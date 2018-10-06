@@ -14,10 +14,11 @@ class deleteQuestionModal extends Component {
     this.setState({ loader: true });
 
     const isInsideRoom = this.props.location.pathname === '/created-questions';
-    await server.delete(`/rooms/${this.props.roomID}/${this.props.questionID}`).catch(error => error.response);
+    const roomID = window.location.pathname.split('/')[2];
+    await server.delete(`/rooms/${roomID}/${this.props.questionID}`).catch(error => error.response);
 
     if (!isInsideRoom) {
-      this.props.history.replace(`${this.props.roomID}?view=all`);
+      this.props.history.replace(`${roomID}?view=all`);
       return;
     }
 
@@ -42,7 +43,6 @@ class deleteQuestionModal extends Component {
 
 deleteQuestionModal.propTypes = {
   questionID: PropTypes.string.isRequired,
-  roomID: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired
 };
 

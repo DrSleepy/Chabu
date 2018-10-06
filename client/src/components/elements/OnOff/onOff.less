@@ -9,8 +9,8 @@
 }
 
 .background {
-  .bottom-box-shadow-with-border;
-  background-color: @primary-color;
+  background-color: none;
+  border: solid 1px @primary-color;
   position: absolute;
   height: 100%;
   width: 50%;
@@ -21,11 +21,12 @@
 
   &--off {
     left: 0;
-    background-color: @danger-color;
+    background-color: none;
+    border: solid 1px @danger-color;
   }
 
   &--off ~ .button:nth-of-type(1) {
-    color: white;
+    color: @danger-color;
   }
 
   &--off ~ .button:nth-of-type(2) {
@@ -39,6 +40,6 @@
   color: @black-text-color;
 
   &:nth-of-type(2) {
-    color: white;
+    color: @primary-color;
   }
 }

@@ -122,12 +122,12 @@ class Home extends Component {
   };
 
   componentWillMount = () => {
-    const list = this.props.location.pathname.split('/')[1];
+    const list = window.location.pathname.split('/')[1];
     this.getListHandler(list);
   };
 
   componentWillReceiveProps = nextProps => {
-    const list = this.props.location.pathname.split('/')[1];
+    const list = window.location.pathname.split('/')[1];
     this.getListHandler(list);
   };
 

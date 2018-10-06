@@ -97,7 +97,7 @@
 
 .actions {
   display: grid;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: max-content 1fr max-content;
   grid-column-gap: @size-6;
 
   & * {
@@ -111,22 +111,20 @@
 
   &__delete {
     color: @danger-color;
+    justify-self: start;
+  }
+
+  &__post {
+    .tera;
+    color: @light-black-text-color;
+    grid-column: 3 / span 1;
+
+    &:before {
+      .icon('\e0b9');
+    }
   }
 }
 
-.editTextarea {
-  resize: vertical;
-}
-
-.modal-actions {
-  .modal-actions-container;
-
-  &__primary,
-  &__secondary {
-    .modal-actions-buttons;
-  }
-
-  &__secondary {
-    font-family: 'roboto-medium';
-  }
+.loader {
+  margin-top: 30px;
 }
