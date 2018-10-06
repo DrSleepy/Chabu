@@ -26,8 +26,7 @@ class PostCommentModal extends Component {
     const newComment = response.data.data;
 
     this.setState({ loader: false, text: '' });
-    
-    
+
     this.props.newCommentHandler(newComment);
     this.props.onClose();
   };
@@ -46,6 +45,7 @@ class PostCommentModal extends Component {
           value={this.state.text}
           onChange={event => this.setState({ text: event.target.value })}
           maxLength="20000"
+          rows="15"
         />
       </Modal>
     );

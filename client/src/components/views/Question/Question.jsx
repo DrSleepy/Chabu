@@ -148,12 +148,9 @@ class Question extends Component {
             <textarea
               placeholder="Additional information..."
               value={this.state.text}
-              onChange={event =>
-                this.setState({
-                  text: event.target.value
-                })
-              }
+              onChange={event => this.setState({ text: event.target.value })}
               maxLength="20000"
+              rows="12"
             />
           </Modal>
         )}

@@ -53,6 +53,7 @@ class CreateQuestion extends Component {
           value={this.state.text}
           onChange={event => this.bindToState(event, 'text')}
           maxLength="20000"
+          rows="12"
         />
         <div className={css.actions}>
           <button className={css.actions__secondary} onClick={this.props.close}>

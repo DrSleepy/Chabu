@@ -15,6 +15,7 @@ class Comment extends Component {
       edited: false,
       deleted: false,
       showUsername: '',
+      timeAgo: '',
       account: { _id: '', username: '' }
     },
     loading: false,
@@ -37,7 +38,7 @@ class Comment extends Component {
     const response = await server.patch(`/comments/${this.state.comment.id}`, data).catch(error => error.response);
 
     this.setState({
-      comment: { ...this.state.comment, text: response.data.data.text },
+      comment: { ...this.state.comment, text: response.data.data.text, edited: true },
       editModal: false,
       editLoader: false
     });
@@ -56,8 +57,8 @@ class Comment extends Component {
 
   setupCommentHandler = async () => {
     const response = await server.get(`/comments/${this.props.commentID}`).catch(error => error.response);
-    const { id, text, showUsername, edited, deleted, comments, account } = response.data.data;
-    this.setState({ comment: { id, text, showUsername, edited, deleted, comments, account } });
+    const { id, text, showUsername, edited, deleted, timeAgo, comments, account } = response.data.data;
+    this.setState({ comment: { id, text, showUsername, edited, deleted, timeAgo, comments, account } });
   };
 
   componentWillMount = () => {
@@ -74,7 +75,8 @@ class Comment extends Component {
         <header className={css.header} onClick={() => this.setState({ show: !this.state.show })}>
           <p className={css.header__username}> {this.state.showUsername ? this.state.account.username : 'Anonymous'} </p>
           <p className={css.header__time}>
-            {this.state.timeAgo} <span className={css.header__edited}> {this.state.edited && '(edited)'} </span>
+            {this.state.comment.timeAgo}{' '}
+            <span className={css.header__edited}> {this.state.comment.edited && '(edited)'} </span>
           </p>
           <i className={[css.header__arrow, cssIsCollapsed].join(' ')} />
         </header>
@@ -123,6 +125,7 @@ class Comment extends Component {
               value={this.state.comment.text}
               onChange={event => this.setState({ comment: { ...this.state.comment, text: event.target.value } })}
               maxLength="20000"
+              rows="12"
             />
           </Modal>
         )}
