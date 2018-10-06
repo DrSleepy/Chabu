@@ -1,23 +1,29 @@
 @import (reference) '../../../styles/index.less';
 
 .comment {
-  padding: @size-3;
-  background-color: #abcdff0a;
-  border-top: solid 1px #a1c0e231;
-  border-bottom: solid 1px #a1c0e231;
   transition: 200ms;
+  padding-left: @size-3;
+  padding-bottom: @size-2;
+  border-bottom: solid 1px rgba(188, 209, 231, 0.178);
 }
 
+.children {
+  box-shadow: 0 1px 0.4px rgba(0, 0, 0, 0.05);
+
+  border-left: solid 1px #9bb9da77;
+  margin-top: @size-1--5;
+}
 .isCollapsedComment {
-  padding: @size-1 @size-3;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .header {
   display: grid;
   grid-template-columns: max-content 1fr max-content;
   grid-column-gap: @size-2--5;
-  margin-bottom: @size-1--5;
   align-items: center;
+  height: max-content;
 
   &__username {
     color: @primary-color;
@@ -32,17 +38,21 @@
     .micro;
   }
 
-  &__arrow:before {
-    content: '\e316';
-    font-family: 'Material Icons';
-    color: @black-text-color;
-    .giga;
+  &__arrow {
+    margin-right: 10px;
+
+    &:before {
+      .giga;
+      .icon('\e316');
+      color: @black-text-color;
+    }
   }
 }
 
 .isCollapsed {
   transition: 200ms;
   transform: rotate(-180deg);
+  transform-origin: center;
 }
 
 .text {
@@ -64,6 +74,8 @@
 
   &__reply {
     color: rgba(255, 193, 68, 0.747);
+    grid-column: 3 / span 1;
+    padding-right: 10px;
 
     &:after {
       content: '\e15e';

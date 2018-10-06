@@ -31,6 +31,28 @@ export const createComment = async (req, res, next) => {
   res.status(200).json(response);
 };
 
+export const getComment = async (req, res, next) => {
+  const response = { ok: false, errors: [], data: null };
+
+  const comment = await CommentModel.findById(req.params.commentID).populate({
+    path: 'comments',
+    populate: {
+      path: 'account',
+      select: ['username', 'showUsername']
+    }
+  });
+
+  if (!comment) {
+    response.errors.push({ path: ['comment'], message: 'Comment not found' });
+    next({ status: 404, ...response });
+    return;
+  }
+
+  response.ok = true;
+  response.data = comment;
+  res.status(200).json(response);
+};
+
 export const deleteComment = async (req, res, next) => {
   const response = { ok: false, errors: [], data: null };
 

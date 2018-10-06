@@ -6,6 +6,7 @@ import mapStateToProps from '../../../store/state';
 import Comment from '../../elements/Comment/Comment';
 import Modal from '../../elements/Modal/Modal';
 import DeleteQuestionModal from '../../elements/DeleteQuestionModal/DeleteQuestionModal';
+import PostCommentModal from '../../elements/PostCommentModal/PostCommentModal';
 import Loader from '../../elements/Loader/Loader';
 import server from '../../../axios';
 import css from './question.less';
@@ -24,12 +25,8 @@ class Question extends Component {
     likedBy: [],
     comments: [],
     deleteModal: false,
+    postCommentModal: false,
     editModal: {
-      modal: false,
-      loader: false,
-      text: ''
-    },
-    postModal: {
       modal: false,
       loader: false,
       text: ''
@@ -40,16 +37,6 @@ class Question extends Component {
     this.setState({ liked: !this.state.liked });
     this.state.liked ? this.setState({ likes: this.state.likes - 1 }) : this.setState({ likes: this.state.likes + 1 });
     await server.patch(`/questions/${this.state.id}/like`);
-  };
-
-  postCommentHandler = async () => {
-    this.setState({ postModal: { ...this.state.postModal, loader: true } });
-
-    const data = { text: this.state.postModal.text };
-    await server.post(`/questions/${this.state.id}`, data).catch(error => error.response);
-
-    this.setState({ postModal: { loader: false, modal: false, text: '' } });
-    this.setupQuestion();
   };
 
   editQuestionHandler = async () => {
@@ -130,7 +117,7 @@ class Question extends Component {
                 </button>
               </Fragment>
             )}
-            <i className={css.actions__post} onClick={() => this.modalHandler('postModal', true)} />
+            <i className={css.actions__post} onClick={() => this.setState({ postCommentModal: true })} />
           </div>
         </div>
         <section>
@@ -138,7 +125,9 @@ class Question extends Component {
           {!this.state.loadingList &&
             this.state.comments
               .map((comment, i) => (
-                <Comment {...comment} username={comment.account.username} reloadQuestion={this.setupQuestion} key={i} />
+                <div className={css.children} key={i}>
+                  <Comment {...comment} username={comment.account.username} reloadQuestion={this.setupQuestion} />
+                </div>
               ))
               .reverse()}
         </section>
@@ -160,26 +149,12 @@ class Question extends Component {
           </Modal>
         )}
 
-        {this.state.postModal.modal && (
-          <Modal
-            titleText="Post Comment"
-            buttonText="Post"
-            buttonLoader={this.state.postModal.loader}
-            onSubmit={this.postCommentHandler}
-            onClose={() => this.modalHandler('postModal', false)}
-          >
-            <textarea
-              className={css.editTextarea}
-              placeholder="Type your comment here..."
-              value={this.state.postModal.text}
-              onChange={event => this.setState({ postModal: { ...this.state.postModal, text: event.target.value } })}
-              maxLength="20000"
-            />
-          </Modal>
+        {this.state.postCommentModal && (
+          <PostCommentModal reloadQuestion={this.setupQuestion} onClose={() => this.setState({ postCommentModal: false })} />
         )}
 
         {this.state.deleteModal.modal && (
-          <DeleteQuestionModal questionID={this.state.id} onClose={() => this.modalHandler('deleteModal', false)} />
+          <DeleteQuestionModal questionID={this.state.id} onClose={() => this.setState({ deleteModal: false })} />
         )}
       </Fragment>
     );

@@ -1,18 +1,24 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Modal from '../Modal/Modal';
+import PostCommentModal from '../PostCommentModal/PostCommentModal';
 import server from '../../../axios';
 import css from './comment.less';
+import mapStateToProps from '../../../store/state';
 
 class Comment extends Component {
   state = {
+    id: '',
     show: true,
     content: '',
+    children: [],
     editModal: false,
     editLoader: false,
     deleteModal: false,
-    deleteLoader: false
+    deleteLoader: false,
+    postCommentModal: false
   };
 
   editCommentHandler = async () => {
@@ -33,13 +39,15 @@ class Comment extends Component {
     this.props.reloadQuestion();
   };
 
-  componentWillMount = () => {
-    this.setState({ content: this.props.text });
+  componentWillMount = async () => {
+    const comment = await server.get(`/comments/${this.props.id}`).catch(error => error.response);
+    this.setState({ id: comment.data.data._id, content: this.props.text, children: comment.data.data.comments });
   };
 
   render() {
     const cssIsCollapsed = !this.state.show ? css.isCollapsed : '';
     const cssIsCollapsedComment = !this.state.show ? css.isCollapsedComment : '';
+    const isMyComment = this.props.accountID === this.props.account._id;
 
     return (
       <div className={[css.comment, cssIsCollapsedComment].join(' ')}>
@@ -56,15 +64,27 @@ class Comment extends Component {
             <p className={css.text}>{!this.props.deleted ? this.props.text : '[deleted]'}</p>
             {!this.props.deleted && (
               <footer className={css.footer}>
-                <button className={css.footer__edit} onClick={() => this.setState({ editModal: true })}>
-                  Edit
+                {isMyComment && (
+                  <Fragment>
+                    <button className={css.footer__edit} onClick={() => this.setState({ editModal: true })}>
+                      Edit
+                    </button>
+                    <button className={css.footer__delete} onClick={() => this.setState({ deleteModal: true })}>
+                      Delete
+                    </button>
+                  </Fragment>
+                )}
+                <button className={css.footer__reply} onClick={() => this.setState({ postCommentModal: true })}>
+                  Reply
                 </button>
-                <button className={css.footer__delete} onClick={() => this.setState({ deleteModal: true })}>
-                  Delete
-                </button>
-                <button className={css.footer__reply}> Reply </button>
               </footer>
             )}
+
+            {this.state.children.map((comment, i) => (
+              <div className={css.children} key={i}>
+                <Comment {...comment} username={comment.account.username} reloadQuestion={this.props.reloadQuestion} />
+              </div>
+            ))}
           </Fragment>
         )}
 
@@ -79,7 +99,11 @@ class Comment extends Component {
             <textarea
               placeholder="Type comment here..."
               value={this.state.content}
-              onChange={event => this.setState({ content: event.target.value })}
+              onChange={event =>
+                this.setState({
+                  content: event.target.value
+                })
+              }
               maxLength="20000"
             />
           </Modal>
@@ -97,9 +121,17 @@ class Comment extends Component {
             <p> Confirm your choice to delete </p>
           </Modal>
         )}
+
+        {this.state.postCommentModal && (
+          <PostCommentModal
+            commentID={this.state.id}
+            reloadQuestion={this.props.reloadQuestion}
+            onClose={() => this.setState({ postCommentModal: false })}
+          />
+        )}
       </div>
     );
   }
 }
 
-export default withRouter(Comment);
+export default connect(mapStateToProps)(withRouter(Comment));

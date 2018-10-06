@@ -11,6 +11,7 @@ const router = express.Router();
 
 router
   .route('/:commentID')
+  .get(paramValidation('commentID', fields.uuid), commentsController.getComment)
   .post(
     auth.isLoggedIn,
     paramValidation('commentID', fields.uuid),
