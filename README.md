@@ -13,7 +13,7 @@ API Endpoints v1
 | Method | Endpoint                                           | Description                                                                       |
 | ------ | -------------------------------------------------- | --------------------------------------------------------------------------------- |
 | POST   | login/                                             | authenticate account                                                              |
-| POST   | logout/                                            | clearns https cookie from client                                                  |
+| POST   | logout/                                            | clears https cookie from client                                                   |
 |        |                                                    |                                                                                   |
 | POST   | accounts/                                          | create new account                                                                |
 | GET    | accounts/                                          | get current account settings                                                      |
