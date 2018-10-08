@@ -18,7 +18,7 @@ import './connection';
 
 const server = express();
 
-const redirectUnmatched = (req, res, next) => {
+const notFound = (req, res, next) => {
   next({ status: 404, message: 'Invalid endpoint' });
 };
 
@@ -26,8 +26,8 @@ const redirectUnmatched = (req, res, next) => {
 server.use(helmet());
 server.use(compression());
 server.use(logger('dev'));
-// server.use(cors({ origin: 'http://localhost:3000', credentials: true }));
-server.use(cors({ origin: 'https://ddaa6893.ngrok.io', credentials: true }));
+server.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+// server.use(cors({ origin: 'https://651085c3.ngrok.io', credentials: true }));
 server.use(bodyParser.json());
 server.use(cookieParser());
 server.use(verifyToken);
@@ -39,7 +39,7 @@ server.use('/questions', questions);
 server.use('/comments', comments);
 server.use('/login', login);
 server.use('/logout', (req, res) => res.clearCookie('token').sendStatus(200));
-server.use(redirectUnmatched);
+server.use(notFound);
 
 // error handling
 server.use((err, req, res, next) => res.status(err.status).json(err)); // eslint-disable-line
