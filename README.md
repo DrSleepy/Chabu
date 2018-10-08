@@ -1,5 +1,5 @@
 # Chabu
-
+Preview of progress (colors not accurate):
 ![Alt Text](https://github.com/DrSleepy/Chabu/blob/master/preview.gif)
 
 The main purpose of this project is to learn Reactjs (MERN stack) by creating a forum like application.
