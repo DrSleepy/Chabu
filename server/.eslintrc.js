@@ -9,6 +9,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'no-underscore-dangle': 0,
     'max-len': 0,
+    'no-extend-native': 0,
     'no-plusplus': 0,
     'func-names': 0,
     'object-curly-newline': 0,

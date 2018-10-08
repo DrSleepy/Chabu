@@ -22,7 +22,8 @@ export const createQuestion = async (req, res, next) => {
     account: req.account._id,
     likedBy: req.account._id,
     room: room.id,
-    ...req.body
+    ...req.body,
+    text: req.body.text.handleWhitespace()
   }).save();
 
   const updateRoom = room.update({ $push: { questions: newQuestion._id } }).exec();
@@ -53,7 +54,11 @@ export const getQuestion = async (req, res, next) => {
 export const updateQuestion = async (req, res) => {
   const response = { ok: false, errors: [], data: null };
 
-  await QuestionModel.findByIdAndUpdate(req.params.questionID, { edited: true, ...req.body });
+  await QuestionModel.findByIdAndUpdate(req.params.questionID, {
+    edited: true,
+    ...req.body,
+    text: req.body.text.handleWhitespace()
+  });
 
   response.ok = true;
   res.status(200).json(response);

@@ -19,7 +19,8 @@ export const createComment = async (req, res, next) => {
   const newComment = await new CommentModel({
     account: req.account._id,
     showUsername: req.account.showUsername,
-    ...req.body
+    ...req.body,
+    text: req.body.text.handleWhitespace()
   }).save();
 
   const comment = await CommentModel.findById(newComment._id).populate({ path: 'account', select: ['username'] });
@@ -80,7 +81,7 @@ export const updateComment = async (req, res, next) => {
     return;
   }
 
-  await comment.update({ edited: true, ...req.body });
+  await comment.update({ edited: true, ...req.body, text: req.body.text.handleWhitespace() });
   const updatedComment = await CommentModel.findById(req.params.commentID);
 
   response.ok = true;

@@ -97,7 +97,7 @@ class Question extends Component {
           <div className={[css.body, cssHasText].join(' ')}>
             <Link to={`/r/${roomID}`} className={css.body__back} />
             <h1 className={css.body__title}> {this.state.title} </h1>
-            {this.state.text && <p className={css.body__text}> {this.state.text} </p>}
+            {this.state.text && <pre className={css.body__text}> {this.state.text} </pre>}
           </div>
           <div className={css.details}>
             <p className={css.details__comments}> 2 comments </p>
@@ -148,7 +148,11 @@ class Question extends Component {
             <textarea
               placeholder="Additional information..."
               value={this.state.text}
-              onChange={event => this.setState({ text: event.target.value })}
+              onChange={event =>
+                this.setState({
+                  text: event.target.value
+                })
+              }
               maxLength="20000"
               rows="12"
             />

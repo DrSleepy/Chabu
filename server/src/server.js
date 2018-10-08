@@ -15,6 +15,7 @@ import questions from './routers/questions';
 import comments from './routers/comments';
 
 import './connection';
+import './prototypes';
 
 const server = express();
 

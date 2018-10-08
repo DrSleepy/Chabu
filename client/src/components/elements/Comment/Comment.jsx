@@ -58,7 +58,8 @@ class Comment extends Component {
   setupCommentHandler = async () => {
     const response = await server.get(`/comments/${this.props.commentID}`).catch(error => error.response);
     const { id, text, showUsername, edited, deleted, timeAgo, comments, account } = response.data.data;
-    this.setState({ comment: { id, text, showUsername, edited, deleted, timeAgo, comments, account } });
+
+    this.setState({ comment: { text, id, showUsername, edited, deleted, timeAgo, comments, account } });
   };
 
   componentWillMount = () => {
@@ -83,7 +84,8 @@ class Comment extends Component {
 
         {this.state.show && (
           <Fragment>
-            <p className={css.text}>{!this.state.comment.deleted ? this.state.comment.text : '[deleted]'}</p>
+            <pre className={css.text}>{!this.state.comment.deleted ? this.state.comment.text : '[deleted]'}</pre>
+
             {!this.state.comment.deleted && (
               <footer className={css.footer}>
                 {isMyComment && (
